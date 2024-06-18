@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [SerializeField] private GameObject target = null;
+    [SerializeField] private GameObject target = null; // 로컬 플레이어 찾아서 넣는 코드로 변경 필요
     [SerializeField] private float delayTime = 30f;
 
-    private Camera mainCamera = null;
+    private Camera cam = null;
 
     private Vector3 fixedPos = Vector3.zero;
     private Vector3 offsetVec = Vector3.zero;
@@ -13,8 +13,8 @@ public class CameraFollow : MonoBehaviour
 
     private void Awake()
     {
-        mainCamera = GetComponent<Camera>();
-        offsetVec = mainCamera.transform.position - target.transform.position;
+        cam = Camera.main;
+        offsetVec = cam.transform.position - target.transform.position;
     }
 
     private void Update()
@@ -25,6 +25,6 @@ public class CameraFollow : MonoBehaviour
     private void FollowTarget()
     {
         fixedPos = offsetVec + target.transform.position;
-        mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, fixedPos, Time.deltaTime * delayTime);
+        cam.transform.position = Vector3.Lerp(cam.transform.position, fixedPos, Time.deltaTime * delayTime);
     }
 }

@@ -2,17 +2,13 @@ using UnityEngine;
 
 public class CharacterPlayer : CharacterBase
 {
-    protected Movement3D movement3D = null;
-
-    protected override void Awake()
-    {
-        base.Awake();
-
-        movement3D = GetComponent<Movement3D>();
-    }
 
     protected void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Attack();
+        }
         Move();
     }
 
