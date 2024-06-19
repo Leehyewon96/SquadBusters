@@ -7,10 +7,16 @@ public class AttackCircle : MonoBehaviour
     public DetectEnemy onDetectEnemy;
     public delegate void UnDetectEnemy(GameObject target);
     public UnDetectEnemy onUnDetectEnemy;
+    private SphereCollider sphereCollider = null;
 
-    public void SetActive(bool isActive)
+    private void Awake()
     {
-        gameObject.SetActive(isActive);
+        sphereCollider = GetComponent<SphereCollider>();
+    }
+
+    public void SetActiveDetectEnemy(bool isActive)
+    {
+        sphereCollider.enabled = isActive;
     }
 
     public void UpdateRadius(float newRadius)
@@ -23,15 +29,10 @@ public class AttackCircle : MonoBehaviour
         transform.position = newPos;
     }
 
-    public void OnTriggerEnter(Collider other)
+    public void OnTriggerStay(Collider other)
     {
         if (other.gameObject.layer.Equals(LayerMask.NameToLayer(LayerLocalize.enemy)))
         {
-            //if(!DetectedEnemies.Contains(other.gameObject))
-            //{
-            //    DetectedEnemies.Add(other.gameObject);
-            //}
-
             if (onDetectEnemy != null)
             {
                 onDetectEnemy.Invoke(other.gameObject);
@@ -43,11 +44,6 @@ public class AttackCircle : MonoBehaviour
     {
         if (other.gameObject.layer.Equals(LayerMask.NameToLayer(LayerLocalize.enemy)))
         {
-            //if(DetectedEnemies.Contains(other.gameObject))
-            //{
-            //    DetectedEnemies.Remove(other.gameObject);
-            //}
-
             if (onUnDetectEnemy != null)
             {
                 onUnDetectEnemy.Invoke(other.gameObject);

@@ -1,5 +1,5 @@
+using System.Collections;
 using UnityEngine;
-using static AttackCircle;
 
 public class CharacterPlayer : CharacterBase
 {
@@ -28,16 +28,19 @@ public class CharacterPlayer : CharacterBase
         {
             isAttacking = false;
             DetectedEnemies.Clear();
+            animator.SetBool(AnimLocalize.contactEnemy, false);
             navMeshAgent.SetDestination(transform.position);
             MoveAttackCircle();
-            attackCircle.SetActive(false); //탐지기능만 끄는걸로 변경
+            attackCircle.SetActiveDetectEnemy(false);
             Move();
         }
         else
         {
-            attackCircle.SetActive(true); // 보이는것만 액티브되는것.
-            MoveToEnemy();
-
+            if(!isAttacking)
+            {
+                attackCircle.SetActiveDetectEnemy(true);
+                MoveToEnemy();
+            }
         }
     }
 

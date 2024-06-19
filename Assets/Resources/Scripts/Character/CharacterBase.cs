@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
 
 public class CharacterBase : MonoBehaviour
 {
@@ -19,7 +17,9 @@ public class CharacterBase : MonoBehaviour
     protected float attackRange = 2f;
     protected float attackRadius = 1f;
     protected float attackDamage = 30f;
+    protected WaitForSecondsRealtime attackTerm = new WaitForSecondsRealtime(1.5f);
     protected bool isAttacking = false; // CharacterStat안에 있어야 되나?
+    protected bool isDead = false;
 
     protected List<GameObject> DetectedEnemies = new List<GameObject>();
 
@@ -54,6 +54,7 @@ public class CharacterBase : MonoBehaviour
     protected virtual void SetDead()
     {
         //죽은 오브젝트 자리에 동전 생성
+        isDead = true;
         gameObject.SetActive(false);
     }
 
@@ -67,61 +68,77 @@ public class CharacterBase : MonoBehaviour
 
     protected virtual void MoveToEnemy()
     {
-        if(isAttacking)
-        {
-            return;
-        }
-
         if(DetectedEnemies.Count == 0)
         {
             animator.SetFloat(AnimLocalize.moveSpeed, 0);
             return;
         }
 
-        isAttacking = true;
-        animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.speed);
-        navMeshAgent.SetDestination(DetectedEnemies.FirstOrDefault().transform.position);
-        
-    }
-
-    protected virtual void Attack(GameObject target)
-    {
-        if(isAttacking)
+        GameObject target = GetTarget();
+        if (target == gameObject)
         {
             return;
         }
 
-        isAttacking = true;
+        animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.speed);
+        navMeshAgent.SetDestination(target.transform.position);
 
-        animator.SetBool(AnimLocalize.contactEnemy, true);
-        StartCoroutine(CoAttack(target));
+        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        {
+            animator.SetFloat(AnimLocalize.moveSpeed, 0);
+            //navMeshAgent.SetDestination(transform.position);
+            isAttacking = true;
+            StartCoroutine(CoAttack(target));
+        }
     }
 
-    private IEnumerator CoAttack(GameObject target)
+    protected GameObject GetTarget()
     {
+        GameObject target = DetectedEnemies.Find(e => !e.GetComponent<CharacterBase>().isDead);
+        if(target != null)
+        {
+            return target;
+        }
+
+        return gameObject;
+    }
+
+    protected virtual IEnumerator CoAttack(GameObject target)
+    {
+        animator.SetBool(AnimLocalize.contactEnemy, true);
+        transform.LookAt(target.transform.position);
         while (true)
         {
-            RaycastHit hit;
-            if (Physics.SphereCast(transform.position, attackRadius, transform.forward, out hit, attackRange))
-            {
-                if (hit.collider.gameObject != this && hit.collider.gameObject.TryGetComponent<CharacterBase>(out CharacterBase hitObj))
-                {
-                    hitObj.TakeDamage(attackDamage);
-                }
-            }
-            else
-            {
-                animator.SetBool(AnimLocalize.contactEnemy, false);
-                isAttacking = false;
-                yield break;
-            }
-
-            //if(target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
+            //RaycastHit hit;
+            //if (Physics.SphereCast(transform.position, attackRadius, transform.forward, out hit, attackRange))
             //{
-            //    targetObj.TakeDamage(attackDamage);
+            //    if (hit.collider.gameObject != this && hit.collider.gameObject.TryGetComponent<CharacterBase>(out CharacterBase hitObj))
+            //    {
+            //        hitObj.TakeDamage(attackDamage);
+            //    }
+            //}
+            //else
+            //{
+            //    animator.SetBool(AnimLocalize.contactEnemy, false);
+            //    isAttacking = false;
+            //    yield break;
             //}
 
-            yield return new WaitForSeconds(1f);
+            yield return attackTerm;
+            if(characterController.enabled)
+            {
+                yield break;
+            }
+            if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
+            {
+                targetObj.TakeDamage(attackDamage);
+                if (targetObj.isDead)
+                {
+                    animator.SetBool(AnimLocalize.contactEnemy, false);
+                    isAttacking = false;
+                    yield break;
+                }
+            }
         }
     }
 
