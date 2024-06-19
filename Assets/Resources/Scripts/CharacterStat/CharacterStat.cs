@@ -1,15 +1,21 @@
 using UnityEngine;
 
+
 public class CharacterStat : MonoBehaviour
 {
     [SerializeField] private float maxHp = 100f;
-    private float currentHp = -1;
+    private float currentHp = -1f;
+    private float attackRadius = 4f;
 
     public delegate void OnCurrentHpChanged(float newHp);
     public delegate void OnCurrentHpZero();
+    public delegate void OnAttackRadiusChanged(float newAttackRadius);
+    public delegate void OnCharacterBeginAttack();
 
     public event OnCurrentHpChanged onCurrentHpChanged;
     public event OnCurrentHpZero onCurrentHpZero;
+    public event OnAttackRadiusChanged onAttackRadiusChanged;
+    public event OnCharacterBeginAttack onCharacterBeginAttack;
 
     private void Awake()
     {
@@ -18,12 +24,13 @@ public class CharacterStat : MonoBehaviour
 
     public float GetCurrentHp() { return currentHp; }
     public float GetMaxHp() { return maxHp; }
+    public float GetAttackRadius() { return attackRadius; }
 
     public void ApplyDamage(float inDamage)
     {
         currentHp = Mathf.Clamp(currentHp - inDamage, 0, maxHp);
 
-        if (onCurrentHpChanged != null)
+        if(onCurrentHpChanged != null)
         {
             onCurrentHpChanged.Invoke(currentHp);
         }
@@ -36,4 +43,14 @@ public class CharacterStat : MonoBehaviour
             }
         }
     }
+
+    public void UpdateAttackCircle(float newRadius)
+    {
+        attackRadius = newRadius;
+        if (onAttackRadiusChanged != null)
+        {
+            onAttackRadiusChanged.Invoke(newRadius);
+        }
+    }
+
 }
