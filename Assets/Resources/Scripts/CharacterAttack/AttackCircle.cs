@@ -8,6 +8,11 @@ public class AttackCircle : MonoBehaviour
     public delegate void UnDetectEnemy(GameObject target);
     public UnDetectEnemy onUnDetectEnemy;
 
+    public void SetActive(bool isActive)
+    {
+        gameObject.SetActive(isActive);
+    }
+
     public void UpdateRadius(float newRadius)
     {
         transform.localScale = Vector3.one * newRadius * 2; // 콜라이더의 반지름이 아닌 전체 구 오브젝트의 지름이라서 *2
