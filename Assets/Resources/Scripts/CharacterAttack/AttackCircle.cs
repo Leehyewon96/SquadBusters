@@ -1,8 +1,10 @@
-using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class AttackCircle : MonoBehaviour
 {
+    public GameObject owner = null;
+
     public delegate void DetectEnemy(GameObject target);
     public DetectEnemy onDetectEnemy;
     public delegate void UnDetectEnemy(GameObject target);
@@ -14,10 +16,10 @@ public class AttackCircle : MonoBehaviour
         sphereCollider = GetComponent<SphereCollider>();
     }
 
-    public void SetActiveDetectEnemy(bool isActive)
-    {
-        sphereCollider.enabled = isActive;
-    }
+    //public void SetActiveDetectEnemy(bool isActive)
+    //{
+    //    sphereCollider.enabled = isActive;
+    //}
 
     public void UpdateRadius(float newRadius)
     {
@@ -31,23 +33,36 @@ public class AttackCircle : MonoBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.layer.Equals(LayerMask.NameToLayer(LayerLocalize.enemy)))
+        if (!other.gameObject.layer.Equals(gameObject.layer))
         {
-            if (onDetectEnemy != null)
+            if (other.gameObject.TryGetComponent<AttackCircle>(out AttackCircle circle))
             {
-                onDetectEnemy.Invoke(other.gameObject);
+                
+                if (onDetectEnemy != null)
+                {
+                    onDetectEnemy.Invoke(circle.owner);
+                }
             }
+            
         }
     }
 
     public void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer.Equals(LayerMask.NameToLayer(LayerLocalize.enemy)))
+        Debug.Log($"[exit] other.name {other.gameObject.name}");
+        if (!other.gameObject.layer.Equals(gameObject.layer))
         {
-            if (onUnDetectEnemy != null)
+            Debug.Log($"[exit] {gameObject.name} : {other.gameObject.name}");
+            if (other.gameObject.TryGetComponent<AttackCircle>(out AttackCircle circle))
             {
-                onUnDetectEnemy.Invoke(other.gameObject);
+                Debug.Log($"2");
+                if (onUnDetectEnemy != null)
+                {
+                    Debug.Log($"3");
+                    onUnDetectEnemy.Invoke(circle.owner);
+                }
             }
+
         }
     }
 }

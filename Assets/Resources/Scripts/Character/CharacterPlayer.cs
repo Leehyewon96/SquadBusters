@@ -1,24 +1,19 @@
-using System.Collections;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class CharacterPlayer : CharacterBase
 {
-    [SerializeField] protected AttackCircle attackCircle = null; //attackCircle 매니저 구현 후 할당 필요
-
     protected override void Awake()
     {
         base.Awake();
-        characterController = GetComponent<CharacterController>();
+        
         //attackCircle = GetComponent<AttackCircle>();
     }
 
     protected override void Start()
     {
         base.Start();
-        attackCircle.UpdateRadius(characterStat.GetAttackRadius());
-        characterStat.onAttackRadiusChanged += attackCircle.UpdateRadius;
-        attackCircle.onDetectEnemy += UpdateEnemyList;
-        attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
+        
     }
 
     protected override void Update()
@@ -31,17 +26,19 @@ public class CharacterPlayer : CharacterBase
             animator.SetBool(AnimLocalize.contactEnemy, false);
             navMeshAgent.SetDestination(transform.position);
             MoveAttackCircle();
-            attackCircle.SetActiveDetectEnemy(false);
+            //attackCircle.SetActiveDetectEnemy(false);
             Move();
         }
         else
         {
             if(!isAttacking)
             {
-                attackCircle.SetActiveDetectEnemy(true);
+                //attackCircle.SetActiveDetectEnemy(true);
                 MoveToEnemy();
             }
         }
+
+        
     }
 
     protected virtual void Move()
@@ -65,8 +62,12 @@ public class CharacterPlayer : CharacterBase
         return false;
     }
 
-    protected virtual void MoveAttackCircle()
+    protected override void UpdateEnemyList(GameObject target)
     {
-        attackCircle.MoveAttackCircle(transform.position);
+        if (!DetectedEnemies.Contains(target)
+            && Vector3.Distance(target.transform.position, transform.position) <= characterStat.GetAttackRadius())
+        {
+            DetectedEnemies.Add(target);
+        }
     }
 }

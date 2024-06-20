@@ -5,7 +5,7 @@ public class CharacterStat : MonoBehaviour
 {
     [SerializeField] private float maxHp = 100f;
     private float currentHp = -1f;
-    private float attackRadius = 5f;
+    [SerializeField] private float attackRadius = 5f;
 
     public delegate void OnCurrentHpChanged(float newHp);
     public delegate void OnCurrentHpZero();
