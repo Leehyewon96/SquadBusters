@@ -1,9 +1,9 @@
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class AttackCircle : MonoBehaviour
 {
     public GameObject owner = null;
+    public bool isUsed { get; private set; } = false;
 
     public delegate void DetectEnemy(GameObject target);
     public DetectEnemy onDetectEnemy;
@@ -16,10 +16,20 @@ public class AttackCircle : MonoBehaviour
         sphereCollider = GetComponent<SphereCollider>();
     }
 
-    //public void SetActiveDetectEnemy(bool isActive)
-    //{
-    //    sphereCollider.enabled = isActive;
-    //}
+    public void SetActive(bool isActive)
+    {
+        gameObject.SetActive(isActive);
+    }
+
+    public void UpdateIsUsed(bool used)
+    {
+        isUsed = used;
+    }
+
+    public void UpdateOwner(GameObject newOwner)
+    {
+        owner = newOwner;
+    }
 
     public void UpdateRadius(float newRadius)
     {
@@ -49,16 +59,12 @@ public class AttackCircle : MonoBehaviour
 
     public void OnTriggerExit(Collider other)
     {
-        Debug.Log($"[exit] other.name {other.gameObject.name}");
         if (!other.gameObject.layer.Equals(gameObject.layer))
         {
-            Debug.Log($"[exit] {gameObject.name} : {other.gameObject.name}");
             if (other.gameObject.TryGetComponent<AttackCircle>(out AttackCircle circle))
             {
-                Debug.Log($"2");
                 if (onUnDetectEnemy != null)
                 {
-                    Debug.Log($"3");
                     onUnDetectEnemy.Invoke(circle.owner);
                 }
             }

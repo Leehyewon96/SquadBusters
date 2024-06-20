@@ -1,5 +1,5 @@
+using System.Collections;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class CharacterNonPlayer : CharacterBase
 {
@@ -9,5 +9,31 @@ public class CharacterNonPlayer : CharacterBase
         MoveToEnemy();
         MoveAttackCircle();
 
+    }
+
+    protected override void Attack(GameObject target)
+    {
+        StartCoroutine(CoAttack(target));
+    }
+
+
+    protected virtual IEnumerator CoAttack(GameObject target)
+    {
+        animator.SetBool(AnimLocalize.contactEnemy, true);
+        transform.LookAt(target.transform.position);
+        while (true)
+        {
+            yield return attackTerm;
+            if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
+            {
+                targetObj.TakeDamage(attackDamage);
+                if (targetObj.isDead)
+                {
+                    animator.SetBool(AnimLocalize.contactEnemy, false);
+                    isAttacking = false;
+                    yield break;
+                }
+            }
+        }
     }
 }

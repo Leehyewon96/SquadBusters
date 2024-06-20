@@ -200,7 +200,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6920864044360685832, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: attackRadius
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6920864044360685834, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: moveSpeed
@@ -210,6 +210,10 @@ PrefabInstance:
       propertyPath: attackCircle
       value: 
       objectReference: {fileID: 1701035989}
+    - target: {fileID: 6920864044360685835, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
+      propertyPath: attackDamage
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
 --- !u!1 &248783583
@@ -940,7 +944,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6920864044360685832, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: attackRadius
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6920864044360685834, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: moveSpeed
@@ -950,6 +954,10 @@ PrefabInstance:
       propertyPath: attackCircle
       value: 
       objectReference: {fileID: 1554470347}
+    - target: {fileID: 6920864044360685835, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
+      propertyPath: attackDamage
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
 --- !u!1001 &887440996
@@ -1225,7 +1233,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6920864044360685832, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: attackRadius
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6920864044360685834, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: moveSpeed
@@ -1237,7 +1245,7 @@ PrefabInstance:
       objectReference: {fileID: 419328633}
     - target: {fileID: 6920864044360685835, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: attackDamage
-      value: 20
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
@@ -1345,7 +1353,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6920864044360685832, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: attackRadius
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6920864044360685834, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: moveSpeed
@@ -1355,6 +1363,10 @@ PrefabInstance:
       propertyPath: attackCircle
       value: 
       objectReference: {fileID: 721042052}
+    - target: {fileID: 6920864044360685835, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
+      propertyPath: attackDamage
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
 --- !u!1 &1261894701
@@ -1454,6 +1466,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -14.93}
+--- !u!1 &1350163314
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1350163315}
+  m_Layer: 0
+  m_Name: AttackCircleManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1350163315
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1350163314}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 17
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1554470345
 GameObject:
   m_ObjectHideFlags: 0

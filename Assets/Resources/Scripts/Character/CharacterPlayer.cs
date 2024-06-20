@@ -1,13 +1,14 @@
+using System.Collections;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class CharacterPlayer : CharacterBase
 {
+    protected CharacterController characterController = null;
+
     protected override void Awake()
     {
         base.Awake();
-        
-        //attackCircle = GetComponent<AttackCircle>();
+        characterController = GetComponent<CharacterController>();
     }
 
     protected override void Start()
@@ -26,19 +27,15 @@ public class CharacterPlayer : CharacterBase
             animator.SetBool(AnimLocalize.contactEnemy, false);
             navMeshAgent.SetDestination(transform.position);
             MoveAttackCircle();
-            //attackCircle.SetActiveDetectEnemy(false);
             Move();
         }
         else
         {
             if(!isAttacking)
             {
-                //attackCircle.SetActiveDetectEnemy(true);
                 MoveToEnemy();
             }
         }
-
-        
     }
 
     protected virtual void Move()
@@ -68,6 +65,38 @@ public class CharacterPlayer : CharacterBase
             && Vector3.Distance(target.transform.position, transform.position) <= characterStat.GetAttackRadius())
         {
             DetectedEnemies.Add(target);
+        }
+    }
+
+    protected override void Attack(GameObject target)
+    {
+        StartCoroutine(CoAttack(target));
+    }
+
+
+    protected virtual IEnumerator CoAttack(GameObject target)
+    {
+        animator.SetBool(AnimLocalize.contactEnemy, true);
+        transform.LookAt(target.transform.position);
+        while (true)
+        {
+            yield return attackTerm;
+            if (characterController.enabled) //캐릭터 상태로 판단하도록 변경하기
+            {
+                animator.SetBool(AnimLocalize.contactEnemy, false);
+                isAttacking = false;
+                yield break;
+            }
+            if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
+            {
+                targetObj.TakeDamage(attackDamage);
+                if (targetObj.isDead)
+                {
+                    animator.SetBool(AnimLocalize.contactEnemy, false);
+                    isAttacking = false;
+                    yield break;
+                }
+            }
         }
     }
 }

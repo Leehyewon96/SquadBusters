@@ -1,14 +1,13 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public class CharacterBase : MonoBehaviour
 {
-    [SerializeField] protected AttackCircle attackCircle = null; //attackCircle 매니저 구현 후 할당 필요
+    [SerializeField] protected AttackCircle attackCircle = null; //게임 매니저에서 attackCircle 매니저 구현 후 할당 필요
 
     protected Animator animator = null;
-    protected CharacterController characterController = null;
+    
     protected Movement3D movement3D = null;
     protected CharacterStat characterStat = null;
     protected NavMeshAgent navMeshAgent = null;
@@ -20,9 +19,10 @@ public class CharacterBase : MonoBehaviour
     [SerializeField] protected float attackDamage = 30f;
     protected WaitForSecondsRealtime attackTerm = new WaitForSecondsRealtime(1.5f);
     protected bool isAttacking = false; // CharacterStat안에 있어야 되나?
-    protected bool isDead = false;
+    public bool isDead { get; protected set; } = false;
 
     protected List<GameObject> DetectedEnemies = new List<GameObject>();
+
 
     protected virtual void Awake()
     {
@@ -31,7 +31,7 @@ public class CharacterBase : MonoBehaviour
         hpBar = GetComponentInChildren<HpBar>();
         movement3D = GetComponent<Movement3D>();
         navMeshAgent = GetComponent<NavMeshAgent>();
-        characterController = GetComponent<CharacterController>();
+        //attackCircle = 
     }
 
     protected virtual void Start()
@@ -50,10 +50,11 @@ public class CharacterBase : MonoBehaviour
 
     protected virtual void Update()
     {
-        //MoveToEnemy();
+        //업데이트용 이벤트 하나 생성 후 상속받는 클래스에서 Start에서 다 등록.
+        //여기서 업데이트용 이벤트 계속 Invoke하기(상속받는 클래스에는 Update 작성 X)
     }
 
-    protected virtual void TakeDamage(float inDamage)
+    public virtual void TakeDamage(float inDamage)
     {
         characterStat.ApplyDamage(inDamage);
     }
@@ -62,7 +63,7 @@ public class CharacterBase : MonoBehaviour
     {
         //죽은 오브젝트 자리에 동전 생성
         isDead = true;
-        attackCircle.gameObject.SetActive(false);
+        attackCircle.SetActive(false);
         gameObject.SetActive(false);
     }
 
@@ -71,27 +72,6 @@ public class CharacterBase : MonoBehaviour
         if(!DetectedEnemies.Contains(target))
         {
             DetectedEnemies.Add(target);
-        }
-    }
-
-    protected virtual void MoveToEnemy()
-    {
-        GameObject target = GetTarget();
-        if (target == gameObject)
-        {
-            StopAllCoroutines();
-            animator.SetFloat(AnimLocalize.moveSpeed, 0);
-            return;
-        }
-
-        animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.speed);
-        navMeshAgent.SetDestination(target.transform.position);
-
-        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
-        {
-            animator.SetFloat(AnimLocalize.moveSpeed, 0);
-            isAttacking = true;
-            StartCoroutine(CoAttack(target));
         }
     }
 
@@ -105,51 +85,38 @@ public class CharacterBase : MonoBehaviour
                 return target;
             }
         }
-            
+
         return gameObject;
+    }
+
+    protected virtual void MoveToEnemy()
+    {
+        GameObject target = GetTarget();
+        if (target == gameObject)
+        {
+            StopAllCoroutines(); //StopAttack같은 이벤트나 함수로 고치기
+            animator.SetFloat(AnimLocalize.moveSpeed, 0);
+            return;
+        }
+
+        animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.speed);
+        navMeshAgent.SetDestination(target.transform.position);
+
+        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        {
+            animator.SetFloat(AnimLocalize.moveSpeed, 0);
+            isAttacking = true;
+            Attack(target);
+        }
     }
 
     protected virtual void Attack(GameObject target)
     {
-        animator.SetBool(AnimLocalize.contactEnemy, true);
-        transform.LookAt(target.transform.position);
-        if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
-        {
-            targetObj.TakeDamage(attackDamage);
-        }
-            
-    }
 
-    protected virtual IEnumerator CoAttack(GameObject target)
-    {
-        animator.SetBool(AnimLocalize.contactEnemy, true);
-        transform.LookAt(target.transform.position);
-        while (true)
-        {
-            yield return attackTerm;
-            if (characterController.enabled) //캐릭터 상태로 판단하도록 변경하기
-            {
-                animator.SetBool(AnimLocalize.contactEnemy, false);
-                isAttacking = false;
-                yield break;
-            }
-            if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
-            {
-                targetObj.TakeDamage(attackDamage);
-                if (targetObj.isDead)
-                {
-                    animator.SetBool(AnimLocalize.contactEnemy, false);
-                    isAttacking = false;
-                    yield break;
-                }
-            }
-        }
     }
 
     protected virtual void OnUnDetectEnemy(GameObject target)
     {
-        //StartCoroutine(CoMoveToEnemy(target));
-        Debug.Log($"target.name {target.name}");
         if(DetectedEnemies.Contains(target))
         {
             Debug.Log($"{gameObject.name} : {target.name}");
