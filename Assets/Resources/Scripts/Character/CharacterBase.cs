@@ -46,6 +46,7 @@ public class CharacterBase : MonoBehaviour
         characterStat.onAttackRadiusChanged += attackCircle.UpdateRadius;
         attackCircle.onDetectEnemy += UpdateEnemyList;
         attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
+        attackCircle.UpdateOwner(gameObject);
     }
 
     protected virtual void Update()
@@ -96,6 +97,7 @@ public class CharacterBase : MonoBehaviour
         {
             StopAllCoroutines(); //StopAttack같은 이벤트나 함수로 고치기
             animator.SetFloat(AnimLocalize.moveSpeed, 0);
+            animator.SetBool(AnimLocalize.contactEnemy, false);
             return;
         }
 

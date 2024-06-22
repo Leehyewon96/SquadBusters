@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AttackCircle : MonoBehaviour
 {
-    public GameObject owner = null;
+    [SerializeField] public GameObject owner = null;
     public bool isUsed { get; private set; } = false;
 
     public delegate void DetectEnemy(GameObject target);
