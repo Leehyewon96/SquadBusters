@@ -4,16 +4,15 @@ using UnityEngine.AI;
 
 public class CharacterBase : MonoBehaviour
 {
-    [SerializeField] protected AttackCircle attackCircle = null; //게임 매니저에서 attackCircle 매니저 구현 후 할당 필요
+    protected AttackCircle attackCircle = null;
+    protected HpBar hpBar = null;
 
     protected Animator animator = null;
-    
     protected Movement3D movement3D = null;
     protected CharacterStat characterStat = null;
     protected NavMeshAgent navMeshAgent = null;
-   
-    protected HpBar hpBar = null;
-    
+    protected CharacterController characterController = null;
+
     protected float attackRange = 2f;
     protected float attackRadius = 1f;
     [SerializeField] protected float attackDamage = 30f;
@@ -28,14 +27,16 @@ public class CharacterBase : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         characterStat = GetComponent<CharacterStat>();
-        hpBar = GetComponentInChildren<HpBar>();
         movement3D = GetComponent<Movement3D>();
         navMeshAgent = GetComponent<NavMeshAgent>();
+        characterController = GetComponent<CharacterController>();
         //attackCircle = 
     }
 
     protected virtual void Start()
     {
+        attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle();
+
         hpBar.SetMaxHp(characterStat.GetMaxHp());
         hpBar.UpdateCurrentHp(characterStat.GetCurrentHp());
         
@@ -47,10 +48,13 @@ public class CharacterBase : MonoBehaviour
         attackCircle.onDetectEnemy += UpdateEnemyList;
         attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
         attackCircle.UpdateOwner(gameObject);
+        attackCircle.UpdateLayer(LayerMask.LayerToName(gameObject.layer));
     }
 
     protected virtual void Update()
     {
+        attackCircle.MoveAttackCircle(transform.position);
+        hpBar.UpdatePos(transform.position + new Vector3(0, characterController.height + 0.5f, 0));
         //업데이트용 이벤트 하나 생성 후 상속받는 클래스에서 Start에서 다 등록.
         //여기서 업데이트용 이벤트 계속 Invoke하기(상속받는 클래스에는 Update 작성 X)
     }
@@ -64,7 +68,10 @@ public class CharacterBase : MonoBehaviour
     {
         //죽은 오브젝트 자리에 동전 생성
         isDead = true;
+        attackCircle.UpdateIsUsed(false);
         attackCircle.SetActive(false);
+        hpBar.UPdateIsUsed(false);
+        hpBar.SetActive(false);
         gameObject.SetActive(false);
     }
 

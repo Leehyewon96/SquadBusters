@@ -3,18 +3,18 @@ using UnityEngine;
 
 public class CharacterPlayer : CharacterBase
 {
-    protected CharacterController characterController = null;
+    
 
     protected override void Awake()
     {
         base.Awake();
-        characterController = GetComponent<CharacterController>();
+        
     }
 
     protected override void Start()
     {
+        hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.Player); //GetComponentInChildren<HpBar>();
         base.Start();
-        
     }
 
     protected override void Update()

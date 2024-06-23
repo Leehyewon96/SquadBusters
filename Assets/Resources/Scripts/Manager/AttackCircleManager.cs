@@ -8,11 +8,11 @@ public class AttackCircleManager : MonoBehaviour
 
     private void Awake()
     {
-        attackCircleList = GetComponentsInChildren<AttackCircle>().ToList();
+        attackCircleList = GetComponentsInChildren<AttackCircle>(true).ToList();
         InitAttackCircles();
     }
 
-    private void InitAttackCircles()
+    public void InitAttackCircles()
     {
         foreach (AttackCircle circle in attackCircleList)
         {
@@ -26,7 +26,7 @@ public class AttackCircleManager : MonoBehaviour
         AttackCircle circle = attackCircleList.Find(c => !c.isUsed);
         if(circle == null)
         {
-            circle = Instantiate(attackCircleList.FirstOrDefault());
+            circle = Instantiate(attackCircleList.FirstOrDefault(), transform);
             attackCircleList.Add(circle);
         }
 

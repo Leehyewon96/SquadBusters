@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class CharacterNonPlayer : CharacterBase
 {
+    protected override void Start()
+    {
+        hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.NPC);
+        base.Start();
+    }
+
     protected override void Update()
     {
         base.Update();

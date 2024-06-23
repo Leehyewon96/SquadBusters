@@ -4,8 +4,11 @@ using UnityEngine;
 public class CharacterStat : MonoBehaviour
 {
     [SerializeField] private float maxHp = 100f;
-    private float currentHp = -1f;
     [SerializeField] private float attackRadius = 5f;
+    private float currentHp = -1f;
+    private int coin = 0;
+    private int jewel = 0;
+
 
     public delegate void OnCurrentHpChanged(float newHp);
     public delegate void OnCurrentHpZero();

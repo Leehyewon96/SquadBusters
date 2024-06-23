@@ -41,6 +41,11 @@ public class AttackCircle : MonoBehaviour
         transform.position = newPos;
     }
 
+    public void UpdateLayer(string layerName)
+    {
+        gameObject.layer = LayerMask.NameToLayer(layerName);
+    }
+
     public void OnTriggerStay(Collider other)
     {
         if (!other.gameObject.layer.Equals(gameObject.layer))
