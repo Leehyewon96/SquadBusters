@@ -35,7 +35,10 @@ public class HpBarManager : MonoBehaviour
                     hpbar = Instantiate(hpBars[1], transform);
                     break;
             }
+
+            hpBars.Add(hpbar);
         }
+
         hpbar.SetActive(true);
         hpbar.UPdateIsUsed(true);
         return hpbar;

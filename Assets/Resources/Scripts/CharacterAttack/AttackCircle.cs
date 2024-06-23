@@ -2,8 +2,20 @@ using UnityEngine;
 
 public class AttackCircle : MonoBehaviour
 {
+    public enum circleType
+    { 
+        None = 0,
+
+        Player,
+        NPC,
+
+        End,
+    }
+
+
     [SerializeField] public GameObject owner = null;
     public bool isUsed { get; private set; } = false;
+    public circleType type = circleType.None;
 
     public delegate void DetectEnemy(GameObject target);
     public DetectEnemy onDetectEnemy;

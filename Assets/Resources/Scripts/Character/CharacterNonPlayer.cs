@@ -6,6 +6,7 @@ public class CharacterNonPlayer : CharacterBase
     protected override void Start()
     {
         hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.NPC);
+        attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.NPC);
         base.Start();
     }
 

@@ -34,9 +34,7 @@ public class CharacterBase : MonoBehaviour
     }
 
     protected virtual void Start()
-    {
-        attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle();
-
+    { 
         hpBar.SetMaxHp(characterStat.GetMaxHp());
         hpBar.UpdateCurrentHp(characterStat.GetCurrentHp());
         
@@ -72,6 +70,7 @@ public class CharacterBase : MonoBehaviour
         attackCircle.SetActive(false);
         hpBar.UPdateIsUsed(false);
         hpBar.SetActive(false);
+
         gameObject.SetActive(false);
     }
 

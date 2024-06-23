@@ -14,6 +14,7 @@ public class CharacterPlayer : CharacterBase
     protected override void Start()
     {
         hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.Player); //GetComponentInChildren<HpBar>();
+        attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
         base.Start();
     }
 

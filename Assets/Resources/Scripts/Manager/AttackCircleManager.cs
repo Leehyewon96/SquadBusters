@@ -21,12 +21,21 @@ public class AttackCircleManager : MonoBehaviour
         }
     }
 
-    public AttackCircle GetAttackCircle()
+    public AttackCircle GetAttackCircle(AttackCircle.circleType inType)
     {
-        AttackCircle circle = attackCircleList.Find(c => !c.isUsed);
+        AttackCircle circle = attackCircleList.Find(c => !c.isUsed && c.type == inType);
         if(circle == null)
         {
-            circle = Instantiate(attackCircleList.FirstOrDefault(), transform);
+            switch (inType)
+            { 
+                case AttackCircle.circleType.Player:
+                    circle = Instantiate(attackCircleList[0], transform);
+                    break;
+                case AttackCircle.circleType.NPC:
+                    circle = Instantiate(attackCircleList[1], transform);
+                    break;
+            }
+            
             attackCircleList.Add(circle);
         }
 
