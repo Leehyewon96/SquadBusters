@@ -71,7 +71,8 @@ public class CharacterBase : MonoBehaviour
         hpBar.SetActive(false);
 
         //죽은 오브젝트 자리에 동전 생성
-        GameManager.Instance.rewardManager.ShowCoin(characterStat.coin, transform.position);
+        GameManager.Instance.itemManager.ShowItem(characterStat.coin, transform.position, ItemType.Coin);
+        GameManager.Instance.itemManager.ShowItem(characterStat.gem, transform.position, ItemType.Gem);
         GameManager.Instance.effectManager.SnowHit(transform.position);
 
         gameObject.SetActive(false);

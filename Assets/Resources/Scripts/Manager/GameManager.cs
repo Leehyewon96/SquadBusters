@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     private static GameManager instance = null;
     [HideInInspector] public HpBarManager hpBarManager = null;
     [HideInInspector] public AttackCircleManager attackCircleManager = null;
-    [HideInInspector] public RewardManager rewardManager = null;
+    [HideInInspector] public ItemManager itemManager = null;
     [HideInInspector] public EffectManager effectManager = null;
 
     public static GameManager Instance
@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     {
         hpBarManager = FindObjectOfType<HpBarManager>();
         attackCircleManager = FindObjectOfType<AttackCircleManager>();
-        rewardManager = FindObjectOfType<RewardManager>();
+        itemManager = FindObjectOfType<ItemManager>();
         effectManager = FindObjectOfType<EffectManager>();
         if (attackCircleManager != null)
         {
