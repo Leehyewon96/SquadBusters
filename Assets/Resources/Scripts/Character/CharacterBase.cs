@@ -64,12 +64,15 @@ public class CharacterBase : MonoBehaviour
 
     protected virtual void SetDead()
     {
-        //죽은 오브젝트 자리에 동전 생성
         isDead = true;
         attackCircle.UpdateIsUsed(false);
         attackCircle.SetActive(false);
         hpBar.UPdateIsUsed(false);
         hpBar.SetActive(false);
+
+        //죽은 오브젝트 자리에 동전 생성
+        GameManager.Instance.rewardManager.ShowCoin(characterStat.coin, transform.position);
+        GameManager.Instance.effectManager.SnowHit(transform.position);
 
         gameObject.SetActive(false);
     }
@@ -127,7 +130,6 @@ public class CharacterBase : MonoBehaviour
     {
         if(DetectedEnemies.Contains(target))
         {
-            Debug.Log($"{gameObject.name} : {target.name}");
             DetectedEnemies.Remove(target);
         }
     }

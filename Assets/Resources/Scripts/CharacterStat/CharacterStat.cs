@@ -6,8 +6,8 @@ public class CharacterStat : MonoBehaviour
     [SerializeField] private float maxHp = 100f;
     [SerializeField] private float attackRadius = 5f;
     private float currentHp = -1f;
-    private int coin = 0;
-    private int jewel = 0;
+    public int coin = 2;
+    public int jewel = 0;
 
 
     public delegate void OnCurrentHpChanged(float newHp);
