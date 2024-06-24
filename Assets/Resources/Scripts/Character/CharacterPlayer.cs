@@ -1,14 +1,19 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterPlayer : CharacterBase
+public class CharacterPlayer : CharacterBase, ICharacterItemInterface
 {
-    
+    public delegate void OnTakeItem();
+    public List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
 
     protected override void Awake()
     {
         base.Awake();
-        
+        OnTakeItem onTakeCoin = GainCoin;
+        takeItemActions.Add(onTakeCoin);
+        OnTakeItem onTakeGem = GainGem;
+        takeItemActions.Add(onTakeGem);
     }
 
     protected override void Start()
@@ -99,5 +104,20 @@ public class CharacterPlayer : CharacterBase
                 }
             }
         }
+    }
+
+    public virtual void TakeItem(ItemType itemType)
+    {
+        takeItemActions[(int)itemType].DynamicInvoke();
+    }
+
+    protected virtual void GainCoin()
+    {
+        Debug.Log("Coin");
+    }
+
+    protected virtual void GainGem()
+    {
+        Debug.Log("Gem");
     }
 }

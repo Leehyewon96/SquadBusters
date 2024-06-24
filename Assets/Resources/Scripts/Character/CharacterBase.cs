@@ -73,7 +73,7 @@ public class CharacterBase : MonoBehaviour
         //죽은 오브젝트 자리에 동전 생성
         GameManager.Instance.itemManager.ShowItem(characterStat.coin, transform.position, ItemType.Coin);
         GameManager.Instance.itemManager.ShowItem(characterStat.gem, transform.position, ItemType.Gem);
-        GameManager.Instance.effectManager.SnowHit(transform.position);
+        GameManager.Instance.effectManager.Explosion(transform.position);
 
         gameObject.SetActive(false);
     }
@@ -139,4 +139,5 @@ public class CharacterBase : MonoBehaviour
     {
         attackCircle.MoveAttackCircle(transform.position);
     }
+
 }

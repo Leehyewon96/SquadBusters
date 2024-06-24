@@ -8,5 +8,7 @@ public class AnimLocalize
 public class LayerLocalize
 {
     static public string enemy = "enemy";
+    static public string player = "player";
+    static public string item = "item";
 }
 

@@ -12,11 +12,11 @@ TagManager:
   - Water
   - UI
   - enemy
-  - 
-  - 
-  - 
-  - 
-  - 
+  - item
+  - Character
+  - player
+  - playerAttackCircle
+  - enemyAttackCircle
   - 
   - 
   - 

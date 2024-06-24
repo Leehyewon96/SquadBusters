@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    [SerializeField] private ItemType type = ItemType.None;
+    [SerializeField] private ItemType type = ItemType.Coin;
 
     public void SetActive(bool isActive)
     {
@@ -17,5 +17,14 @@ public class Item : MonoBehaviour
     public void UpdateItemType(ItemType newType)
     {
         type = newType;
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.layer == LayerMask.NameToLayer(LayerLocalize.player))
+        {
+            other.gameObject.GetComponent<ICharacterItemInterface>().TakeItem(type);
+            SetActive(false);
+        }
     }
 }

@@ -23,6 +23,8 @@ public class AttackCircle : MonoBehaviour
     public UnDetectEnemy onUnDetectEnemy;
     private SphereCollider sphereCollider = null;
 
+    private string postFixLayer = "AttackCircle";
+
     private void Awake()
     {
         sphereCollider = GetComponent<SphereCollider>();
@@ -55,12 +57,12 @@ public class AttackCircle : MonoBehaviour
 
     public void UpdateLayer(string layerName)
     {
-        gameObject.layer = LayerMask.NameToLayer(layerName);
+        gameObject.layer = LayerMask.NameToLayer(layerName + postFixLayer);
     }
 
     public void OnTriggerStay(Collider other)
     {
-        if (!other.gameObject.layer.Equals(gameObject.layer))
+        if (!other.gameObject.layer.Equals(gameObject.layer) && !other.gameObject.layer.Equals(LayerMask.NameToLayer(LayerLocalize.item)))
         {
             if (other.gameObject.TryGetComponent<AttackCircle>(out AttackCircle circle))
             {
@@ -76,7 +78,7 @@ public class AttackCircle : MonoBehaviour
 
     public void OnTriggerExit(Collider other)
     {
-        if (!other.gameObject.layer.Equals(gameObject.layer))
+        if (!other.gameObject.layer.Equals(gameObject.layer) && !other.gameObject.layer.Equals(LayerMask.NameToLayer(LayerLocalize.item)))
         {
             if (other.gameObject.TryGetComponent<AttackCircle>(out AttackCircle circle))
             {
