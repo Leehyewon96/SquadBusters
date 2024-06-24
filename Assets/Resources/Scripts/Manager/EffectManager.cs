@@ -4,6 +4,7 @@ public class EffectManager : MonoBehaviour
 {
     [SerializeField] private GameObject snowHit = null;
     [SerializeField] private GameObject explosion = null;
+    [SerializeField] private GameObject stoneHit = null;
 
     private void Awake()
     {
@@ -24,5 +25,13 @@ public class EffectManager : MonoBehaviour
         pos.y = 1.2f;
         explosion.gameObject.SetActive(true);
         explosion.GetComponent<ParticleSystem>().Play();
+    }
+
+    public void StoneHit(Vector3 pos)
+    {
+        stoneHit.transform.position = pos;
+        pos.y = 1.2f;
+        stoneHit.gameObject.SetActive(true);
+        stoneHit.GetComponent<ParticleSystem>().Play();
     }
 }

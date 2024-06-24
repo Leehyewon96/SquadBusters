@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -8,6 +9,7 @@ public class CharacterBase : MonoBehaviour
     protected HpBar hpBar = null;
 
     protected Animator animator = null;
+    protected RuntimeAnimatorController animatorController = null;
     protected Movement3D movement3D = null;
     protected CharacterStat characterStat = null;
     protected NavMeshAgent navMeshAgent = null;
@@ -26,6 +28,7 @@ public class CharacterBase : MonoBehaviour
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
+        animatorController = animator.runtimeAnimatorController;
         characterStat = GetComponent<CharacterStat>();
         movement3D = GetComponent<Movement3D>();
         navMeshAgent = GetComponent<NavMeshAgent>();

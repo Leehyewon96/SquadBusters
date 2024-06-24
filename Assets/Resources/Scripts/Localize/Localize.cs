@@ -3,6 +3,7 @@ public class AnimLocalize
     static public string moveSpeed = "moveSpeed";
     static public string contactEnemy = "contactEnemy";
     static public string dead = "dead";
+    static public string attack = "Attack";
 }
 
 public class LayerLocalize

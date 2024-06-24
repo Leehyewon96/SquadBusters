@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CharacterPlayer : CharacterBase, ICharacterItemInterface
@@ -82,9 +83,11 @@ public class CharacterPlayer : CharacterBase, ICharacterItemInterface
 
     protected virtual IEnumerator CoAttack(GameObject target)
     {
-        
         animator.SetBool(AnimLocalize.contactEnemy, true);
-       
+        AnimationClip clip = animatorController.animationClips.ToList().Find(anim => anim.name.Equals(AnimLocalize.attack));
+        attackTerm = new WaitForSecondsRealtime(clip.length);
+        Debug.Log(clip.length);
+
         while (true)
         {
             yield return attackTerm;
@@ -99,7 +102,7 @@ public class CharacterPlayer : CharacterBase, ICharacterItemInterface
             }
             if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
             {
-                GameManager.Instance.effectManager.SnowHit(target.transform.position);
+                GameManager.Instance.effectManager.StoneHit(target.transform.position);
                 targetObj.TakeDamage(attackDamage);
                 if (targetObj.isDead)
                 {
@@ -119,12 +122,10 @@ public class CharacterPlayer : CharacterBase, ICharacterItemInterface
     protected virtual void GainCoin()
     {
         characterStat.coin += 1;
-        Debug.Log("Coin");
     }
 
     protected virtual void GainGem()
     {
         characterStat.gem += 1;
-        Debug.Log("Gem");
     }
 }
