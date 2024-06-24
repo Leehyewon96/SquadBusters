@@ -82,11 +82,15 @@ public class CharacterPlayer : CharacterBase, ICharacterItemInterface
 
     protected virtual IEnumerator CoAttack(GameObject target)
     {
+        
         animator.SetBool(AnimLocalize.contactEnemy, true);
-        transform.LookAt(target.transform.position);
+       
         while (true)
         {
             yield return attackTerm;
+
+            transform.LookAt(target.transform.position);
+
             if (characterController.enabled) //캐릭터 상태로 판단하도록 변경하기
             {
                 animator.SetBool(AnimLocalize.contactEnemy, false);
@@ -95,6 +99,7 @@ public class CharacterPlayer : CharacterBase, ICharacterItemInterface
             }
             if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
             {
+                GameManager.Instance.effectManager.SnowHit(target.transform.position);
                 targetObj.TakeDamage(attackDamage);
                 if (targetObj.isDead)
                 {
@@ -113,11 +118,13 @@ public class CharacterPlayer : CharacterBase, ICharacterItemInterface
 
     protected virtual void GainCoin()
     {
+        characterStat.coin += 1;
         Debug.Log("Coin");
     }
 
     protected virtual void GainGem()
     {
+        characterStat.gem += 1;
         Debug.Log("Gem");
     }
 }

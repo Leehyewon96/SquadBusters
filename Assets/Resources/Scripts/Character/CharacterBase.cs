@@ -16,7 +16,7 @@ public class CharacterBase : MonoBehaviour
     protected float attackRange = 2f;
     protected float attackRadius = 1f;
     [SerializeField] protected float attackDamage = 30f;
-    protected WaitForSecondsRealtime attackTerm = new WaitForSecondsRealtime(1.5f);
+    protected WaitForSecondsRealtime attackTerm = new WaitForSecondsRealtime(0.933f);
     protected bool isAttacking = false; // CharacterStat안에 있어야 되나?
     public bool isDead { get; protected set; } = false;
 
