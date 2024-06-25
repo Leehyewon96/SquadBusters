@@ -19,7 +19,7 @@ public class Item : MonoBehaviour
         type = newType;
     }
 
-    public void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.layer == LayerMask.NameToLayer(LayerLocalize.player))
         {

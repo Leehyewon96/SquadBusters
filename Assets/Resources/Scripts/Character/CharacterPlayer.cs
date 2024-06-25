@@ -7,6 +7,8 @@ public class CharacterPlayer : CharacterBase, ICharacterItemInterface
 {
     public delegate void OnTakeItem();
     public List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
+    public List<GameObject> units = new List<GameObject>();
+    
 
     protected override void Awake()
     {
@@ -15,6 +17,8 @@ public class CharacterPlayer : CharacterBase, ICharacterItemInterface
         takeItemActions.Add(onTakeCoin);
         OnTakeItem onTakeGem = GainGem;
         takeItemActions.Add(onTakeGem);
+        OnTakeItem onTakeTreasureBox = GainTreasureBox;
+        takeItemActions.Add(onTakeTreasureBox);
     }
 
     protected override void Start()
@@ -33,7 +37,7 @@ public class CharacterPlayer : CharacterBase, ICharacterItemInterface
             DetectedEnemies.Clear();
             animator.SetBool(AnimLocalize.contactEnemy, false);
             navMeshAgent.SetDestination(transform.position);
-            MoveAttackCircle();
+            //MoveAttackCircle();
             Move();
         }
         else
@@ -44,6 +48,7 @@ public class CharacterPlayer : CharacterBase, ICharacterItemInterface
             }
         }
     }
+
 
     protected virtual void Move()
     {
@@ -127,5 +132,15 @@ public class CharacterPlayer : CharacterBase, ICharacterItemInterface
     protected virtual void GainGem()
     {
         characterStat.gem += 1;
+    }
+
+    protected virtual void GainTreasureBox()
+    {
+        Vector3 pos = Vector3.zero;
+        float x = Random.Range(-characterStat.GetAttackRadius(), characterStat.GetAttackRadius());
+        float z = Random.Range(0, Mathf.Pow(characterStat.GetAttackRadius(), 2) - Mathf.Pow(x, 2));
+        pos.x = x + attackCircle.gameObject.transform.position.x;//Random.Range(transform.position.x - 0.1f, transform.position.x + 0.1f);
+        pos.z = Random.Range(-Mathf.Sqrt(z), Mathf.Sqrt(z)) + attackCircle.gameObject.transform.position.z;//Random.Range(transform.position.z - 0.1f, transform.position.z + 0.1f);
+        GameObject player = GameManager.Instance.Spawn(pos);
     }
 }

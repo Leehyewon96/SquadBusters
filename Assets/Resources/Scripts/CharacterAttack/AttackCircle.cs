@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AttackCircle : MonoBehaviour
@@ -11,9 +13,9 @@ public class AttackCircle : MonoBehaviour
 
         End,
     }
+    
+    private List<GameObject> owners = new List<GameObject>();
 
-
-    [SerializeField] public GameObject owner = null;
     public bool isUsed { get; private set; } = false;
     public circleType type = circleType.None;
 
@@ -30,6 +32,11 @@ public class AttackCircle : MonoBehaviour
         sphereCollider = GetComponent<SphereCollider>();
     }
 
+    private void Update()
+    {
+        MoveAttackCircle(owners.FirstOrDefault().transform.position);
+    }
+
     public void SetActive(bool isActive)
     {
         gameObject.SetActive(isActive);
@@ -40,9 +47,12 @@ public class AttackCircle : MonoBehaviour
         isUsed = used;
     }
 
-    public void UpdateOwner(GameObject newOwner)
+    public void UpdateOwners(GameObject newOwner)
     {
-        owner = newOwner;
+        if(!owners.Contains(newOwner))
+        {
+            owners.Add(newOwner);
+        }
     }
 
     public void UpdateRadius(float newRadius)
@@ -66,13 +76,19 @@ public class AttackCircle : MonoBehaviour
         {
             if (other.gameObject.TryGetComponent<AttackCircle>(out AttackCircle circle))
             {
+                foreach(var owner in circle.owners)
+                {
+                    if (onDetectEnemy != null)
+                    {
+                        onDetectEnemy.Invoke(owner);
+                    }
+                }
                 
-                if (onDetectEnemy != null)
+                /*if (onDetectEnemy != null)
                 {
                     onDetectEnemy.Invoke(circle.owner);
-                }
+                }*/
             }
-            
         }
     }
 
@@ -82,10 +98,17 @@ public class AttackCircle : MonoBehaviour
         {
             if (other.gameObject.TryGetComponent<AttackCircle>(out AttackCircle circle))
             {
-                if (onUnDetectEnemy != null)
+                foreach (var owner in circle.owners)
+                {
+                    if (onUnDetectEnemy != null)
+                    {
+                        onUnDetectEnemy.Invoke(owner);
+                    }
+                }
+                /*if (onUnDetectEnemy != null)
                 {
                     onUnDetectEnemy.Invoke(circle.owner);
-                }
+                }*/
             }
 
         }

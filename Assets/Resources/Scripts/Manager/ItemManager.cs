@@ -6,6 +6,7 @@ public enum ItemType
 { 
     Coin,
     Gem,
+    TreasureBox,
 
     End,
 }

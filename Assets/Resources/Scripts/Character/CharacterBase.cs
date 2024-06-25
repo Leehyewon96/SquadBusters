@@ -23,6 +23,7 @@ public class CharacterBase : MonoBehaviour
     public bool isDead { get; protected set; } = false;
 
     protected List<GameObject> DetectedEnemies = new List<GameObject>();
+    public Vector3 offsetPos = Vector3.zero;
 
 
     protected virtual void Awake()
@@ -48,13 +49,13 @@ public class CharacterBase : MonoBehaviour
         characterStat.onAttackRadiusChanged += attackCircle.UpdateRadius;
         attackCircle.onDetectEnemy += UpdateEnemyList;
         attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
-        attackCircle.UpdateOwner(gameObject);
+        attackCircle.UpdateOwners(gameObject);
         attackCircle.UpdateLayer(LayerMask.LayerToName(gameObject.layer));
     }
 
     protected virtual void Update()
     {
-        attackCircle.MoveAttackCircle(transform.position);
+        //attackCircle.MoveAttackCircle(transform.position);
         hpBar.UpdatePos(transform.position + new Vector3(0, characterController.height + 0.5f, 0));
         //업데이트용 이벤트 하나 생성 후 상속받는 클래스에서 Start에서 다 등록.
         //여기서 업데이트용 이벤트 계속 Invoke하기(상속받는 클래스에는 Update 작성 X)
@@ -109,8 +110,9 @@ public class CharacterBase : MonoBehaviour
         if (target == gameObject)
         {
             StopAllCoroutines(); //StopAttack같은 이벤트나 함수로 고치기
-            animator.SetFloat(AnimLocalize.moveSpeed, 0);
+            animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
             animator.SetBool(AnimLocalize.contactEnemy, false);
+            navMeshAgent.SetDestination(attackCircle.transform.position + offsetPos);
             return;
         }
 

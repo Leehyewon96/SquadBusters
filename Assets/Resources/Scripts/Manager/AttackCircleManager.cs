@@ -40,8 +40,11 @@ public class AttackCircleManager : MonoBehaviour
         }
 
         circle.SetActive(true);
-        circle.UpdateIsUsed(true);
-
+        if(inType == AttackCircle.circleType.NPC)
+        {
+            circle.UpdateIsUsed(true);
+        }
+        
         return circle;
     }
 }

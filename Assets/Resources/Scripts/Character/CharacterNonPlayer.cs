@@ -14,7 +14,7 @@ public class CharacterNonPlayer : CharacterBase
     {
         base.Update();
         MoveToEnemy();
-        MoveAttackCircle();
+        //MoveAttackCircle();
 
     }
 

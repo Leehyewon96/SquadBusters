@@ -1,5 +1,11 @@
-using Unity.VisualScripting;
 using UnityEngine;
+
+public enum CharacterType
+{ 
+    ElPrimo,
+    Babarian,
+}
+
 
 public class GameManager : MonoBehaviour
 {
@@ -8,6 +14,8 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public AttackCircleManager attackCircleManager = null;
     [HideInInspector] public ItemManager itemManager = null;
     [HideInInspector] public EffectManager effectManager = null;
+
+    [SerializeField] private GameObject player = null;
 
     public static GameManager Instance
     {
@@ -71,5 +79,8 @@ public class GameManager : MonoBehaviour
 
     }
 
-
+    public GameObject Spawn(Vector3 pos)
+    {
+        return Instantiate(player, pos, Quaternion.identity);
+    }
 }
