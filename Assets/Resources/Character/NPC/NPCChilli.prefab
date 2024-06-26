@@ -360,6 +360,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHp: 70
   attackRadius: 5
+  coin: 0
+  gem: 0
 --- !u!114 &2656522768901584192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -373,6 +375,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackDamage: 5
+  offsetPos: {x: 0, y: 0, z: 0}
+  characterType: 4
 --- !u!114 &2656522768901584193
 MonoBehaviour:
   m_ObjectHideFlags: 0

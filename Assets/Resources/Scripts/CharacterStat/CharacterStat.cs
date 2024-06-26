@@ -29,6 +29,12 @@ public class CharacterStat : MonoBehaviour
     public float GetMaxHp() { return maxHp; }
     public float GetAttackRadius() { return attackRadius; }
 
+    public void Init()
+    {
+        maxHp = 100.0f;
+        currentHp = maxHp;
+    }
+
     public void ApplyDamage(float inDamage)
     {
         currentHp = Mathf.Clamp(currentHp - inDamage, 0, maxHp);

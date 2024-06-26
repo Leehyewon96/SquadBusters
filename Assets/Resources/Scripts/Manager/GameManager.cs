@@ -1,11 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-
-public enum CharacterType
-{ 
-    ElPrimo,
-    Babarian,
-}
-
 
 public class GameManager : MonoBehaviour
 {
@@ -16,7 +12,9 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public EffectManager effectManager = null;
 
     [SerializeField] private GameObject player = null;
-    [SerializeField] private AttackCircle attackCircle = null;
+
+    public GameObject NPCParent = null;
+    [HideInInspector] public List<GameObject> NPCPool = new List<GameObject>();
 
     public static GameManager Instance
     {
@@ -44,11 +42,13 @@ public class GameManager : MonoBehaviour
         }
 
         InitGame();
+
+        //SpawnPoses = FindObjectOfType<Spawn>
     }
 
     public void Start()
     {
-        SpawnCharacter();
+        SpawnCharacter(Vector3.zero, CharacterType.ElPrimo);
     }
 
     public void InitGame()
@@ -62,19 +62,20 @@ public class GameManager : MonoBehaviour
             attackCircleManager.InitAttackCircles();
         }
 
-        
-        
+        List<CharacterNonPlayer> NPCTemp = NPCParent.GetComponentsInChildren<CharacterNonPlayer>(true).ToList();
+
+        NPCTemp.ForEach(n => NPCPool.Add(n.gameObject));
     }
 
-    public void SpawnCharacter()
+    //게임시작시 최초로 AttackCircle, Player 스폰시키는 함수
+    public void SpawnCharacter(Vector3 pos, CharacterType chartype)
     {
-        //AttackCircle (플레이어) 스폰
-        GameObject newPlayer = SpawnPlayer(Vector3.zero);
+        CharacterBase newPlayer = SpawnPlayer(pos, chartype);
         AttackCircle circle = attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
         Camera.main.GetComponent<CameraFollow>().SetTarget(circle.gameObject);
         circle.UpdateLayer(LayerLocalize.playerAttackCircle);
         circle.UpdateOwners(newPlayer);
-        circle.UpdateRadius(4f);
+        circle.UpdateRadius(4f); // Localize 시키기
     }
 
     public void PauseGame()
@@ -97,8 +98,12 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public GameObject SpawnPlayer(Vector3 pos)
+    public CharacterBase SpawnPlayer(Vector3 pos, CharacterType charType)
     {
-        return Instantiate(player, pos, Quaternion.identity);
+        GameObject character = Instantiate(player, pos, Quaternion.identity);
+        CharacterBase characterBase = character.GetComponent<CharacterBase>();
+        characterBase.SetCharacterType(charType);
+        effectManager.AttachStarAura(character);
+        return characterBase;
     }
 }

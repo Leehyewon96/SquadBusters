@@ -64,12 +64,12 @@ public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface
         return false;
     }
 
-    protected override void UpdateEnemyList(GameObject target)
+    protected override void UpdateEnemyList(CharacterBase target)
     {
-        if (!DetectedEnemies.Contains(target)
+        if (!DetectedEnemies.Contains(target.gameObject)
             && Vector3.Distance(target.transform.position, transform.position) <= characterStat.GetAttackRadius())
         {
-            DetectedEnemies.Add(target);
+            DetectedEnemies.Add(target.gameObject);
         }
     }
 
@@ -84,7 +84,6 @@ public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface
         animator.SetBool(AnimLocalize.contactEnemy, true);
         AnimationClip clip = animatorController.animationClips.ToList().Find(anim => anim.name.Equals(AnimLocalize.attack));
         attackTerm = new WaitForSecondsRealtime(clip.length);
-        Debug.Log(clip.length);
 
         while (true)
         {

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,15 +15,15 @@ public class AttackCircle : MonoBehaviour
         End,
     }
     
-    private List<GameObject> owners = new List<GameObject>();
+    private List<CharacterBase> owners = new List<CharacterBase>();
     private AttackCircleStat attackCircleStat = null;
 
     public bool isUsed { get; private set; } = false;
     public circleType type = circleType.None;
 
-    public delegate void DetectEnemy(GameObject target);
+    public delegate void DetectEnemy(CharacterBase target);
     public DetectEnemy onDetectEnemy;
-    public delegate void UnDetectEnemy(GameObject target);
+    public delegate void UnDetectEnemy(CharacterBase target);
     public UnDetectEnemy onUnDetectEnemy;
 
     private SphereCollider sphereCollider = null;
@@ -52,15 +53,37 @@ public class AttackCircle : MonoBehaviour
         isUsed = used;
     }
 
-    public void UpdateOwners(GameObject newOwner)
+    public void UpdateOwners(CharacterBase newOwner)
     {
         if(!owners.Contains(newOwner))
         {
             owners.Add(newOwner);
         }
+
+        //머지할 수 있는지 검사
+        List<CharacterBase> chars = owners.FindAll(o => o.GetCharacterType() == newOwner.GetCharacterType()).ToList();
+        if(chars.Count < 3)
+        {
+            return;
+        }
+
+        
+        StartCoroutine(CoMergeCharacter(chars, newOwner.transform.position));
     }
 
-    public void RemoveOwner(GameObject inOwner)
+    private IEnumerator CoMergeCharacter(List<CharacterBase> chars, Vector3 pos)
+    {
+        yield return new WaitForSeconds(0.7f);
+        SpawnPlayer(CharacterType.ElPrimo2);
+        foreach (var ch in chars)
+        {
+            ch.SetDead();
+        }
+
+        owners.LastOrDefault().transform.position = pos;
+    }
+
+    public void RemoveOwner(CharacterBase inOwner)
     {
         if (owners.Contains(inOwner))
         {
@@ -117,11 +140,6 @@ public class AttackCircle : MonoBehaviour
                         onDetectEnemy.Invoke(owner);
                     }
                 }
-                
-                /*if (onDetectEnemy != null)
-                {
-                    onDetectEnemy.Invoke(circle.owner);
-                }*/
             }
         }
     }
@@ -139,10 +157,6 @@ public class AttackCircle : MonoBehaviour
                         onUnDetectEnemy.Invoke(owner);
                     }
                 }
-                /*if (onUnDetectEnemy != null)
-                {
-                    onUnDetectEnemy.Invoke(circle.owner);
-                }*/
             }
 
         }
@@ -170,12 +184,17 @@ public class AttackCircle : MonoBehaviour
 
     public void GainTreasureBox()
     {
+        SpawnPlayer(CharacterType.ElPrimo);
+    }
+
+    private void SpawnPlayer(CharacterType newType)
+    {
         Vector3 pos = Vector3.zero;
         float x = Random.Range(-attackCircleStat.attackRadius, attackCircleStat.attackRadius);
         float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
-        pos.x = x + transform.position.x;//Random.Range(transform.position.x - 0.1f, transform.position.x + 0.1f);
-        pos.z = Random.Range(-Mathf.Sqrt(z), Mathf.Sqrt(z)) + transform.position.z;//Random.Range(transform.position.z - 0.1f, transform.position.z + 0.1f);
-        GameObject player = GameManager.Instance.SpawnPlayer(pos);
+        pos.x = x + transform.position.x;
+        pos.z = Random.Range(-Mathf.Sqrt(z), Mathf.Sqrt(z)) + transform.position.z;
+        CharacterBase player = GameManager.Instance.SpawnPlayer(pos, newType);
         UpdateOwners(player);
     }
 }

@@ -11,14 +11,18 @@ public class CameraFollow : MonoBehaviour
     private Vector3 offsetVec = Vector3.zero;
    
 
-    private void Awake()
+    private void Start()
     {
         cam = Camera.main;
-        offsetVec = cam.transform.position - target.transform.position;
     }
 
     private void Update()
     {
+        if(target == null)
+        {
+            return;
+        }
+
         FollowTarget();
     }
 
@@ -31,5 +35,7 @@ public class CameraFollow : MonoBehaviour
     public void SetTarget(GameObject inTarget)
     {
         target = inTarget;
+        offsetVec = cam.transform.position - target.transform.position;
     }
+
 }

@@ -1,8 +1,17 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
+
+public enum CharacterType
+{
+    ElPrimo,
+    ElPrimo2,
+    Babarian,
+
+    Eggy,
+    Chilli,
+    Kiwi,
+}
 
 public class CharacterBase : MonoBehaviour
 {
@@ -25,6 +34,7 @@ public class CharacterBase : MonoBehaviour
 
     protected List<GameObject> DetectedEnemies = new List<GameObject>();
     public Vector3 offsetPos = Vector3.zero;
+    [SerializeField] protected CharacterType characterType = CharacterType.ElPrimo;
 
 
     protected virtual void Awake()
@@ -38,10 +48,10 @@ public class CharacterBase : MonoBehaviour
     }
 
     protected virtual void Start()
-    { 
+    {
         hpBar.SetMaxHp(characterStat.GetMaxHp());
         hpBar.UpdateCurrentHp(characterStat.GetCurrentHp());
-        
+
         characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
         characterStat.onCurrentHpZero += SetDead;
 
@@ -49,7 +59,6 @@ public class CharacterBase : MonoBehaviour
         attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
         attackCircle.SetCoin(characterStat.coin);
         attackCircle.SetGem(characterStat.gem);
-
     }
 
     protected virtual void Update()
@@ -58,6 +67,34 @@ public class CharacterBase : MonoBehaviour
         hpBar.UpdatePos(transform.position + new Vector3(0, characterController.height + 0.5f, 0));
         //업데이트용 이벤트 하나 생성 후 상속받는 클래스에서 Start에서 다 등록.
         //여기서 업데이트용 이벤트 계속 Invoke하기(상속받는 클래스에는 Update 작성 X)
+    }
+
+    public virtual void Init()
+    {
+        hpBar.SetMaxHp(characterStat.GetMaxHp());
+        hpBar.UpdateCurrentHp(characterStat.GetCurrentHp());
+
+        characterStat.onCurrentHpChanged -= hpBar.UpdateCurrentHp;
+        characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
+        characterStat.onCurrentHpZero -= SetDead;
+        characterStat.onCurrentHpZero += SetDead;
+
+        attackCircle.onDetectEnemy -= UpdateEnemyList;
+        attackCircle.onDetectEnemy += UpdateEnemyList;
+        attackCircle.onUnDetectEnemy -= OnUnDetectEnemy;
+        attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
+        attackCircle.SetCoin(characterStat.coin);
+        attackCircle.SetGem(characterStat.gem);
+    }
+
+    public virtual void SetCharacterType(CharacterType type)
+    {
+        characterType = type;
+    }
+
+    public virtual CharacterType GetCharacterType()
+    {
+        return characterType;
     }
 
     public virtual void TakeDamage(float inDamage)
@@ -69,20 +106,20 @@ public class CharacterBase : MonoBehaviour
         characterStat.ApplyDamage(inDamage);
     }
 
-    protected virtual void SetDead()
+    public virtual void SetDead()
     {
         isDead = true;
         hpBar.UPdateIsUsed(false);
         hpBar.SetActive(false);
-        attackCircle.RemoveOwner(gameObject);
+        attackCircle.RemoveOwner(this);
         gameObject.SetActive(false);
     }
 
-    protected virtual void UpdateEnemyList(GameObject target)
+    protected virtual void UpdateEnemyList(CharacterBase target)
     {
-        if (!DetectedEnemies.Contains(target))
+        if (!DetectedEnemies.Contains(target.gameObject))
         {
-            DetectedEnemies.Add(target);
+            DetectedEnemies.Add(target.gameObject);
         }
     }
 
@@ -128,11 +165,11 @@ public class CharacterBase : MonoBehaviour
 
     }
 
-    protected virtual void OnUnDetectEnemy(GameObject target)
+    protected virtual void OnUnDetectEnemy(CharacterBase target)
     {
-        if(DetectedEnemies.Contains(target))
+        if(DetectedEnemies.Contains(target.gameObject))
         {
-            DetectedEnemies.Remove(target);
+            DetectedEnemies.Remove(target.gameObject);
         }
     }
 }
