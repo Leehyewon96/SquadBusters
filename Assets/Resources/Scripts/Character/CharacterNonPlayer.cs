@@ -47,16 +47,4 @@ public class CharacterNonPlayer : CharacterBase
         }
     }
 
-    protected override void SetDead()
-    {
-        attackCircle.UpdateIsUsed(false);
-        attackCircle.SetActive(false);
-
-        //죽은 오브젝트 자리에 동전 생성
-        GameManager.Instance.itemManager.ShowItem(characterStat.coin, transform.position, ItemType.Coin);
-        GameManager.Instance.itemManager.ShowItem(characterStat.gem, transform.position, ItemType.Gem);
-        GameManager.Instance.effectManager.Explosion(transform.position);
-
-        base.SetDead();
-    }
 }

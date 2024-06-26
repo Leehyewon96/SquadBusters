@@ -6,9 +6,9 @@ public class CharacterStat : MonoBehaviour
     [SerializeField] private float maxHp = 100f;
     [SerializeField] private float attackRadius = 5f;
     private float currentHp = -1f;
-    public int coin = 2;
-    public int gem = 0;
 
+    public int coin = 0;
+    public int gem = 0;
 
     public delegate void OnCurrentHpChanged(float newHp);
     public delegate void OnCurrentHpZero();
@@ -31,11 +31,6 @@ public class CharacterStat : MonoBehaviour
 
     public void ApplyDamage(float inDamage)
     {
-        if(currentHp <= 0)
-        {
-            return;
-        }
-
         currentHp = Mathf.Clamp(currentHp - inDamage, 0, maxHp);
 
         if(onCurrentHpChanged != null)

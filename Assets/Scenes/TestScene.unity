@@ -382,7 +382,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &470212927
 Transform:
   m_ObjectHideFlags: 0
@@ -2199,7 +2199,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1697644304
 Transform:
   m_ObjectHideFlags: 0
@@ -3656,7 +3656,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2656522768908863118, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2656522768908863120, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: m_Layer
@@ -3921,7 +3921,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4972546740958827131, guid: 1ed532e50cbb4e440bbc9682b30e70ed, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4972546740958827133, guid: 1ed532e50cbb4e440bbc9682b30e70ed, type: 3}
       propertyPath: m_Layer
@@ -4538,7 +4538,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHp: 100
   attackRadius: 4
-  coin: 2
+  coin: 0
   gem: 0
 --- !u!114 &7907194102984880067
 MonoBehaviour:
@@ -4917,7 +4917,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5943084131390111174, guid: 738ac756286d9f24aa0720ba79edd72d, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5943084131390111176, guid: 738ac756286d9f24aa0720ba79edd72d, type: 3}
       propertyPath: m_Layer

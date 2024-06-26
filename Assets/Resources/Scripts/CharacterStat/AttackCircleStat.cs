@@ -4,8 +4,8 @@ using UnityEngine;
 public class AttackCircleStat : MonoBehaviour
 {
     private List<GameObject> units = new List<GameObject>();
-    [HideInInspector] public int coin = 0;
-    [HideInInspector] public int gem = 0;
+    public int coin = 0;
+    public int gem = 0;
 
     public float attackRadius = 2f;
 

@@ -66,6 +66,22 @@ public class AttackCircle : MonoBehaviour
         {
             owners.Remove(inOwner);
         }
+
+        if(owners.Count == 0)
+        {
+            SetDead();
+        }
+    }
+
+    private void SetDead()
+    {
+        //죽은 오브젝트 자리에 동전 생성
+        GameManager.Instance.itemManager.ShowItem(attackCircleStat.coin, transform.position, ItemType.Coin);
+        GameManager.Instance.itemManager.ShowItem(attackCircleStat.gem, transform.position, ItemType.Gem);
+        GameManager.Instance.effectManager.Explosion(transform.position);
+
+        UpdateIsUsed(false);
+        SetActive(false);
     }
 
     public void UpdateRadius(float newRadius)
@@ -130,6 +146,16 @@ public class AttackCircle : MonoBehaviour
             }
 
         }
+    }
+
+    public void SetCoin(int cnt)
+    {
+        attackCircleStat.coin = cnt;
+    }
+
+    public void SetGem(int cnt)
+    {
+        attackCircleStat.gem = cnt;
     }
 
     public void GainCoin()

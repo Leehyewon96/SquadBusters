@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.AI;
@@ -46,6 +47,9 @@ public class CharacterBase : MonoBehaviour
 
         attackCircle.onDetectEnemy += UpdateEnemyList;
         attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
+        attackCircle.SetCoin(characterStat.coin);
+        attackCircle.SetGem(characterStat.gem);
+
     }
 
     protected virtual void Update()
@@ -58,16 +62,19 @@ public class CharacterBase : MonoBehaviour
 
     public virtual void TakeDamage(float inDamage)
     {
+        if(isDead)
+        {
+            return;
+        }
         characterStat.ApplyDamage(inDamage);
     }
 
     protected virtual void SetDead()
     {
         isDead = true;
-        attackCircle.RemoveOwner(gameObject);
         hpBar.UPdateIsUsed(false);
         hpBar.SetActive(false);
-
+        attackCircle.RemoveOwner(gameObject);
         gameObject.SetActive(false);
     }
 
