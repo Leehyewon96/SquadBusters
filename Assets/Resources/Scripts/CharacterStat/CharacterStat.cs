@@ -31,6 +31,11 @@ public class CharacterStat : MonoBehaviour
 
     public void ApplyDamage(float inDamage)
     {
+        if(currentHp <= 0)
+        {
+            return;
+        }
+
         currentHp = Mathf.Clamp(currentHp - inDamage, 0, maxHp);
 
         if(onCurrentHpChanged != null)

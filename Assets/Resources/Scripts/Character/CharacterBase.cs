@@ -34,7 +34,6 @@ public class CharacterBase : MonoBehaviour
         movement3D = GetComponent<Movement3D>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         characterController = GetComponent<CharacterController>();
-        //attackCircle = 
     }
 
     protected virtual void Start()
@@ -45,12 +44,8 @@ public class CharacterBase : MonoBehaviour
         characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
         characterStat.onCurrentHpZero += SetDead;
 
-        attackCircle.UpdateRadius(characterStat.GetAttackRadius());
-        characterStat.onAttackRadiusChanged += attackCircle.UpdateRadius;
         attackCircle.onDetectEnemy += UpdateEnemyList;
         attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
-        attackCircle.UpdateOwners(gameObject);
-        attackCircle.UpdateLayer(LayerMask.LayerToName(gameObject.layer));
     }
 
     protected virtual void Update()
@@ -69,22 +64,16 @@ public class CharacterBase : MonoBehaviour
     protected virtual void SetDead()
     {
         isDead = true;
-        attackCircle.UpdateIsUsed(false);
-        attackCircle.SetActive(false);
+        attackCircle.RemoveOwner(gameObject);
         hpBar.UPdateIsUsed(false);
         hpBar.SetActive(false);
-
-        //죽은 오브젝트 자리에 동전 생성
-        GameManager.Instance.itemManager.ShowItem(characterStat.coin, transform.position, ItemType.Coin);
-        GameManager.Instance.itemManager.ShowItem(characterStat.gem, transform.position, ItemType.Gem);
-        GameManager.Instance.effectManager.Explosion(transform.position);
 
         gameObject.SetActive(false);
     }
 
     protected virtual void UpdateEnemyList(GameObject target)
     {
-        if(!DetectedEnemies.Contains(target))
+        if (!DetectedEnemies.Contains(target))
         {
             DetectedEnemies.Add(target);
         }
@@ -139,10 +128,4 @@ public class CharacterBase : MonoBehaviour
             DetectedEnemies.Remove(target);
         }
     }
-
-    protected virtual void MoveAttackCircle()
-    {
-        attackCircle.MoveAttackCircle(transform.position);
-    }
-
 }

@@ -15,6 +15,7 @@ public class AttackCircle : MonoBehaviour
     }
     
     private List<GameObject> owners = new List<GameObject>();
+    private AttackCircleStat attackCircleStat = null;
 
     public bool isUsed { get; private set; } = false;
     public circleType type = circleType.None;
@@ -23,6 +24,7 @@ public class AttackCircle : MonoBehaviour
     public DetectEnemy onDetectEnemy;
     public delegate void UnDetectEnemy(GameObject target);
     public UnDetectEnemy onUnDetectEnemy;
+
     private SphereCollider sphereCollider = null;
 
     private string postFixLayer = "AttackCircle";
@@ -30,11 +32,14 @@ public class AttackCircle : MonoBehaviour
     private void Awake()
     {
         sphereCollider = GetComponent<SphereCollider>();
+        attackCircleStat = GetComponent<AttackCircleStat>();
     }
+
 
     private void Update()
     {
-        MoveAttackCircle(owners.FirstOrDefault().transform.position);
+        MoveAttackCircle();
+
     }
 
     public void SetActive(bool isActive)
@@ -55,19 +60,32 @@ public class AttackCircle : MonoBehaviour
         }
     }
 
+    public void RemoveOwner(GameObject inOwner)
+    {
+        if (owners.Contains(inOwner))
+        {
+            owners.Remove(inOwner);
+        }
+    }
+
     public void UpdateRadius(float newRadius)
     {
         transform.localScale = Vector3.one * newRadius * 2; // 콜라이더의 반지름이 아닌 전체 구 오브젝트의 지름이라서 *2
     }
 
-    public void MoveAttackCircle(Vector3 newPos)
+    public void MoveAttackCircle()
     {
-        transform.position = newPos;
+        if(owners.Count == 0)
+        {
+            return;
+        }
+
+        transform.position = owners.FirstOrDefault().transform.position;
     }
 
     public void UpdateLayer(string layerName)
     {
-        gameObject.layer = LayerMask.NameToLayer(layerName + postFixLayer);
+        gameObject.layer = LayerMask.NameToLayer(layerName);
     }
 
     public void OnTriggerStay(Collider other)
@@ -112,5 +130,25 @@ public class AttackCircle : MonoBehaviour
             }
 
         }
+    }
+
+    public void GainCoin()
+    {
+        attackCircleStat.coin += 1;
+    }
+
+    public void GainGem()
+    {
+        attackCircleStat.gem += 1;
+    }
+
+    public void GainTreasureBox()
+    {
+        Vector3 pos = Vector3.zero;
+        float x = Random.Range(-attackCircleStat.attackRadius, attackCircleStat.attackRadius);
+        float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
+        pos.x = x + transform.position.x;//Random.Range(transform.position.x - 0.1f, transform.position.x + 0.1f);
+        pos.z = Random.Range(-Mathf.Sqrt(z), Mathf.Sqrt(z)) + transform.position.z;//Random.Range(transform.position.z - 0.1f, transform.position.z + 0.1f);
+        GameObject player = GameManager.Instance.SpawnPlayer(pos);
     }
 }

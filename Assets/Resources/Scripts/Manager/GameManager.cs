@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public EffectManager effectManager = null;
 
     [SerializeField] private GameObject player = null;
+    [SerializeField] private AttackCircle attackCircle = null;
 
     public static GameManager Instance
     {
@@ -45,6 +46,11 @@ public class GameManager : MonoBehaviour
         InitGame();
     }
 
+    public void Start()
+    {
+        SpawnCharacter();
+    }
+
     public void InitGame()
     {
         hpBarManager = FindObjectOfType<HpBarManager>();
@@ -57,6 +63,18 @@ public class GameManager : MonoBehaviour
         }
 
         
+        
+    }
+
+    public void SpawnCharacter()
+    {
+        //AttackCircle (플레이어) 스폰
+        GameObject newPlayer = SpawnPlayer(Vector3.zero);
+        Camera.main.GetComponent<CameraFollow>().SetTarget(newPlayer);
+        AttackCircle circle = attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
+        circle.UpdateLayer(LayerLocalize.playerAttackCircle);
+        circle.UpdateOwners(newPlayer);
+        circle.UpdateRadius(4f);
     }
 
     public void PauseGame()
@@ -79,7 +97,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public GameObject Spawn(Vector3 pos)
+    public GameObject SpawnPlayer(Vector3 pos)
     {
         return Instantiate(player, pos, Quaternion.identity);
     }

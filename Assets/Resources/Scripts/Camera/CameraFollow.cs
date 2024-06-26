@@ -27,4 +27,9 @@ public class CameraFollow : MonoBehaviour
         fixedPos = offsetVec + target.transform.position;
         cam.transform.position = Vector3.Lerp(cam.transform.position, fixedPos, Time.deltaTime * delayTime);
     }
+
+    public void SetTarget(GameObject inTarget)
+    {
+        target = inTarget;
+    }
 }

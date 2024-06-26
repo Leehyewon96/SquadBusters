@@ -375,6 +375,7 @@ GameObject:
   - component: {fileID: 470212930}
   - component: {fileID: 470212929}
   - component: {fileID: 470212928}
+  - component: {fileID: 470212933}
   m_Layer: 0
   m_Name: PlayerAttackCircle
   m_TagString: Untagged
@@ -426,7 +427,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a2ed2300f67c3c49afa49d59dc69b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: {fileID: 0}
   type: 1
 --- !u!135 &470212930
 SphereCollider:
@@ -491,6 +491,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 470212926}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &470212933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470212926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7274f35cf4d9dd445ad99fb059865d07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coin: 0
+  gem: 0
+  attackRadius: 4
 --- !u!1001 &486009479
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1069,6 +1084,10 @@ PrefabInstance:
     - target: {fileID: 2700314720743621606, guid: 4186091d41e6c554ab7336e563dc5c93, type: 3}
       propertyPath: m_Name
       value: PlayerHpBarCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 2700314720743621606, guid: 4186091d41e6c554ab7336e563dc5c93, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6609399603902838851, guid: 4186091d41e6c554ab7336e563dc5c93, type: 3}
@@ -1661,6 +1680,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: NPCHpBarCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 3986196816743314551, guid: 3aedfc92fec4ff047b1eb048a8cf5356, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3769325729774371739, guid: 3aedfc92fec4ff047b1eb048a8cf5356, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3aedfc92fec4ff047b1eb048a8cf5356, type: 3}
@@ -1979,6 +2002,7 @@ MonoBehaviour:
   itemManager: {fileID: 0}
   effectManager: {fileID: 0}
   player: {fileID: 5625394804606533146, guid: 36a67e01665fc3b4685a591258780369, type: 3}
+  attackCircle: {fileID: 0}
 --- !u!4 &1293282101
 Transform:
   m_ObjectHideFlags: 0
@@ -2168,6 +2192,7 @@ GameObject:
   - component: {fileID: 1697644307}
   - component: {fileID: 1697644306}
   - component: {fileID: 1697644305}
+  - component: {fileID: 1697644310}
   m_Layer: 0
   m_Name: NPCAttackCircle
   m_TagString: Untagged
@@ -2218,7 +2243,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a2ed2300f67c3c49afa49d59dc69b05, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  owner: {fileID: 0}
   type: 2
 --- !u!135 &1697644307
 SphereCollider:
@@ -2283,6 +2307,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1697644303}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1697644310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1697644303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7274f35cf4d9dd445ad99fb059865d07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  coin: 0
+  gem: 0
+  attackRadius: 4
 --- !u!1 &1709655317 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3986196816743314551, guid: 3aedfc92fec4ff047b1eb048a8cf5356, type: 3}
@@ -2705,7 +2744,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &785026937344711128
 Transform:
   m_ObjectHideFlags: 0
@@ -3617,7 +3656,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2656522768908863118, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2656522768908863120, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: m_Layer
@@ -3882,7 +3921,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4972546740958827131, guid: 1ed532e50cbb4e440bbc9682b30e70ed, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4972546740958827133, guid: 1ed532e50cbb4e440bbc9682b30e70ed, type: 3}
       propertyPath: m_Layer
@@ -4514,6 +4553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackDamage: 30
+  offsetPos: {x: 0, y: 0, z: 0}
   units: []
 --- !u!1 &7989934987990365447
 GameObject:
@@ -4877,7 +4917,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5943084131390111174, guid: 738ac756286d9f24aa0720ba79edd72d, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5943084131390111176, guid: 738ac756286d9f24aa0720ba79edd72d, type: 3}
       propertyPath: m_Layer

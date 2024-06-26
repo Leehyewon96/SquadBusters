@@ -3,28 +3,32 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CharacterPlayer : CharacterBase, ICharacterItemInterface
+public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface
 {
+    public List<GameObject> units = new List<GameObject>();
+
     public delegate void OnTakeItem();
     public List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
-    public List<GameObject> units = new List<GameObject>();
+
     
 
     protected override void Awake()
     {
         base.Awake();
-        OnTakeItem onTakeCoin = GainCoin;
-        takeItemActions.Add(onTakeCoin);
-        OnTakeItem onTakeGem = GainGem;
-        takeItemActions.Add(onTakeGem);
-        OnTakeItem onTakeTreasureBox = GainTreasureBox;
-        takeItemActions.Add(onTakeTreasureBox);
+       
     }
 
     protected override void Start()
     {
         hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.Player); //GetComponentInChildren<HpBar>();
         attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
+        OnTakeItem onTakeCoin = GainCoin;
+        takeItemActions.Add(onTakeCoin);
+        OnTakeItem onTakeGem = GainGem;
+        takeItemActions.Add(onTakeGem);
+        OnTakeItem onTakeTreasureBox = GainTreasureBox;
+        takeItemActions.Add(onTakeTreasureBox);
+
         base.Start();
     }
 
@@ -109,8 +113,10 @@ public class CharacterPlayer : CharacterBase, ICharacterItemInterface
             {
                 GameManager.Instance.effectManager.StoneHit(target.transform.position);
                 targetObj.TakeDamage(attackDamage);
+
                 if (targetObj.isDead)
                 {
+                    DetectedEnemies.Remove(target);
                     animator.SetBool(AnimLocalize.contactEnemy, false);
                     isAttacking = false;
                     yield break;
@@ -126,21 +132,16 @@ public class CharacterPlayer : CharacterBase, ICharacterItemInterface
 
     protected virtual void GainCoin()
     {
-        characterStat.coin += 1;
+        attackCircle.GainCoin();
     }
 
     protected virtual void GainGem()
     {
-        characterStat.gem += 1;
+        attackCircle.GainGem();
     }
 
     protected virtual void GainTreasureBox()
     {
-        Vector3 pos = Vector3.zero;
-        float x = Random.Range(-characterStat.GetAttackRadius(), characterStat.GetAttackRadius());
-        float z = Random.Range(0, Mathf.Pow(characterStat.GetAttackRadius(), 2) - Mathf.Pow(x, 2));
-        pos.x = x + attackCircle.gameObject.transform.position.x;//Random.Range(transform.position.x - 0.1f, transform.position.x + 0.1f);
-        pos.z = Random.Range(-Mathf.Sqrt(z), Mathf.Sqrt(z)) + attackCircle.gameObject.transform.position.z;//Random.Range(transform.position.z - 0.1f, transform.position.z + 0.1f);
-        GameObject player = GameManager.Instance.Spawn(pos);
+        attackCircle.GainTreasureBox();
     }
 }

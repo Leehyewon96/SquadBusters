@@ -8,7 +8,7 @@ public class HpBarManager : MonoBehaviour
 
     private void Awake()
     {
-        hpBars = GetComponentsInChildren<HpBar>().ToList();
+        hpBars = GetComponentsInChildren<HpBar>(true).ToList();
         Init();
     }
 
