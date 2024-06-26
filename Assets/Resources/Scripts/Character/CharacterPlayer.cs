@@ -5,18 +5,8 @@ using UnityEngine;
 
 public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface
 {
-    public List<GameObject> units = new List<GameObject>();
-
     public delegate void OnTakeItem();
     public List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
-
-    
-
-    protected override void Awake()
-    {
-        base.Awake();
-       
-    }
 
     protected override void Start()
     {
@@ -41,7 +31,6 @@ public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface
             DetectedEnemies.Clear();
             animator.SetBool(AnimLocalize.contactEnemy, false);
             navMeshAgent.SetDestination(transform.position);
-            //MoveAttackCircle();
             Move();
         }
         else

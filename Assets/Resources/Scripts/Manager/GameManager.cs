@@ -70,8 +70,8 @@ public class GameManager : MonoBehaviour
     {
         //AttackCircle (플레이어) 스폰
         GameObject newPlayer = SpawnPlayer(Vector3.zero);
-        Camera.main.GetComponent<CameraFollow>().SetTarget(newPlayer);
         AttackCircle circle = attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
+        Camera.main.GetComponent<CameraFollow>().SetTarget(circle.gameObject);
         circle.UpdateLayer(LayerLocalize.playerAttackCircle);
         circle.UpdateOwners(newPlayer);
         circle.UpdateRadius(4f);

@@ -7,7 +7,7 @@ public class CharacterNonPlayer : CharacterBase
     {
         hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.NPC);
         attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.NPC);
-        attackCircle.UpdateOwners(gameObject);
+        attackCircle.UpdateOwners(gameObject); // 게임매니저에서 NPC 스폰하는 방식으로 바꾸면 거기서 Owner지정하고 이 코드 지우기
         base.Start();
     }
 
@@ -15,11 +15,7 @@ public class CharacterNonPlayer : CharacterBase
     {
         base.Update();
         MoveToEnemy();
-        //MoveAttackCircle();
-
     }
-
-    
 
     protected override void Attack(GameObject target)
     {

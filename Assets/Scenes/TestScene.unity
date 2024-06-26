@@ -3560,7 +3560,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2656522768901584192, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: attackDamage
-      value: 1
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 2656522768901584195, guid: b87bcff25303b81428090ef7c8b57d50, type: 3}
       propertyPath: gem
@@ -3853,7 +3853,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4972546740958827108, guid: 1ed532e50cbb4e440bbc9682b30e70ed, type: 3}
       propertyPath: attackDamage
-      value: 1
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 4972546740958827109, guid: 1ed532e50cbb4e440bbc9682b30e70ed, type: 3}
       propertyPath: m_Layer
@@ -4554,7 +4554,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackDamage: 30
   offsetPos: {x: 0, y: 0, z: 0}
-  units: []
 --- !u!1 &7989934987990365447
 GameObject:
   m_ObjectHideFlags: 0
@@ -4905,7 +4904,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5943084131390111173, guid: 738ac756286d9f24aa0720ba79edd72d, type: 3}
       propertyPath: attackDamage
-      value: 1
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 5943084131390111174, guid: 738ac756286d9f24aa0720ba79edd72d, type: 3}
       propertyPath: m_Name

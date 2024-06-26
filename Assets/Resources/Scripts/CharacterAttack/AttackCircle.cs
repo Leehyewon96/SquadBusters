@@ -176,5 +176,6 @@ public class AttackCircle : MonoBehaviour
         pos.x = x + transform.position.x;//Random.Range(transform.position.x - 0.1f, transform.position.x + 0.1f);
         pos.z = Random.Range(-Mathf.Sqrt(z), Mathf.Sqrt(z)) + transform.position.z;//Random.Range(transform.position.z - 0.1f, transform.position.z + 0.1f);
         GameObject player = GameManager.Instance.SpawnPlayer(pos);
+        UpdateOwners(player);
     }
 }
