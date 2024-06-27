@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -107,11 +105,21 @@ public class GameManager : MonoBehaviour
 
     public CharacterBase SpawnPlayer(Vector3 pos, CharacterType charType)
     {
-        GameObject InstancingChar = Resources.Load($"Character/Player/{charType.ToString()}") as GameObject;
-        GameObject character = Instantiate(InstancingChar, pos, Quaternion.identity);
+        GameObject character = playerPool.Find(p => !p.activeSelf && p.GetComponent<CharacterPlayer>().GetCharacterType() == charType);
+        if(character == null)
+        {
+            GameObject InstancingChar = Resources.Load($"Character/Player/{charType.ToString()}") as GameObject;
+            character = Instantiate(InstancingChar, pos, Quaternion.identity);
+            character.transform.SetParent(PlayerParent.transform);
+            playerPool.Add(character);
+        }
+        
         CharacterBase characterBase = character.GetComponent<CharacterBase>();
         characterBase.SetCharacterType(charType);
         effectManager.AttachStarAura(character);
+        character.transform.position = pos;
+        character.SetActive(true);
+
         return characterBase;
     }
 }
