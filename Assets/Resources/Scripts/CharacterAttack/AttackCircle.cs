@@ -182,9 +182,9 @@ public class AttackCircle : MonoBehaviour
         attackCircleStat.gem += 1;
     }
 
-    public void GainTreasureBox()
+    public void GainTreasureBox(CharacterType newType)
     {
-        SpawnPlayer(CharacterType.ElPrimo);
+        SpawnPlayer(newType);
     }
 
     private void SpawnPlayer(CharacterType newType)

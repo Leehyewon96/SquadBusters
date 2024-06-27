@@ -7,6 +7,7 @@ public enum CharacterType
     ElPrimo,
     ElPrimo2,
     Babarian,
+    Player,
 
     Eggy,
     Chilli,
@@ -51,10 +52,14 @@ public class CharacterBase : MonoBehaviour
         hpBar.SetMaxHp(characterStat.GetMaxHp());
         hpBar.UpdateCurrentHp(characterStat.GetCurrentHp());
 
+        characterStat.onCurrentHpChanged -= hpBar.UpdateCurrentHp;
         characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
+        characterStat.onCurrentHpZero -= SetDead;
         characterStat.onCurrentHpZero += SetDead;
 
+        attackCircle.onDetectEnemy -= UpdateEnemyList;
         attackCircle.onDetectEnemy += UpdateEnemyList;
+        attackCircle.onUnDetectEnemy -= OnUnDetectEnemy;
         attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
         attackCircle.SetCoin(characterStat.coin);
         attackCircle.SetGem(characterStat.gem);

@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface
+public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface, ICharacterUIInterface
 {
     public delegate void OnTakeItem();
     public List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
@@ -132,6 +131,11 @@ public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface
 
     protected virtual void GainTreasureBox()
     {
-        attackCircle.GainTreasureBox();
+        GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter);
+    }
+
+    public void SelectCharacter(CharacterType newType)
+    {
+        attackCircle.GainTreasureBox(newType);
     }
 }

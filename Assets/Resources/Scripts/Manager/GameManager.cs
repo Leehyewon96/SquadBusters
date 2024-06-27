@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -10,8 +11,9 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public AttackCircleManager attackCircleManager = null;
     [HideInInspector] public ItemManager itemManager = null;
     [HideInInspector] public EffectManager effectManager = null;
+    [HideInInspector] public UIManager uiManager = null;
 
-    [SerializeField] private GameObject player = null;
+    public GameObject player { get; private set; } = null;
 
     public GameObject NPCParent = null;
     [HideInInspector] public List<GameObject> NPCPool = new List<GameObject>();
@@ -57,6 +59,7 @@ public class GameManager : MonoBehaviour
         attackCircleManager = FindObjectOfType<AttackCircleManager>();
         itemManager = FindObjectOfType<ItemManager>();
         effectManager = FindObjectOfType<EffectManager>();
+        uiManager = FindObjectOfType<UIManager>();
         if (attackCircleManager != null)
         {
             attackCircleManager.InitAttackCircles();
@@ -71,6 +74,7 @@ public class GameManager : MonoBehaviour
     public void SpawnCharacter(Vector3 pos, CharacterType chartype)
     {
         CharacterBase newPlayer = SpawnPlayer(pos, chartype);
+        player = newPlayer.gameObject;
         AttackCircle circle = attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
         Camera.main.GetComponent<CameraFollow>().SetTarget(circle.gameObject);
         circle.UpdateLayer(LayerLocalize.playerAttackCircle);
@@ -100,7 +104,9 @@ public class GameManager : MonoBehaviour
 
     public CharacterBase SpawnPlayer(Vector3 pos, CharacterType charType)
     {
-        GameObject character = Instantiate(player, pos, Quaternion.identity);
+        GameObject InstancingChar = Resources.Load($"Character/Player/{charType.ToString()}") as GameObject;
+
+        GameObject character = Instantiate(InstancingChar, pos, Quaternion.identity);
         CharacterBase characterBase = character.GetComponent<CharacterBase>();
         characterBase.SetCharacterType(charType);
         effectManager.AttachStarAura(character);

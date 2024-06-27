@@ -3,14 +3,6 @@ using UnityEngine;
 
 public class CharacterNonPlayer : CharacterBase, ICharacterSpawnerInterface
 {
-    protected override void Start()
-    {
-        /*hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.NPC);
-        attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.NPC);
-        attackCircle.UpdateOwners(this); // 게임매니저에서 NPC 스폰하는 방식으로 바꾸면 거기서 Owner지정하고 이 코드 지우기
-        base.Start();*/
-    }
-
     protected override void Update()
     {
         base.Update();
@@ -27,7 +19,9 @@ public class CharacterNonPlayer : CharacterBase, ICharacterSpawnerInterface
         hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.NPC);
         attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.NPC);
         attackCircle.UpdateOwners(this); // 게임매니저에서 NPC 스폰하는 방식으로 바꾸면 거기서 Owner지정하고 이 코드 지우기
+        DetectedEnemies.Clear();
         characterStat.Init();
+        attackCircle.UpdateRadius(4f);
         base.Init();
     }
 
