@@ -13,10 +13,13 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public EffectManager effectManager = null;
     [HideInInspector] public UIManager uiManager = null;
 
-    public GameObject player { get; private set; } = null;
+    public GameObject attackCircle { get; private set; } = null;
 
     public GameObject NPCParent = null;
     [HideInInspector] public List<GameObject> NPCPool = new List<GameObject>();
+
+    public GameObject PlayerParent = null;
+    [HideInInspector] private List<GameObject> playerPool = new List<GameObject>();
 
     public static GameManager Instance
     {
@@ -50,7 +53,7 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
-        SpawnCharacter(Vector3.zero, CharacterType.ElPrimo);
+        SpawnCharacter(Vector3.zero, CharacterType.Babarian);
     }
 
     public void InitGame()
@@ -74,8 +77,8 @@ public class GameManager : MonoBehaviour
     public void SpawnCharacter(Vector3 pos, CharacterType chartype)
     {
         CharacterBase newPlayer = SpawnPlayer(pos, chartype);
-        player = newPlayer.gameObject;
         AttackCircle circle = attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
+        attackCircle = circle.gameObject;
         Camera.main.GetComponent<CameraFollow>().SetTarget(circle.gameObject);
         circle.UpdateLayer(LayerLocalize.playerAttackCircle);
         circle.UpdateOwners(newPlayer);
@@ -105,7 +108,6 @@ public class GameManager : MonoBehaviour
     public CharacterBase SpawnPlayer(Vector3 pos, CharacterType charType)
     {
         GameObject InstancingChar = Resources.Load($"Character/Player/{charType.ToString()}") as GameObject;
-
         GameObject character = Instantiate(InstancingChar, pos, Quaternion.identity);
         CharacterBase characterBase = character.GetComponent<CharacterBase>();
         characterBase.SetCharacterType(charType);

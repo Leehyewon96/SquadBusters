@@ -3148,9 +3148,9 @@ MonoBehaviour:
   itemManager: {fileID: 0}
   effectManager: {fileID: 0}
   uiManager: {fileID: 0}
-  player: {fileID: 5625394804606533146, guid: 36a67e01665fc3b4685a591258780369, type: 3}
   NPCParent: {fileID: 1990050550}
   NPCPool: []
+  PlayerParent: {fileID: 1958967482}
 --- !u!4 &1293282101
 Transform:
   m_ObjectHideFlags: 0
@@ -3848,6 +3848,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1846973824}
   m_CullTransparentMesh: 1
+--- !u!1 &1958967482
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1958967483}
+  m_Layer: 0
+  m_Name: Player
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1958967483
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1958967482}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -17.847647, y: 0.083333336, z: 16.842989}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 15
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1990050550
 GameObject:
   m_ObjectHideFlags: 0

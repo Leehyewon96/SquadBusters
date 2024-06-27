@@ -9,9 +9,9 @@ public class SelectCharacter : MonoBehaviour
 
     private void Awake()
     {
-        char1.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.Player - 1));
-        char2.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.Player - 1));
-        char3.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.Player - 1));
+        char1.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.Player));
+        char2.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.Player));
+        char3.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.Player));
 
         char1.GetComponent<Button>().onClick.AddListener(delegate { SelectChar(char1.characterType); });
         char2.GetComponent<Button>().onClick.AddListener(delegate { SelectChar(char2.characterType); });
@@ -25,7 +25,7 @@ public class SelectCharacter : MonoBehaviour
 
     public void SelectChar(CharacterType newType)
     {
-        GameManager.Instance.player.GetComponent<ICharacterUIInterface>().SelectCharacter(newType);
+        GameManager.Instance.attackCircle.GetComponent<IAttackCircleUIInterface>().SelectCharacter(newType);
         SetActive(false);
     }
 }

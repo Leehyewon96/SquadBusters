@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface, ICharacterUIInterface
+public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface
 {
     public delegate void OnTakeItem();
     public List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
@@ -12,6 +12,7 @@ public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface, IChara
     {
         hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.Player); //GetComponentInChildren<HpBar>();
         attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
+
         OnTakeItem onTakeCoin = GainCoin;
         takeItemActions.Add(onTakeCoin);
         OnTakeItem onTakeGem = GainGem;
@@ -42,7 +43,6 @@ public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface, IChara
             }
         }
     }
-
 
     protected virtual void Move()
     {
@@ -119,12 +119,12 @@ public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface, IChara
         takeItemActions[(int)itemType].DynamicInvoke();
     }
 
-    protected virtual void GainCoin()
+    public void GainCoin()
     {
         attackCircle.GainCoin();
     }
 
-    protected virtual void GainGem()
+    public void GainGem()
     {
         attackCircle.GainGem();
     }
@@ -132,10 +132,5 @@ public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface, IChara
     protected virtual void GainTreasureBox()
     {
         GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter);
-    }
-
-    public void SelectCharacter(CharacterType newType)
-    {
-        attackCircle.GainTreasureBox(newType);
     }
 }

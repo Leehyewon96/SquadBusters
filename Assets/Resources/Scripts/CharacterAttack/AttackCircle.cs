@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class AttackCircle : MonoBehaviour
+public class AttackCircle : MonoBehaviour, IAttackCircleUIInterface
 {
     public enum circleType
     { 
@@ -14,7 +14,7 @@ public class AttackCircle : MonoBehaviour
 
         End,
     }
-    
+
     private List<CharacterBase> owners = new List<CharacterBase>();
     private AttackCircleStat attackCircleStat = null;
 
@@ -57,18 +57,18 @@ public class AttackCircle : MonoBehaviour
     {
         if(!owners.Contains(newOwner))
         {
+            Debug.Log(newOwner.GetCharacterType());
             owners.Add(newOwner);
-        }
 
-        //머지할 수 있는지 검사
-        List<CharacterBase> chars = owners.FindAll(o => o.GetCharacterType() == newOwner.GetCharacterType()).ToList();
-        if(chars.Count < 3)
-        {
-            return;
-        }
+            //머지할 수 있는지 검사
+            List<CharacterBase> chars = owners.FindAll(o => o.GetCharacterType() == newOwner.GetCharacterType()).ToList();
+            if (chars.Count < 3)
+            {
+                return;
+            }
 
-        
-        StartCoroutine(CoMergeCharacter(chars, newOwner.transform.position));
+            StartCoroutine(CoMergeCharacter(chars, newOwner.transform.position));
+        }
     }
 
     private IEnumerator CoMergeCharacter(List<CharacterBase> chars, Vector3 pos)
@@ -182,7 +182,7 @@ public class AttackCircle : MonoBehaviour
         attackCircleStat.gem += 1;
     }
 
-    public void GainTreasureBox(CharacterType newType)
+    public void SelectCharacter(CharacterType newType)
     {
         SpawnPlayer(newType);
     }
