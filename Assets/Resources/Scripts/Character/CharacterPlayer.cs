@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface
 {
@@ -30,7 +31,8 @@ public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface
             isAttacking = false;
             DetectedEnemies.Clear();
             animator.SetBool(AnimLocalize.contactEnemy, false);
-            navMeshAgent.SetDestination(transform.position);
+            navMeshAgent.SetDestination(attackCircle.transform.position);
+            
             Move();
         }
         else

@@ -33,7 +33,6 @@ public class CharacterBase : MonoBehaviour
     public bool isDead { get; protected set; } = false;
 
     protected List<GameObject> DetectedEnemies = new List<GameObject>();
-    public Vector3 offsetPos = Vector3.zero;
     [SerializeField] protected CharacterType characterType = CharacterType.ElPrimo;
 
 
@@ -145,7 +144,7 @@ public class CharacterBase : MonoBehaviour
             StopAllCoroutines(); //StopAttack같은 이벤트나 함수로 고치기
             animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
             animator.SetBool(AnimLocalize.contactEnemy, false);
-            navMeshAgent.SetDestination(attackCircle.transform.position + offsetPos);
+            navMeshAgent.SetDestination(attackCircle.transform.position);
             return;
         }
 

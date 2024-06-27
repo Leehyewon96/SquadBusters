@@ -190,10 +190,10 @@ public class AttackCircle : MonoBehaviour
     private void SpawnPlayer(CharacterType newType)
     {
         Vector3 pos = Vector3.zero;
-        float x = Random.Range(-attackCircleStat.attackRadius, attackCircleStat.attackRadius);
+        float x = Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
         float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
         pos.x = x + transform.position.x;
-        pos.z = Random.Range(-Mathf.Sqrt(z), Mathf.Sqrt(z)) + transform.position.z;
+        pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
         CharacterBase player = GameManager.Instance.SpawnPlayer(pos, newType);
         UpdateOwners(player);
     }
