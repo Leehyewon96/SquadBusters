@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
-        SpawnCharacter(Vector3.zero, CharacterType.Babarian);
+        SpawnCharacter(Vector3.up * 10f, CharacterType.Babarian);
     }
 
     public void InitGame()
