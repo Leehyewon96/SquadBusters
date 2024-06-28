@@ -46,7 +46,7 @@ public class ItemManager : MonoBehaviour
     public void ShowItem(int num, Vector3 pos, ItemType itemType)
     {
         Vector3 randomPos = pos;
-        randomPos.y = 1.2f;
+        randomPos.y += 1.2f;
         for (int i = 1; i <= num; ++i)
         {
             randomPos.x = Random.Range(pos.x - 1, pos.x + 1);
