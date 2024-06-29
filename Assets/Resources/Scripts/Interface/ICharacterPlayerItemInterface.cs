@@ -1,4 +1,4 @@
-public interface IAttackCircleItemInterface
+public interface ICharacterPlayerItemInterface
 {
     public void TakeItem(ItemType itemType);
 }

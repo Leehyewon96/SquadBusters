@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class CharacterPlayer : CharacterBase, IAttackCircleItemInterface
+public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 {
     public delegate void OnTakeItem();
     public List<OnTakeItem> takeItemActions = new List<OnTakeItem>();

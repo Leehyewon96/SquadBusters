@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour
         GameObject character = playerPool.Find(p => !p.activeSelf && p.GetComponent<CharacterPlayer>().GetCharacterType() == charType);
         if(character == null)
         {
-            GameObject InstancingChar = Resources.Load($"Character/Player/{charType.ToString()}") as GameObject;
+            GameObject InstancingChar = Resources.Load($"Prefabs/Character/Player/{charType.ToString()}") as GameObject;
             character = Instantiate(InstancingChar, pos, Quaternion.identity);
             character.transform.SetParent(PlayerParent.transform);
             playerPool.Add(character);
