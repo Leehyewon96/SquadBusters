@@ -91,7 +91,6 @@ public class AttackCircle : MonoBehaviour, IAttackCircleUIInterface
 
         if(owners.Count == 0)
         {
-            Debug.Log("RemoveOwner");
             SetDead();
         }
     }
