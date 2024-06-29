@@ -57,7 +57,6 @@ public class AttackCircle : MonoBehaviour, IAttackCircleUIInterface
     {
         if(!owners.Contains(newOwner))
         {
-            Debug.Log(newOwner.GetCharacterType());
             owners.Add(newOwner);
 
             //머지할 수 있는지 검사

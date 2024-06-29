@@ -10,7 +10,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected override void Start()
     {
-        hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.Player); //GetComponentInChildren<HpBar>();
+        hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.Player);
         attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
 
         OnTakeItem onTakeCoin = GainCoin;
