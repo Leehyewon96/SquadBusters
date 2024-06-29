@@ -23,7 +23,7 @@ public class Item : MonoBehaviour
     {
         if(other.gameObject.layer == LayerMask.NameToLayer(LayerLocalize.player))
         {
-            other.gameObject.GetComponent<IAttackCircleItemInterface>().TakeItem(type);
+            other.gameObject.GetComponent<ICharacterPlayerItemInterface>().TakeItem(type);
             SetActive(false);
         }
     }
