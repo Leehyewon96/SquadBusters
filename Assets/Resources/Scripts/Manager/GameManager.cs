@@ -78,7 +78,6 @@ public class GameManager : MonoBehaviour
         AttackCircle circle = attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
         attackCircle = circle.gameObject;
         Camera.main.GetComponent<CameraFollow>().SetTarget(circle.gameObject);
-        circle.UpdateLayer(LayerLocalize.playerAttackCircle);
         circle.UpdateOwners(newPlayer);
         circle.UpdateRadius(4f); // Localize Ω√≈∞±‚
     }

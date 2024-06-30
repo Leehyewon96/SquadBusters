@@ -31,9 +31,10 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             isAttacking = false;
             DetectedEnemies.Clear();
             animator.SetBool(AnimLocalize.contactEnemy, false);
-            navMeshAgent.SetDestination(attackCircle.transform.position);
+            //navMeshAgent.SetDestination(attackCircle.transform.position);
             
             Move();
+            PlayAnim();
         }
         else
         {
@@ -50,6 +51,11 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         float z = Input.GetAxis("Vertical");
 
         movement3D.Move(x, z);
+    }
+
+    public void PlayAnim()
+    {
+        animator.SetFloat(AnimLocalize.moveSpeed, characterController.velocity.magnitude);
     }
 
     protected virtual bool CheckInput()

@@ -149,12 +149,14 @@ public class CharacterBase : MonoBehaviour
             StopAllCoroutines(); //StopAttack같은 이벤트나 함수로 고치기
             animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
             animator.SetBool(AnimLocalize.contactEnemy, false);
-            navMeshAgent.ResetPath();
+            navMeshAgent.SetDestination(attackCircle.transform.position);
+            navMeshAgent.stoppingDistance = 0;
             return;
         }
 
         animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.speed);
         navMeshAgent.SetDestination(target.transform.position);
+        navMeshAgent.stoppingDistance = 1.5f;
 
         if (Vector3.Distance(transform.position, target.transform.position) <= navMeshAgent.stoppingDistance)
         {

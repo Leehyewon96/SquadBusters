@@ -15,11 +15,12 @@ public class AttackCircle : MonoBehaviour, IAttackCircleUIInterface
         End,
     }
 
-    private List<CharacterBase> owners = new List<CharacterBase>();
+
+    protected List<CharacterBase> owners = new List<CharacterBase>();
     private AttackCircleStat attackCircleStat = null;
 
     public bool isUsed { get; private set; } = false;
-    public circleType type = circleType.None;
+    [HideInInspector] public circleType type = circleType.None;
 
     public delegate void DetectEnemy(CharacterBase target);
     public DetectEnemy onDetectEnemy;
@@ -30,17 +31,20 @@ public class AttackCircle : MonoBehaviour, IAttackCircleUIInterface
 
     private string postFixLayer = "AttackCircle";
 
-    private void Awake()
+    protected virtual void Awake()
     {
         sphereCollider = GetComponent<SphereCollider>();
         attackCircleStat = GetComponent<AttackCircleStat>();
     }
 
-
-    private void Update()
+    protected virtual void Start()
     {
-        MoveAttackCircle();
+        if (owners.Count == 0)
+        {
+            return;
+        }
 
+        transform.position = owners.FirstOrDefault().transform.position;
     }
 
     public void SetActive(bool isActive)
@@ -111,20 +115,10 @@ public class AttackCircle : MonoBehaviour, IAttackCircleUIInterface
         transform.localScale = Vector3.one * newRadius * 2; // 콜라이더의 반지름이 아닌 전체 구 오브젝트의 지름이라서 *2
     }
 
-    public void MoveAttackCircle()
-    {
-        if(owners.Count == 0)
-        {
-            return;
-        }
-
-        transform.position = owners.FirstOrDefault().transform.position;
-    }
-
-    public void UpdateLayer(string layerName)
-    {
-        gameObject.layer = LayerMask.NameToLayer(layerName);
-    }
+    //public void UpdateLayer(string layerName)
+    //{
+    //    gameObject.layer = LayerMask.NameToLayer(layerName);
+    //}
 
     public void OnTriggerStay(Collider other)
     {
