@@ -31,8 +31,8 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             isAttacking = false;
             DetectedEnemies.Clear();
             animator.SetBool(AnimLocalize.contactEnemy, false);
-            //navMeshAgent.SetDestination(attackCircle.transform.position);
-            
+            navMeshAgent.SetDestination(attackCircle.transform.position);
+
             Move();
             PlayAnim();
         }

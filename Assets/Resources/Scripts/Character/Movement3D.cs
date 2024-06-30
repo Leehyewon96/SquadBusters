@@ -22,7 +22,7 @@ public class Movement3D : MonoBehaviour
         moveDirection = new Vector3(x, 0, z);
 
         characterController.Move(moveDirection * moveSpeed * Time.deltaTime);
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveDirection), 0.05f);
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveDirection), 0.1f);
     }
 
     
