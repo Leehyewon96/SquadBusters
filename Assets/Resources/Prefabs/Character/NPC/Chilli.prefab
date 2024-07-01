@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 4960156766142342463}
   - component: {fileID: 8360419168712773414}
   m_Layer: 6
-  m_Name: NPCChilli
+  m_Name: Chilli
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

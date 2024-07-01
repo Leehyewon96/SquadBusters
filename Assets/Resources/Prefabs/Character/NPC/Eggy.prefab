@@ -1047,7 +1047,7 @@ GameObject:
   - component: {fileID: 4972546740958827104}
   - component: {fileID: 825643754732441646}
   m_Layer: 6
-  m_Name: NPCEggy
+  m_Name: Eggy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

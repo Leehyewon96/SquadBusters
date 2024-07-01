@@ -4,7 +4,13 @@ public class SpawnPos : MonoBehaviour
 {
     public CharacterType characterType;
     public float repeatInterval = 5f;
+    private GameObject origin = null;
     private GameObject spawnObject = null;
+
+    public void Awake()
+    {
+        origin = Resources.Load($"Prefabs/Character/NPC/{characterType.ToString()}") as GameObject;
+    }
 
     public void Start()
     {
@@ -13,17 +19,9 @@ public class SpawnPos : MonoBehaviour
 
     public GameObject Spawn()
     {
-        if (spawnObject == null || spawnObject.GetComponent<ICharacterSpawnerInterface>().GetIsDead())
+        if (spawnObject == null)
         {
-            GameObject obj = GameManager.Instance.NPCPool.Find(n => !n.activeSelf 
-            && n.GetComponent<ICharacterSpawnerInterface>().GetCharacterType() == characterType);
-            if(obj == null)
-            {
-                GameObject origin = GameManager.Instance.NPCPool.Find(n => n.GetComponent<ICharacterSpawnerInterface>().GetCharacterType() == characterType);
-                obj = Instantiate(origin, transform.position, Quaternion.identity);
-                obj.transform.SetParent(GameManager.Instance.NPCParent.transform);
-                GameManager.Instance.NPCPool.Add(obj);
-            }
+            GameObject obj = Instantiate(origin, transform.position, Quaternion.identity);
 
             obj.transform.position = transform.position;
             obj.transform.rotation = transform.rotation;

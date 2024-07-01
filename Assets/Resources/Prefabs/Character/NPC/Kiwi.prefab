@@ -569,7 +569,7 @@ GameObject:
   - component: {fileID: 5943084131390111175}
   - component: {fileID: 5805880852922372771}
   m_Layer: 6
-  m_Name: NPCKiwi
+  m_Name: Kiwi
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

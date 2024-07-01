@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.LowLevel;
+using UnityEngine.TextCore.Text;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,12 +14,6 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public UIManager uiManager = null;
 
     public GameObject attackCircle { get; private set; } = null;
-
-    public GameObject NPCParent = null;
-    [HideInInspector] public List<GameObject> NPCPool = new List<GameObject>();
-
-    public GameObject PlayerParent = null;
-    [HideInInspector] private List<GameObject> playerPool = new List<GameObject>();
 
     public static GameManager Instance
     {
@@ -66,9 +62,6 @@ public class GameManager : MonoBehaviour
             attackCircleManager.InitAttackCircles();
         }
 
-        List<CharacterNonPlayer> NPCTemp = NPCParent.GetComponentsInChildren<CharacterNonPlayer>(true).ToList();
-
-        NPCTemp.ForEach(n => NPCPool.Add(n.gameObject));
     }
 
     //게임시작시 최초로 AttackCircle, Player 스폰시키는 함수
@@ -104,15 +97,9 @@ public class GameManager : MonoBehaviour
 
     public CharacterBase SpawnPlayer(Vector3 pos, CharacterType charType)
     {
-        GameObject character = playerPool.Find(p => !p.activeSelf && p.GetComponent<CharacterPlayer>().GetCharacterType() == charType);
-        if(character == null)
-        {
-            GameObject InstancingChar = Resources.Load($"Prefabs/Character/Player/{charType.ToString()}") as GameObject;
-            character = Instantiate(InstancingChar, pos, Quaternion.identity);
-            character.transform.SetParent(PlayerParent.transform);
-            playerPool.Add(character);
-        }
-        
+        GameObject InstancingChar = Resources.Load($"Prefabs/Character/Player/{charType.ToString()}") as GameObject;
+        GameObject character = Instantiate(InstancingChar, pos, Quaternion.identity);
+
         CharacterBase characterBase = character.GetComponent<CharacterBase>();
         characterBase.SetCharacterType(charType);
         effectManager.AttachStarAura(character);
