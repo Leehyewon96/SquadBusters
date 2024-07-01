@@ -15,3 +15,10 @@ public class LayerLocalize
     static public string playerAttackCircle = "playerAttackCircle";
 }
 
+public class SceneLocalize
+{
+    static public string startScene = "StartScene";
+    static public string lobbyScene = "LobbyScene";
+    static public string gameScene = "GameScene";
+}
+
