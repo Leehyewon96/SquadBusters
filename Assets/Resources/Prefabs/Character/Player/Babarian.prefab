@@ -2078,6 +2078,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackDamage: 30
   characterType: 2
+  hpBarOrigin: {fileID: 2700314720743621606, guid: 4186091d41e6c554ab7336e563dc5c93, type: 3}
+  attackCircleOrigin: {fileID: 769835126204654549, guid: 0f5515bcf25c2ff4399c5062415d4f50, type: 3}
 --- !u!114 &4371349516588012202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2091,7 +2093,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 0}
-  animator: {fileID: 0}
   moveSpeed: 15
 --- !u!114 &1743247430763174416
 MonoBehaviour:

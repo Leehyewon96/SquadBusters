@@ -921,7 +921,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 0}
-  animator: {fileID: 0}
   moveSpeed: 15
 --- !u!143 &5227177248383114418
 CharacterController:
@@ -977,6 +976,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackDamage: 30
   characterType: 0
+  hpBarOrigin: {fileID: 2700314720743621606, guid: 4186091d41e6c554ab7336e563dc5c93, type: 3}
+  attackCircleOrigin: {fileID: 769835126204654549, guid: 0f5515bcf25c2ff4399c5062415d4f50, type: 3}
 --- !u!1 &5784154998071375014
 GameObject:
   m_ObjectHideFlags: 0

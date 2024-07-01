@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class AttackCircle : MonoBehaviour, IAttackCircleUIInterface
+public class AttackCircle : MonoBehaviour
 {
     public enum circleType
     { 
@@ -17,7 +17,7 @@ public class AttackCircle : MonoBehaviour, IAttackCircleUIInterface
 
 
     protected List<CharacterBase> owners = new List<CharacterBase>();
-    private AttackCircleStat attackCircleStat = null;
+    protected AttackCircleStat attackCircleStat = null;
 
     public bool isUsed { get; private set; } = false;
     [HideInInspector] public circleType type = circleType.None;
@@ -57,33 +57,12 @@ public class AttackCircle : MonoBehaviour, IAttackCircleUIInterface
         isUsed = used;
     }
 
-    public void UpdateOwners(CharacterBase newOwner)
+    public virtual void UpdateOwners(CharacterBase newOwner)
     {
         if(!owners.Contains(newOwner))
         {
             owners.Add(newOwner);
-
-            //머지할 수 있는지 검사
-            List<CharacterBase> chars = owners.FindAll(o => o.GetCharacterType() == newOwner.GetCharacterType()).ToList();
-            if (chars.Count < 3)
-            {
-                return;
-            }
-
-            StartCoroutine(CoMergeCharacter(chars, newOwner.transform.position));
         }
-    }
-
-    private IEnumerator CoMergeCharacter(List<CharacterBase> chars, Vector3 pos)
-    {
-        yield return new WaitForSeconds(0.7f);
-        SpawnPlayer(CharacterType.ElPrimo2);
-        foreach (var ch in chars)
-        {
-            ch.SetDead();
-        }
-
-        owners.LastOrDefault().transform.position = pos;
     }
 
     public void RemoveOwner(CharacterBase inOwner)
@@ -173,21 +152,5 @@ public class AttackCircle : MonoBehaviour, IAttackCircleUIInterface
     public void GainGem()
     {
         attackCircleStat.gem += 1;
-    }
-
-    public void SelectCharacter(CharacterType newType)
-    {
-        SpawnPlayer(newType);
-    }
-
-    private void SpawnPlayer(CharacterType newType)
-    {
-        Vector3 pos = Vector3.zero;
-        float x = Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
-        float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
-        pos.x = x + transform.position.x;
-        pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
-        CharacterBase player = GameManager.Instance.SpawnPlayer(pos, newType);
-        UpdateOwners(player);
     }
 }

@@ -10,8 +10,10 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected override void Start()
     {
-        hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.Player);
-        attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
+        //hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.Player);
+        //attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
+        GameObject hpBarobj = Instantiate(hpBarOrigin, transform.position, Quaternion.identity);
+        hpBar = hpBarobj.GetComponentInChildren<HpBar>();
 
         OnTakeItem onTakeCoin = GainCoin;
         takeItemActions.Add(onTakeCoin);
@@ -43,6 +45,11 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
                 MoveToEnemy();
             }
         }
+    }
+
+    public virtual void SetAttackCircle(PlayerAttackCircle inAttackCircle)
+    {
+        attackCircle = inAttackCircle;
     }
 
     protected virtual void Move()

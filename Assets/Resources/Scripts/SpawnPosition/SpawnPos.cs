@@ -10,17 +10,28 @@ public class SpawnPos : MonoBehaviour
     public void Awake()
     {
         origin = Resources.Load($"Prefabs/Character/NPC/{characterType.ToString()}") as GameObject;
+        
     }
 
-    public void Start()
+    public void StartSpawn()
     {
         InvokeRepeating("Spawn", 0.0f, repeatInterval);
     }
 
     public GameObject Spawn()
     {
+        //if(!GameManager.Instance.isConnect)
+        //{
+        //    return null;
+        //}
+
         if (spawnObject == null)
         {
+            if (origin == null)
+            {
+                Debug.Log($"Prefabs/Character/NPC/{characterType.ToString()}");
+                origin = Resources.Load($"Prefabs/Character/NPC/{characterType.ToString()}") as GameObject;
+            }
             GameObject obj = Instantiate(origin, transform.position, Quaternion.identity);
 
             obj.transform.position = transform.position;

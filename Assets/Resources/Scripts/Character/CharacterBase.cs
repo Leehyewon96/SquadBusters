@@ -35,7 +35,8 @@ public class CharacterBase : MonoBehaviour
 
     protected List<GameObject> DetectedEnemies = new List<GameObject>();
     [SerializeField] protected CharacterType characterType = CharacterType.ElPrimo;
-
+    [SerializeField] protected GameObject hpBarOrigin = null;
+    [SerializeField] public GameObject attackCircleOrigin = null;
 
     protected virtual void Awake()
     {

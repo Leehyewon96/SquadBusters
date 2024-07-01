@@ -9,6 +9,11 @@ public class CharacterNonPlayer : CharacterBase, ICharacterSpawnerInterface
         MoveToEnemy();
     }
 
+    public virtual void SetAttackCircle(NPCAttackCircle inAttackCircle)
+    {
+        attackCircle = inAttackCircle;
+    }
+
     protected override void Attack(GameObject target)
     {
         StartCoroutine(CoAttack(target));
@@ -16,9 +21,10 @@ public class CharacterNonPlayer : CharacterBase, ICharacterSpawnerInterface
 
     public override void Init()
     {
-        hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.NPC);
-        attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.NPC);
-        attackCircle.UpdateOwners(this); // 게임매니저에서 NPC 스폰하는 방식으로 바꾸면 거기서 Owner지정하고 이 코드 지우기
+        GameObject hpBarobj = Instantiate(hpBarOrigin, transform.position, Quaternion.identity);
+        hpBar = hpBarobj.GetComponentInChildren<HpBar>();//GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.NPC);
+        attackCircle = Instantiate(attackCircleOrigin, transform.position, Quaternion.identity).GetComponent<NPCAttackCircle>();
+        attackCircle.UpdateOwners(this);
         DetectedEnemies.Clear();
         characterStat.Init();
         attackCircle.UpdateRadius(4f);

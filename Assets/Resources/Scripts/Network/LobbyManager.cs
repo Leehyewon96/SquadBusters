@@ -3,6 +3,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
@@ -39,6 +40,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         base.OnJoinedRoom();
         Debug.Log("방 입장 완료");
         SceneManager.LoadScene(SceneLocalize.gameScene);
+        GameManager.Instance.isConnect = true;
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
