@@ -847,7 +847,7 @@ GameObject:
   - component: {fileID: 5332301195476487006}
   - component: {fileID: 5227177248383114418}
   - component: {fileID: 4930873679043823484}
-  - component: {fileID: 7231438356263298360}
+  - component: {fileID: 1736767175111765215}
   m_Layer: 9
   m_Name: ElPrimo
   m_TagString: Untagged
@@ -921,7 +921,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 0}
-  animator: {fileID: 0}
   moveSpeed: 15
 --- !u!143 &5227177248383114418
 CharacterController:
@@ -963,7 +962,7 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &7231438356263298360
+--- !u!114 &1736767175111765215
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
