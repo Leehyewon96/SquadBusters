@@ -1,3 +1,5 @@
+using Photon.Pun;
+using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,16 +19,23 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         characterController = moveObj.AddComponent<CharacterController>();
 
         type = circleType.Player;
+        //SpawnPlayer(CharacterType.ElPrimo);
+        GetComponent<PhotonView>().RPC("Spawn", RpcTarget.All, CharacterType.ElPrimo);
+        
     }
 
     protected override void Start()
-    {
-        base.Start();
+    { 
         moveObj.transform.position = transform.position;
     }
 
     protected virtual void Update()
     {
+        if (!GetComponent<PhotonView>().IsMine)
+        {
+            return;
+        }
+
         if((CheckInput()))
         {
             Move();
@@ -64,6 +73,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
 
     protected virtual void Move()
     {
+        
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
 
@@ -88,8 +98,26 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         SpawnPlayer(newType);
     }
 
-    private void SpawnPlayer(CharacterType newType)
+    public void SpawnPlayerInLocal(CharacterType newType)
     {
+        Vector3 pos = Vector3.zero;
+        float x = Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
+        float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
+        pos.x = x + transform.position.x;
+        pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
+        CharacterBase player = GameManager.Instance.SpawnPlayer(pos, newType);
+
+        player.GetComponent<CharacterPlayer>().SetAttackCircle(this);
+        UpdateOwners(player);
+    }
+
+    public void SpawnPlayer(CharacterType newType)
+    {
+        if (!GetComponent<PhotonView>().IsMine)
+        {
+            return;
+        }
+
         Vector3 pos = Vector3.zero;
         float x = Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
         float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
@@ -98,5 +126,28 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         CharacterBase player = GameManager.Instance.SpawnPlayer(pos, newType);
         player.GetComponent<CharacterPlayer>().SetAttackCircle(this);
         UpdateOwners(player);
+    }
+
+    [PunRPC]
+    public void Spawn(CharacterType newType)
+    {
+        if (!GetComponent<PhotonView>().IsMine)
+        {
+            return;
+        }
+
+        Vector3 pos = Vector3.zero;
+        float x = Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
+        float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
+        pos.x = x + transform.position.x;
+        pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
+        //CharacterBase player = GameManager.Instance.SpawnPlayer(pos, newType);
+
+        string path = $"Prefabs/Character/Player/{newType.ToString()}";
+        GameObject obj = Resources.Load(path) as GameObject;
+        GameObject player = Instantiate(obj, pos, Quaternion.identity);
+
+        player.GetComponent<CharacterPlayer>().SetAttackCircle(this);
+        UpdateOwners(player.GetComponent<CharacterBase>());
     }
 }

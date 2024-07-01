@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,8 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     {
         //hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.Player);
         //attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
-        GameObject hpBarobj = Instantiate(hpBarOrigin, transform.position, Quaternion.identity);
+        string path = $"Prefabs/UI/HpBar/PlayerHpBarCanvas";
+        GameObject hpBarobj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
         hpBar = hpBarobj.GetComponentInChildren<HpBar>();
 
         OnTakeItem onTakeCoin = GainCoin;

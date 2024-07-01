@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -72,6 +73,11 @@ public class CharacterBase : MonoBehaviour
         hpBar.UpdatePos(transform.position + new Vector3(0, characterController.height + 0.5f, 0));
         //업데이트용 이벤트 하나 생성 후 상속받는 클래스에서 Start에서 다 등록.
         //여기서 업데이트용 이벤트 계속 Invoke하기(상속받는 클래스에는 Update 작성 X)
+
+        if (GetComponent<PhotonView>().IsMine)
+        {
+            return;
+        }
     }
 
     public virtual void Init()

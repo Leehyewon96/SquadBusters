@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
@@ -21,7 +22,8 @@ public class CharacterNonPlayer : CharacterBase, ICharacterSpawnerInterface
 
     public override void Init()
     {
-        GameObject hpBarobj = Instantiate(hpBarOrigin, transform.position, Quaternion.identity);
+        string path = $"Prefabs/UI/HpBar/NPCHpBarCanvas";
+        GameObject hpBarobj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
         hpBar = hpBarobj.GetComponentInChildren<HpBar>();//GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.NPC);
         attackCircle = Instantiate(attackCircleOrigin, transform.position, Quaternion.identity).GetComponent<NPCAttackCircle>();
         attackCircle.UpdateOwners(this);

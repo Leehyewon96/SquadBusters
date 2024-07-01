@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,22 +71,19 @@ public class GameManager : MonoBehaviour
         spawnPoses.ForEach(s => s.StartSpawn());
 
         SpawnCharacter(Vector3.up * 2.26f, CharacterType.ElPrimo);
-        //if (attackCircleManager != null)
-        //{
-        //    attackCircleManager.InitAttackCircles();
-        //}
     }
 
     //게임시작시 최초로 AttackCircle, Player 스폰시키는 함수
     public void SpawnCharacter(Vector3 pos, CharacterType chartype)
     {
-        CharacterBase newPlayer = SpawnPlayer(pos, chartype);
-        attackCircle = Instantiate(newPlayer.attackCircleOrigin, newPlayer.transform.position, Quaternion.identity);
+        //CharacterBase newPlayer = SpawnPlayer(pos, chartype);
+        string path = $"Prefabs/Character/PlayerAttackCircle";
+        attackCircle = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
         Camera.main.GetComponent<CameraFollow>().SetTarget(attackCircle.gameObject);
         PlayerAttackCircle circle = attackCircle.GetComponent<PlayerAttackCircle>();
-        circle.UpdateOwners(newPlayer);
+        //circle.UpdateOwners(newPlayer);
         circle.UpdateRadius(4f); // Localize 시키기
-        newPlayer.GetComponent<CharacterPlayer>().SetAttackCircle(circle);
+        //newPlayer.GetComponent<CharacterPlayer>().SetAttackCircle(circle);
     }
 
     public void PauseGame()
@@ -110,8 +108,9 @@ public class GameManager : MonoBehaviour
 
     public CharacterBase SpawnPlayer(Vector3 pos, CharacterType charType)
     {
-        GameObject InstancingChar = Resources.Load($"Prefabs/Character/Player/{charType.ToString()}") as GameObject;
-        GameObject character = Instantiate(InstancingChar, pos, Quaternion.identity);
+        //GameObject InstancingChar = Resources.Load($"Prefabs/Character/Player/{charType.ToString()}") as GameObject;
+        string path = $"Prefabs/Character/Player/{charType.ToString()}";
+        GameObject character = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
 
         CharacterBase characterBase = character.GetComponent<CharacterBase>();
         characterBase.SetCharacterType(charType);
