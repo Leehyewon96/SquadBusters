@@ -1,5 +1,4 @@
 using Photon.Pun;
-using Photon.Realtime;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +16,17 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         moveObj = new GameObject($"Move{gameObject.name}");
         movement3D = moveObj.AddComponent<Movement3D>();
         characterController = moveObj.AddComponent<CharacterController>();
-
         type = circleType.Player;
+
         //SpawnPlayer(CharacterType.ElPrimo);
-        GetComponent<PhotonView>().RPC("Spawn", RpcTarget.All, CharacterType.ElPrimo);
+        if(GetComponent<PhotonView>().IsMine)
+        {
+            GetComponent<PhotonView>().RPC("SpawnPlayer", RpcTarget.AllBuffered, CharacterType.ElPrimo);
+        }
         
+        //Spawn(CharacterType.ElPrimo);
+
+
     }
 
     protected override void Start()
@@ -111,6 +116,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         UpdateOwners(player);
     }
 
+    [PunRPC]
     public void SpawnPlayer(CharacterType newType)
     {
         if (!GetComponent<PhotonView>().IsMine)
@@ -125,6 +131,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
         CharacterBase player = GameManager.Instance.SpawnPlayer(pos, newType);
         player.GetComponent<CharacterPlayer>().SetAttackCircle(this);
+       // player.GetComponent<CharacterPlayer>().Init();
         UpdateOwners(player);
     }
 

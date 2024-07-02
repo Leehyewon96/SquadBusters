@@ -51,20 +51,20 @@ public class CharacterBase : MonoBehaviour
 
     protected virtual void Start()
     {
-        hpBar.SetMaxHp(characterStat.GetMaxHp());
-        hpBar.UpdateCurrentHp(characterStat.GetCurrentHp());
+        //hpBar.SetMaxHp(characterStat.GetMaxHp());
+        //hpBar.UpdateCurrentHp(characterStat.GetCurrentHp());
 
-        characterStat.onCurrentHpChanged -= hpBar.UpdateCurrentHp;
-        characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
-        characterStat.onCurrentHpZero -= SetDead;
-        characterStat.onCurrentHpZero += SetDead;
+        //characterStat.onCurrentHpChanged -= hpBar.UpdateCurrentHp;
+        //characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
+        //characterStat.onCurrentHpZero -= SetDead;
+        //characterStat.onCurrentHpZero += SetDead;
 
-        attackCircle.onDetectEnemy -= UpdateEnemyList;
-        attackCircle.onDetectEnemy += UpdateEnemyList;
-        attackCircle.onUnDetectEnemy -= OnUnDetectEnemy;
-        attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
-        attackCircle.SetCoin(characterStat.coin);
-        attackCircle.SetGem(characterStat.gem);
+        //attackCircle.onDetectEnemy -= UpdateEnemyList;
+        //attackCircle.onDetectEnemy += UpdateEnemyList;
+        //attackCircle.onUnDetectEnemy -= OnUnDetectEnemy;
+        //attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
+        //attackCircle.SetCoin(characterStat.coin);
+        //attackCircle.SetGem(characterStat.gem);
     }
 
     protected virtual void Update()

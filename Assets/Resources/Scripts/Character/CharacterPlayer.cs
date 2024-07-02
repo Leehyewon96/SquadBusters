@@ -14,7 +14,8 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         //hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.Player);
         //attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
         string path = $"Prefabs/UI/HpBar/PlayerHpBarCanvas";
-        GameObject hpBarobj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
+        GameObject obj = Resources.Load(path) as GameObject;
+        GameObject hpBarobj = Instantiate(obj, transform.position, Quaternion.identity);
         hpBar = hpBarobj.GetComponentInChildren<HpBar>();
 
         OnTakeItem onTakeCoin = GainCoin;
@@ -29,6 +30,11 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected override void Update()
     {
+        if(attackCircle == null)
+        {
+            return;
+        }
+
         base.Update();
         if (CheckInput()) //플레이어 조작할때
         {

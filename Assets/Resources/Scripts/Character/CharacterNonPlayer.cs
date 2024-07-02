@@ -23,13 +23,21 @@ public class CharacterNonPlayer : CharacterBase, ICharacterSpawnerInterface
     public override void Init()
     {
         string path = $"Prefabs/UI/HpBar/NPCHpBarCanvas";
-        GameObject hpBarobj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
+        GameObject obj = Resources.Load(path) as GameObject;
+        GameObject hpBarobj = Instantiate(obj, transform.position, Quaternion.identity);
         hpBar = hpBarobj.GetComponentInChildren<HpBar>();//GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.NPC);
         attackCircle = Instantiate(attackCircleOrigin, transform.position, Quaternion.identity).GetComponent<NPCAttackCircle>();
         attackCircle.UpdateOwners(this);
         DetectedEnemies.Clear();
         characterStat.Init();
         attackCircle.UpdateRadius(4f);
+
+        StartCoroutine(CoInit());
+    }
+
+    private IEnumerator CoInit()
+    {
+        yield return new WaitUntil(() => hpBar != null && attackCircle != null);
         base.Init();
     }
 
