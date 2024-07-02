@@ -39,6 +39,8 @@ public class CharacterBase : MonoBehaviour
     [SerializeField] protected GameObject hpBarOrigin = null;
     [SerializeField] public GameObject attackCircleOrigin = null;
 
+    protected PhotonView photonView = null;
+
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
@@ -47,6 +49,7 @@ public class CharacterBase : MonoBehaviour
         movement3D = GetComponent<Movement3D>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         characterController = GetComponent<CharacterController>();
+        photonView = GetComponent<PhotonView>();
     }
 
     protected virtual void Start()
@@ -74,7 +77,7 @@ public class CharacterBase : MonoBehaviour
         //업데이트용 이벤트 하나 생성 후 상속받는 클래스에서 Start에서 다 등록.
         //여기서 업데이트용 이벤트 계속 Invoke하기(상속받는 클래스에는 Update 작성 X)
 
-        if (GetComponent<PhotonView>().IsMine)
+        if (photonView.IsMine)
         {
             return;
         }

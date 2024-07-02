@@ -13,10 +13,12 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     {
         //hpBar = GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.Player);
         //attackCircle = GameManager.Instance.attackCircleManager.GetAttackCircle(AttackCircle.circleType.Player);
-        string path = $"Prefabs/UI/HpBar/PlayerHpBarCanvas";
-        GameObject obj = Resources.Load(path) as GameObject;
-        GameObject hpBarobj = Instantiate(obj, transform.position, Quaternion.identity);
-        hpBar = hpBarobj.GetComponentInChildren<HpBar>();
+
+        if(photonView.IsMine)
+        {
+            photonView.RPC("SetHpBar", RpcTarget.AllBuffered);
+        }
+
 
         OnTakeItem onTakeCoin = GainCoin;
         takeItemActions.Add(onTakeCoin);
@@ -55,9 +57,23 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         }
     }
 
+
     public virtual void SetAttackCircle(PlayerAttackCircle inAttackCircle)
     {
         attackCircle = inAttackCircle;
+    }
+
+    [PunRPC]
+    public void SetHpBar()
+    {
+        if(photonView.IsMine)
+        {
+            string path = $"Prefabs/UI/HpBar/PlayerHpBarCanvas";
+            GameObject obj = Resources.Load(path) as GameObject;
+            GameObject hpBarobj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
+            hpBar = hpBarobj.GetComponentInChildren<HpBar>();
+        }
+        
     }
 
     protected virtual void Move()
