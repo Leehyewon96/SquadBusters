@@ -130,6 +130,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         pos.x = x + transform.position.x;
         pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
         CharacterBase player = GameManager.Instance.SpawnPlayer(pos, newType);
+       
         player.GetComponent<CharacterPlayer>().SetAttackCircle(this);
        // player.GetComponent<CharacterPlayer>().Init();
         UpdateOwners(player);

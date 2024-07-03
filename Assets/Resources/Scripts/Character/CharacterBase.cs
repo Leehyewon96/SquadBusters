@@ -49,25 +49,13 @@ public class CharacterBase : MonoBehaviour
         movement3D = GetComponent<Movement3D>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         characterController = GetComponent<CharacterController>();
+        hpBar = GetComponentInChildren<HpBar>();
         photonView = GetComponent<PhotonView>();
     }
 
     protected virtual void Start()
     {
-        //hpBar.SetMaxHp(characterStat.GetMaxHp());
-        //hpBar.UpdateCurrentHp(characterStat.GetCurrentHp());
-
-        //characterStat.onCurrentHpChanged -= hpBar.UpdateCurrentHp;
-        //characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
-        //characterStat.onCurrentHpZero -= SetDead;
-        //characterStat.onCurrentHpZero += SetDead;
-
-        //attackCircle.onDetectEnemy -= UpdateEnemyList;
-        //attackCircle.onDetectEnemy += UpdateEnemyList;
-        //attackCircle.onUnDetectEnemy -= OnUnDetectEnemy;
-        //attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
-        //attackCircle.SetCoin(characterStat.coin);
-        //attackCircle.SetGem(characterStat.gem);
+        Init();
     }
 
     protected virtual void Update()
@@ -93,6 +81,10 @@ public class CharacterBase : MonoBehaviour
         characterStat.onCurrentHpZero -= SetDead;
         characterStat.onCurrentHpZero += SetDead;
 
+        if (!photonView.IsMine)
+        {
+            return;
+        }
         attackCircle.onDetectEnemy -= UpdateEnemyList;
         attackCircle.onDetectEnemy += UpdateEnemyList;
         attackCircle.onUnDetectEnemy -= OnUnDetectEnemy;
