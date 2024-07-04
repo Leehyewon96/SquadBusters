@@ -18,19 +18,11 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         characterController = moveObj.AddComponent<CharacterController>();
         type = circleType.Player;
 
-        if(GetComponent<PhotonView>().IsMine)
+        if (photonView.IsMine)
         {
-            SpawnPlayer(CharacterType.ElPrimo);
+            CharacterBase character = SpawnPlayer(transform.position, CharacterType.ElPrimo);
+            UpdateOwners(character);
         }
-        
-        //if(GetComponent<PhotonView>().IsMine)
-        //{
-        //    GetComponent<PhotonView>().RPC("SpawnPlayer", RpcTarget.AllBuffered, CharacterType.ElPrimo);
-        //}
-        
-        //Spawn(CharacterType.ElPrimo);
-
-
     }
 
     protected override void Start()
@@ -79,7 +71,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
     private IEnumerator CoMergeCharacter(List<CharacterBase> chars, Vector3 pos)
     {
         yield return new WaitForSeconds(0.7f);
-        SpawnPlayer(CharacterType.ElPrimo2);
+        SpawnPlayer(transform.position, CharacterType.ElPrimo2);
         foreach (var ch in chars)
         {
             ch.SetDead();
@@ -112,22 +104,12 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
 
     public void SelectCharacter(CharacterType newType)
     {
-        SpawnPlayer(newType);
-    }
-
-    public void SpawnPlayer(CharacterType newType)
-    {
         Vector3 pos = Vector3.zero;
         float x = Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
         float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
         pos.x = x + transform.position.x;
         pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
-        CharacterBase player = GameManager.Instance.SpawnPlayer(pos, newType);
-
-        //player.GetComponent<CharacterPlayer>().SetAttackCircle(this);
-        // player.GetComponent<CharacterPlayer>().Init();
-        player.name += "mine";
+        CharacterBase player = SpawnPlayer(pos, newType);
         UpdateOwners(player);
     }
-
 }

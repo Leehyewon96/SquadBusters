@@ -1,5 +1,4 @@
 using System.Linq;
-using UnityEngine;
 
 public class NPCAttackCircle : AttackCircle
 {
@@ -7,9 +6,14 @@ public class NPCAttackCircle : AttackCircle
     {
         base.Awake();
         type = circleType.NPC;
+        if (photonView.IsMine)
+        {
+            CharacterBase character = SpawnPlayer(transform.position, CharacterType.Eggy);
+            UpdateOwners(character);
+        }
     }
 
-    protected virtual void Update()
+    protected override void Update()
     {
         Move();
     }

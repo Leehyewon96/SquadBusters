@@ -8,25 +8,8 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     public delegate void OnTakeItem();
     public List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
 
-    protected override void Start()
-    {
-        //OnTakeItem onTakeCoin = GainCoin;
-        //takeItemActions.Add(onTakeCoin);
-        //OnTakeItem onTakeGem = GainGem;
-        //takeItemActions.Add(onTakeGem);
-        //OnTakeItem onTakeTreasureBox = GainTreasureBox;
-        //takeItemActions.Add(onTakeTreasureBox);
-
-        base.Start();
-    }
-
     protected override void Update()
     {
-        //if(attackCircle == null)
-        //{
-        //    return;
-        //}
-
         base.Update();
 
         if (!photonView.IsMine)
@@ -74,13 +57,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         //    }
         //}
     }
-
-
-    //public virtual void SetAttackCircle(PlayerAttackCircle inAttackCircle)
-    //{
-    //    attackCircle = inAttackCircle;
-    //}
-
 
     protected virtual void Move()
     {
@@ -161,16 +137,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     {
         takeItemActions[(int)itemType].DynamicInvoke();
     }
-
-    //public void GainCoin()
-    //{
-    //    attackCircle.GainCoin();
-    //}
-
-    //public void GainGem()
-    //{
-    //    attackCircle.GainGem();
-    //}
 
     public virtual void GainTreasureBox()
     {

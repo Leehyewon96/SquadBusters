@@ -66,7 +66,12 @@ public class GameManager : MonoBehaviour
         effectManager = FindObjectOfType<EffectManager>();
         uiManager = FindObjectOfType<UIManager>();
         spawnPoses = FindObjectsOfType<SpawnPos>().ToList();
-        spawnPoses.ForEach(s => s.StartSpawn());
+        
+        if(PhotonNetwork.IsMasterClient)
+        {
+            spawnPoses.ForEach(s => s.StartSpawn());
+        }
+        
 
         SpawnCharacter(Vector3.up * 2.26f, CharacterType.ElPrimo);
     }
@@ -74,14 +79,11 @@ public class GameManager : MonoBehaviour
     //게임시작시 최초로 AttackCircle, Player 스폰시키는 함수
     public void SpawnCharacter(Vector3 pos, CharacterType chartype)
     {
-        //CharacterBase newPlayer = SpawnPlayer(pos, chartype);
         string path = $"Prefabs/Character/PlayerAttackCircle";
         attackCircle = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
         Camera.main.GetComponent<CameraFollow>().SetTarget(attackCircle.gameObject);
         PlayerAttackCircle circle = attackCircle.GetComponent<PlayerAttackCircle>();
-        //circle.UpdateOwners(newPlayer);
-        circle.UpdateRadius(4f); // Localize 시키기
-        //newPlayer.GetComponent<CharacterPlayer>().SetAttackCircle(circle);
+        circle.UpdateRadius(4f);
     }
 
     public void PauseGame()
@@ -102,20 +104,5 @@ public class GameManager : MonoBehaviour
     public void StopGame()
     {
 
-    }
-
-    public CharacterBase SpawnPlayer(Vector3 pos, CharacterType charType)
-    {
-        //GameObject InstancingChar = Resources.Load($"Prefabs/Character/Player/{charType.ToString()}") as GameObject;
-        string path = $"Prefabs/Character/Player/{charType.ToString()}";
-        GameObject character = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
-
-        CharacterBase characterBase = character.GetComponent<CharacterBase>();
-        characterBase.SetCharacterType(charType);
-        effectManager.AttachStarAura(character);
-        character.transform.position = pos;
-        character.SetActive(true);
-
-        return characterBase;
     }
 }

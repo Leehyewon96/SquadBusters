@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -30,6 +31,7 @@ public class AttackCircle : MonoBehaviour
     public UnDetectEnemy onUnDetectEnemy;
 
     private SphereCollider sphereCollider = null;
+    protected PhotonView photonView = null;
 
     private string postFixLayer = "AttackCircle";
 
@@ -37,6 +39,7 @@ public class AttackCircle : MonoBehaviour
     {
         sphereCollider = GetComponent<SphereCollider>();
         attackCircleStat = GetComponent<AttackCircleStat>();
+        photonView = GetComponent<PhotonView>();
     }
 
     protected virtual void Start()
@@ -125,10 +128,19 @@ public class AttackCircle : MonoBehaviour
         transform.localScale = Vector3.one * newRadius * 2; // 콜라이더의 반지름이 아닌 전체 구 오브젝트의 지름이라서 *2
     }
 
-    //public void UpdateLayer(string layerName)
-    //{
-    //    gameObject.layer = LayerMask.NameToLayer(layerName);
-    //}
+    public CharacterBase SpawnPlayer(Vector3 pos, CharacterType charType)
+    {
+        string path = $"Prefabs/Character/{charType.ToString()}";
+        GameObject character = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
+
+        CharacterBase characterBase = character.GetComponent<CharacterBase>();
+        characterBase.SetCharacterType(charType);
+        GameManager.Instance.effectManager.AttachStarAura(character);
+        character.transform.position = pos;
+        character.SetActive(true);
+
+        return characterBase;
+    }
 
     public void OnTriggerStay(Collider other)
     {

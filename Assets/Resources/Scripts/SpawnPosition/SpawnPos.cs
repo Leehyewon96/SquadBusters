@@ -1,15 +1,16 @@
+using Photon.Pun;
 using UnityEngine;
 
 public class SpawnPos : MonoBehaviour
 {
     public CharacterType characterType;
     public float repeatInterval = 5f;
-    private GameObject origin = null;
+    private string path = null;
     private GameObject spawnObject = null;
 
     public void Awake()
     {
-        origin = Resources.Load($"Prefabs/Character/NPC/{characterType.ToString()}") as GameObject;
+        path = $"Prefabs/Character/{characterType.ToString()}";
         
     }
 
@@ -20,25 +21,13 @@ public class SpawnPos : MonoBehaviour
 
     public GameObject Spawn()
     {
-        //if(!GameManager.Instance.isConnect)
-        //{
-        //    return null;
-        //}
-
         if (spawnObject == null)
         {
-            if (origin == null)
-            {
-                Debug.Log($"Prefabs/Character/NPC/{characterType.ToString()}");
-                origin = Resources.Load($"Prefabs/Character/NPC/{characterType.ToString()}") as GameObject;
-            }
-            GameObject obj = Instantiate(origin, transform.position, Quaternion.identity);
+            GameObject obj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
 
             obj.transform.position = transform.position;
             obj.transform.rotation = transform.rotation;
-            obj.GetComponent<ICharacterSpawnerInterface>().SetIsDead(false);
             obj.SetActive(true);
-            obj.GetComponent<ICharacterSpawnerInterface>().Init();
             return spawnObject = obj;
         }
 
