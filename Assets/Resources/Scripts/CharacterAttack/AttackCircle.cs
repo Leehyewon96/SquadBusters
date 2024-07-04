@@ -2,7 +2,8 @@ using Photon.Pun;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static CharacterPlayer;
+using UnityEngine.TextCore.Text;
+using UnityEngine.UIElements;
 
 public class AttackCircle : MonoBehaviour
 {
@@ -84,18 +85,6 @@ public class AttackCircle : MonoBehaviour
             onUnDetectEnemy += newOwner.OnUnDetectEnemy;
             newOwner.deadAction -= RemoveOwner;
             newOwner.deadAction += RemoveOwner;
-            
-            if(newOwner.TryGetComponent<CharacterPlayer>(out CharacterPlayer characterPlayer))
-            {
-                OnTakeItem onTakeCoin = GainCoin;
-                characterPlayer.takeItemActions.Add(onTakeCoin);
-                OnTakeItem onTakeGem = GainGem;
-                characterPlayer.takeItemActions.Add(onTakeGem);
-                OnTakeItem onTakeTreasureBox = characterPlayer.GainTreasureBox;
-                characterPlayer.takeItemActions.Add(onTakeTreasureBox);
-            }
-            
-            //attackCircle.SetCoin(characterStat.coin);
         }
     }
 
@@ -132,13 +121,8 @@ public class AttackCircle : MonoBehaviour
     {
         string path = $"Prefabs/Character/{charType.ToString()}";
         GameObject character = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
-
         CharacterBase characterBase = character.GetComponent<CharacterBase>();
-        characterBase.SetCharacterType(charType);
-        GameManager.Instance.effectManager.AttachStarAura(character);
-        character.transform.position = pos;
-        character.SetActive(true);
-
+        UpdateOwners(characterBase);
         return characterBase;
     }
 
@@ -146,11 +130,6 @@ public class AttackCircle : MonoBehaviour
     {
         if (!other.gameObject.layer.Equals(gameObject.layer) && !other.gameObject.layer.Equals(LayerMask.NameToLayer(LayerLocalize.item)))
         {
-            //if (!DetectedEnemies.Contains(other.gameObject))
-            //{
-            //    DetectedEnemies.Add(other.gameObject);
-            //}
-
             if (other.gameObject.TryGetComponent<AttackCircle>(out AttackCircle circle))
             {
                 foreach (var owner in circle.owners)
@@ -168,11 +147,6 @@ public class AttackCircle : MonoBehaviour
     {
         if (!other.gameObject.layer.Equals(gameObject.layer) && !other.gameObject.layer.Equals(LayerMask.NameToLayer(LayerLocalize.item)))
         {
-            if (DetectedEnemies.Contains(other.gameObject))
-            {
-                DetectedEnemies.Remove(other.gameObject);
-            }
-
             if (other.gameObject.TryGetComponent<AttackCircle>(out AttackCircle circle))
             {
                 foreach (var owner in circle.owners)

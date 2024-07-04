@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static CharacterPlayer;
 
 public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
 {
@@ -21,7 +22,6 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         if (photonView.IsMine)
         {
             CharacterBase character = SpawnPlayer(transform.position, CharacterType.ElPrimo);
-            UpdateOwners(character);
         }
     }
 
@@ -32,7 +32,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
 
     protected override void Update()
     {
-        if (!GetComponent<PhotonView>().IsMine)
+        if (!photonView.IsMine)
         {
             return;
         }
@@ -41,15 +41,13 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         {
             Move();
             transform.position = moveObj.transform.position;
-            foreach (var owner in owners)
-            {
-                owner.SetDestination(moveObj.transform.position);
-                owner.SetSpeed(100f);
-            }
-            return;
         }
-
-        base.Update();
+        foreach (var owner in owners)
+        {
+            owner.SetDestination(moveObj.transform.position);
+            //owner.SetSpeed(100f);
+        }
+        //base.Update();
     }
 
     public override void UpdateOwners(CharacterBase newOwner)

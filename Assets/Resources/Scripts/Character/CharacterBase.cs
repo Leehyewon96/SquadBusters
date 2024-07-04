@@ -162,22 +162,22 @@ public class CharacterBase : MonoBehaviour
 
     protected virtual void MoveToEnemy()
     {
+        animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
+
         GameObject target = GetTarget();
         if (target == gameObject)
         {
-            StopAllCoroutines(); //StopAttack같은 이벤트나 함수로 고치기
-            animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
+            StopAllCoroutines();
             animator.SetBool(AnimLocalize.contactEnemy, false);
             return;
         }
 
-        animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.speed);
         navMeshAgent.SetDestination(target.transform.position);
-        //navMeshAgent.stoppingDistance = 1.5f;
 
         if (Vector3.Distance(transform.position, target.transform.position) <= navMeshAgent.stoppingDistance)
         {
             navMeshAgent.ResetPath();
+            navMeshAgent.velocity = Vector3.zero;
             animator.SetFloat(AnimLocalize.moveSpeed, 0);
             isAttacking = true;
             Attack(target);

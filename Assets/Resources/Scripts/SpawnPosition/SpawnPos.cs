@@ -10,8 +10,7 @@ public class SpawnPos : MonoBehaviour
 
     public void Awake()
     {
-        path = $"Prefabs/Character/{characterType.ToString()}";
-        
+        path = $"Prefabs/Character/NPCAttackCircle";
     }
 
     public void StartSpawn()
@@ -24,10 +23,8 @@ public class SpawnPos : MonoBehaviour
         if (spawnObject == null)
         {
             GameObject obj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
-
-            obj.transform.position = transform.position;
-            obj.transform.rotation = transform.rotation;
-            obj.SetActive(true);
+            obj.GetComponent<NPCAttackCircle>().SpawnNPC(characterType);
+            obj.GetComponent<NPCAttackCircle>().UpdateRadius(0.5f);
             return spawnObject = obj;
         }
 

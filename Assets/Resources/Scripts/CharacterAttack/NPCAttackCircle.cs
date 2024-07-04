@@ -6,11 +6,6 @@ public class NPCAttackCircle : AttackCircle
     {
         base.Awake();
         type = circleType.NPC;
-        if (photonView.IsMine)
-        {
-            CharacterBase character = SpawnPlayer(transform.position, CharacterType.Eggy);
-            UpdateOwners(character);
-        }
     }
 
     protected override void Update()
@@ -26,5 +21,13 @@ public class NPCAttackCircle : AttackCircle
         }
 
         transform.position = owners.FirstOrDefault().transform.position;
+    }
+
+    public virtual void SpawnNPC(CharacterType characterType)
+    {
+        if (photonView.IsMine)
+        {
+            CharacterBase character = SpawnPlayer(transform.position, characterType);
+        }
     }
 }

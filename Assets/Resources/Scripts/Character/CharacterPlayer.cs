@@ -17,45 +17,27 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             return;
         }
 
-        if (Vector3.Distance(transform.position, navMeshAgent.destination) > navMeshAgent.stoppingDistance)
+        if (CheckInput())
         {
-            characterController.enabled = false;
-            animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
-            return;
-        }
+            StopAllCoroutines();
+            navMeshAgent.ResetPath();
+            navMeshAgent.velocity = Vector3.zero;
 
-        navMeshAgent.ResetPath();
-        if(CheckInput())
-        {
+            isAttacking = false;
+            DetectedEnemies.Clear();
+            animator.SetBool(AnimLocalize.contactEnemy, false);
+
             Move();
             animator.SetFloat(AnimLocalize.moveSpeed, characterController.velocity.magnitude);
         }
         else
         {
             animator.SetFloat(AnimLocalize.moveSpeed, 0);
+            if (!isAttacking)
+            {
+                MoveToEnemy();
+            }
         }
-        
-        
-
-        //Debug.Log($"out {Vector3.Distance(transform.position, navMeshAgent.destination)}");
-        //navMeshAgent.ResetPath();
-        //if (CheckInput()) //플레이어 조작할때
-        //{
-        //    isAttacking = false;
-        //    DetectedEnemies.Clear();
-        //    animator.SetBool(AnimLocalize.contactEnemy, false);
-        //    //navMeshAgent.SetDestination(attackCircle.transform.position);
-
-        //    Move();
-        //    PlayAnim();
-        //}
-        //else
-        //{
-        //    if (!isAttacking)
-        //    {
-        //        MoveToEnemy();
-        //    }
-        //}
     }
 
     protected virtual void Move()
@@ -84,14 +66,17 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         return false;
     }
 
-    public override void UpdateEnemyList(CharacterBase target)
-    {
-        if (!DetectedEnemies.Contains(target.gameObject)
-            && Vector3.Distance(target.transform.position, transform.position) <= characterStat.GetAttackRadius())
-        {
-            DetectedEnemies.Add(target.gameObject);
-        }
-    }
+    //public override void UpdateEnemyList(CharacterBase target)
+    //{
+    //    Debug.Log($"player UpdateEnemyList");
+    //    Debug.Log($"DetectedEnemies {DetectedEnemies.Count} / characterStat.GetAttackRadius() {characterStat.GetAttackRadius()} / 거리 : {Vector3.Distance(target.transform.position, transform.position)}");
+    //    if (!DetectedEnemies.Contains(target.gameObject)
+    //        && Vector3.Distance(target.transform.position, transform.position) <= characterStat.GetAttackRadius())
+    //    {
+    //        Debug.Log($"player가 {target.gameObject.name} 추가 ");
+    //        DetectedEnemies.Add(target.gameObject);
+    //    }
+    //}
 
     protected override void Attack(GameObject target)
     {
