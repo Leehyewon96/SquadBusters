@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -17,7 +18,7 @@ public enum CharacterType
 
 public class CharacterBase : MonoBehaviour
 {
-    protected AttackCircle attackCircle = null;
+    //protected AttackCircle attackCircle = null;
     protected HpBar hpBar = null;
 
     protected Animator animator = null;
@@ -40,6 +41,9 @@ public class CharacterBase : MonoBehaviour
     [SerializeField] public GameObject attackCircleOrigin = null;
 
     protected PhotonView photonView = null;
+
+    public delegate void DeadAction(CharacterBase characterBase);
+    public DeadAction deadAction = null;
 
     protected virtual void Awake()
     {
@@ -64,11 +68,6 @@ public class CharacterBase : MonoBehaviour
         hpBar.UpdatePos(transform.position + new Vector3(0, characterController.height + 0.5f, 0));
         //업데이트용 이벤트 하나 생성 후 상속받는 클래스에서 Start에서 다 등록.
         //여기서 업데이트용 이벤트 계속 Invoke하기(상속받는 클래스에는 Update 작성 X)
-
-        if (photonView.IsMine)
-        {
-            return;
-        }
     }
 
     public virtual void Init()
@@ -85,12 +84,12 @@ public class CharacterBase : MonoBehaviour
         {
             return;
         }
-        attackCircle.onDetectEnemy -= UpdateEnemyList;
-        attackCircle.onDetectEnemy += UpdateEnemyList;
-        attackCircle.onUnDetectEnemy -= OnUnDetectEnemy;
-        attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
-        attackCircle.SetCoin(characterStat.coin);
-        attackCircle.SetGem(characterStat.gem);
+        //attackCircle.onDetectEnemy -= UpdateEnemyList;
+        //attackCircle.onDetectEnemy += UpdateEnemyList;
+        //attackCircle.onUnDetectEnemy -= OnUnDetectEnemy;
+        //attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
+        ////attackCircle.SetCoin(characterStat.coin);
+        //attackCircle.SetGem(characterStat.gem);
     }
 
     public virtual void SetCharacterType(CharacterType type)
@@ -117,16 +116,34 @@ public class CharacterBase : MonoBehaviour
         isDead = true;
         hpBar.UPdateIsUsed(false);
         hpBar.SetActive(false);
-        attackCircle.RemoveOwner(this);
+        if(deadAction != null)
+        {
+            deadAction.Invoke(this);
+        }
         gameObject.SetActive(false);
     }
 
-    protected virtual void UpdateEnemyList(CharacterBase target)
+    public virtual void UpdateEnemyList(CharacterBase target)
     {
         if (!DetectedEnemies.Contains(target.gameObject))
         {
             DetectedEnemies.Add(target.gameObject);
         }
+    }
+
+    public virtual void SetDestination(Vector3 destination)
+    {
+        navMeshAgent.SetDestination(destination);
+    }
+
+    public virtual void ResetPath()
+    {
+        navMeshAgent.ResetPath();
+    }
+
+    public virtual void SetSpeed(float inSpeed)
+    {
+        navMeshAgent.speed = inSpeed;
     }
 
     protected GameObject GetTarget()
@@ -151,16 +168,6 @@ public class CharacterBase : MonoBehaviour
             StopAllCoroutines(); //StopAttack같은 이벤트나 함수로 고치기
             animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
             animator.SetBool(AnimLocalize.contactEnemy, false);
-
-            if(Vector3.Distance(transform.position, attackCircle.transform.position) <= navMeshAgent.stoppingDistance)
-            {
-                navMeshAgent.ResetPath();
-            }
-            else
-            {
-                navMeshAgent.SetDestination(attackCircle.transform.position);
-            }
-            
             return;
         }
 
@@ -182,7 +189,7 @@ public class CharacterBase : MonoBehaviour
 
     }
 
-    protected virtual void OnUnDetectEnemy(CharacterBase target)
+    public virtual void OnUnDetectEnemy(CharacterBase target)
     {
         if(DetectedEnemies.Contains(target.gameObject))
         {

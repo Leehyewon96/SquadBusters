@@ -3,8 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.LowLevel;
-using UnityEngine.TextCore.Text;
 
 public class GameManager : MonoBehaviour
 {

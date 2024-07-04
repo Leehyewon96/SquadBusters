@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class CharacterNonPlayer : CharacterBase, ICharacterSpawnerInterface
 {
-    protected override void Update()
-    {
-        base.Update();
-        MoveToEnemy();
-    }
+    //protected override void Update()
+    //{
+    //    base.Update();
+    //    //MoveToEnemy();
+    //}
 
-    public virtual void SetAttackCircle(NPCAttackCircle inAttackCircle)
-    {
-        attackCircle = inAttackCircle;
-    }
+    //public virtual void SetAttackCircle(NPCAttackCircle inAttackCircle)
+    //{
+    //    attackCircle = inAttackCircle;
+    //}
 
     protected override void Attack(GameObject target)
     {
@@ -26,18 +26,18 @@ public class CharacterNonPlayer : CharacterBase, ICharacterSpawnerInterface
         GameObject obj = Resources.Load(path) as GameObject;
         GameObject hpBarobj = Instantiate(obj, transform.position, Quaternion.identity);
         hpBar = hpBarobj.GetComponentInChildren<HpBar>();//GameManager.Instance.hpBarManager.GetHpBar(HpBar.barType.NPC);
-        attackCircle = Instantiate(attackCircleOrigin, transform.position, Quaternion.identity).GetComponent<NPCAttackCircle>();
-        attackCircle.UpdateOwners(this);
+        //attackCircle = Instantiate(attackCircleOrigin, transform.position, Quaternion.identity).GetComponent<NPCAttackCircle>();
+        //attackCircle.UpdateOwners(this);
         DetectedEnemies.Clear();
         characterStat.Init();
-        attackCircle.UpdateRadius(4f);
+        //attackCircle.UpdateRadius(4f);
 
         StartCoroutine(CoInit());
     }
 
     private IEnumerator CoInit()
     {
-        yield return new WaitUntil(() => hpBar != null && attackCircle != null);
+        yield return new WaitUntil(() => hpBar != null);
         base.Init();
     }
 

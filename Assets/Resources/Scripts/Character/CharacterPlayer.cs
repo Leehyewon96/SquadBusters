@@ -1,4 +1,3 @@
-using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,48 +10,76 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected override void Start()
     {
-        OnTakeItem onTakeCoin = GainCoin;
-        takeItemActions.Add(onTakeCoin);
-        OnTakeItem onTakeGem = GainGem;
-        takeItemActions.Add(onTakeGem);
-        OnTakeItem onTakeTreasureBox = GainTreasureBox;
-        takeItemActions.Add(onTakeTreasureBox);
+        //OnTakeItem onTakeCoin = GainCoin;
+        //takeItemActions.Add(onTakeCoin);
+        //OnTakeItem onTakeGem = GainGem;
+        //takeItemActions.Add(onTakeGem);
+        //OnTakeItem onTakeTreasureBox = GainTreasureBox;
+        //takeItemActions.Add(onTakeTreasureBox);
 
         base.Start();
     }
 
     protected override void Update()
     {
-        if(attackCircle == null)
+        //if(attackCircle == null)
+        //{
+        //    return;
+        //}
+
+        base.Update();
+
+        if (!photonView.IsMine)
         {
             return;
         }
 
-        base.Update();
-        if (CheckInput()) //플레이어 조작할때
+        if (Vector3.Distance(transform.position, navMeshAgent.destination) > navMeshAgent.stoppingDistance)
         {
-            isAttacking = false;
-            DetectedEnemies.Clear();
-            animator.SetBool(AnimLocalize.contactEnemy, false);
-            navMeshAgent.SetDestination(attackCircle.transform.position);
+            characterController.enabled = false;
+            animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
+            return;
+        }
 
+        navMeshAgent.ResetPath();
+        if(CheckInput())
+        {
             Move();
-            PlayAnim();
+            animator.SetFloat(AnimLocalize.moveSpeed, characterController.velocity.magnitude);
         }
         else
         {
-            if(!isAttacking)
-            {
-                MoveToEnemy();
-            }
+            animator.SetFloat(AnimLocalize.moveSpeed, 0);
         }
+        
+        
+
+        //Debug.Log($"out {Vector3.Distance(transform.position, navMeshAgent.destination)}");
+        //navMeshAgent.ResetPath();
+        //if (CheckInput()) //플레이어 조작할때
+        //{
+        //    isAttacking = false;
+        //    DetectedEnemies.Clear();
+        //    animator.SetBool(AnimLocalize.contactEnemy, false);
+        //    //navMeshAgent.SetDestination(attackCircle.transform.position);
+
+        //    Move();
+        //    PlayAnim();
+        //}
+        //else
+        //{
+        //    if (!isAttacking)
+        //    {
+        //        MoveToEnemy();
+        //    }
+        //}
     }
 
 
-    public virtual void SetAttackCircle(PlayerAttackCircle inAttackCircle)
-    {
-        attackCircle = inAttackCircle;
-    }
+    //public virtual void SetAttackCircle(PlayerAttackCircle inAttackCircle)
+    //{
+    //    attackCircle = inAttackCircle;
+    //}
 
 
     protected virtual void Move()
@@ -81,7 +108,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         return false;
     }
 
-    protected override void UpdateEnemyList(CharacterBase target)
+    public override void UpdateEnemyList(CharacterBase target)
     {
         if (!DetectedEnemies.Contains(target.gameObject)
             && Vector3.Distance(target.transform.position, transform.position) <= characterStat.GetAttackRadius())
@@ -135,17 +162,17 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         takeItemActions[(int)itemType].DynamicInvoke();
     }
 
-    public void GainCoin()
-    {
-        attackCircle.GainCoin();
-    }
+    //public void GainCoin()
+    //{
+    //    attackCircle.GainCoin();
+    //}
 
-    public void GainGem()
-    {
-        attackCircle.GainGem();
-    }
+    //public void GainGem()
+    //{
+    //    attackCircle.GainGem();
+    //}
 
-    protected virtual void GainTreasureBox()
+    public virtual void GainTreasureBox()
     {
         GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter);
     }

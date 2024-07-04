@@ -1,7 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static CharacterPlayer;
 
 public class AttackCircle : MonoBehaviour
 {
@@ -18,6 +18,8 @@ public class AttackCircle : MonoBehaviour
 
     protected List<CharacterBase> owners = new List<CharacterBase>();
     protected AttackCircleStat attackCircleStat = null;
+
+    protected List<GameObject> DetectedEnemies = new List<GameObject>();
 
     public bool isUsed { get; private set; } = false;
     [HideInInspector] public circleType type = circleType.None;
@@ -47,6 +49,17 @@ public class AttackCircle : MonoBehaviour
         transform.position = owners.FirstOrDefault().transform.position;
     }
 
+    protected virtual void Update()
+    {
+        if(DetectedEnemies.Count == 0)
+        {
+            //owners.ForEach(o => o.SetDestination());
+            return;
+        }
+
+        owners.ForEach(o => o.SetDestination(DetectedEnemies.FirstOrDefault().transform.position));
+    }
+
     public void SetActive(bool isActive)
     {
         gameObject.SetActive(isActive);
@@ -62,6 +75,24 @@ public class AttackCircle : MonoBehaviour
         if(!owners.Contains(newOwner))
         {
             owners.Add(newOwner);
+            onDetectEnemy -= newOwner.UpdateEnemyList;
+            onDetectEnemy += newOwner.UpdateEnemyList;
+            onUnDetectEnemy -= newOwner.OnUnDetectEnemy;
+            onUnDetectEnemy += newOwner.OnUnDetectEnemy;
+            newOwner.deadAction -= RemoveOwner;
+            newOwner.deadAction += RemoveOwner;
+            
+            if(newOwner.TryGetComponent<CharacterPlayer>(out CharacterPlayer characterPlayer))
+            {
+                OnTakeItem onTakeCoin = GainCoin;
+                characterPlayer.takeItemActions.Add(onTakeCoin);
+                OnTakeItem onTakeGem = GainGem;
+                characterPlayer.takeItemActions.Add(onTakeGem);
+                OnTakeItem onTakeTreasureBox = characterPlayer.GainTreasureBox;
+                characterPlayer.takeItemActions.Add(onTakeTreasureBox);
+            }
+            
+            //attackCircle.SetCoin(characterStat.coin);
         }
     }
 
@@ -103,9 +134,14 @@ public class AttackCircle : MonoBehaviour
     {
         if (!other.gameObject.layer.Equals(gameObject.layer) && !other.gameObject.layer.Equals(LayerMask.NameToLayer(LayerLocalize.item)))
         {
+            //if (!DetectedEnemies.Contains(other.gameObject))
+            //{
+            //    DetectedEnemies.Add(other.gameObject);
+            //}
+
             if (other.gameObject.TryGetComponent<AttackCircle>(out AttackCircle circle))
             {
-                foreach(var owner in circle.owners)
+                foreach (var owner in circle.owners)
                 {
                     if (onDetectEnemy != null)
                     {
@@ -120,6 +156,11 @@ public class AttackCircle : MonoBehaviour
     {
         if (!other.gameObject.layer.Equals(gameObject.layer) && !other.gameObject.layer.Equals(LayerMask.NameToLayer(LayerLocalize.item)))
         {
+            if (DetectedEnemies.Contains(other.gameObject))
+            {
+                DetectedEnemies.Remove(other.gameObject);
+            }
+
             if (other.gameObject.TryGetComponent<AttackCircle>(out AttackCircle circle))
             {
                 foreach (var owner in circle.owners)

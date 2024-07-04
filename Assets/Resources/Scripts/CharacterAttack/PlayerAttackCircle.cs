@@ -18,11 +18,15 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         characterController = moveObj.AddComponent<CharacterController>();
         type = circleType.Player;
 
-        //SpawnPlayer(CharacterType.ElPrimo);
         if(GetComponent<PhotonView>().IsMine)
         {
-            GetComponent<PhotonView>().RPC("SpawnPlayer", RpcTarget.AllBuffered, CharacterType.ElPrimo);
+            SpawnPlayer(CharacterType.ElPrimo);
         }
+        
+        //if(GetComponent<PhotonView>().IsMine)
+        //{
+        //    GetComponent<PhotonView>().RPC("SpawnPlayer", RpcTarget.AllBuffered, CharacterType.ElPrimo);
+        //}
         
         //Spawn(CharacterType.ElPrimo);
 
@@ -34,18 +38,26 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         moveObj.transform.position = transform.position;
     }
 
-    protected virtual void Update()
+    protected override void Update()
     {
         if (!GetComponent<PhotonView>().IsMine)
         {
             return;
         }
 
-        if((CheckInput()))
+        if ((CheckInput()))
         {
             Move();
             transform.position = moveObj.transform.position;
+            foreach (var owner in owners)
+            {
+                owner.SetDestination(moveObj.transform.position);
+                owner.SetSpeed(100f);
+            }
+            return;
         }
+
+        base.Update();
     }
 
     public override void UpdateOwners(CharacterBase newOwner)
@@ -103,59 +115,19 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         SpawnPlayer(newType);
     }
 
-    public void SpawnPlayerInLocal(CharacterType newType)
-    {
-        Vector3 pos = Vector3.zero;
-        float x = Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
-        float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
-        pos.x = x + transform.position.x;
-        pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
-        CharacterBase player = GameManager.Instance.SpawnPlayer(pos, newType);
-
-        player.GetComponent<CharacterPlayer>().SetAttackCircle(this);
-        UpdateOwners(player);
-    }
-
-    [PunRPC]
     public void SpawnPlayer(CharacterType newType)
     {
-        if (!GetComponent<PhotonView>().IsMine)
-        {
-            return;
-        }
-
         Vector3 pos = Vector3.zero;
         float x = Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
         float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
         pos.x = x + transform.position.x;
         pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
         CharacterBase player = GameManager.Instance.SpawnPlayer(pos, newType);
-       
-        player.GetComponent<CharacterPlayer>().SetAttackCircle(this);
-       // player.GetComponent<CharacterPlayer>().Init();
+
+        //player.GetComponent<CharacterPlayer>().SetAttackCircle(this);
+        // player.GetComponent<CharacterPlayer>().Init();
+        player.name += "mine";
         UpdateOwners(player);
     }
 
-    [PunRPC]
-    public void Spawn(CharacterType newType)
-    {
-        if (!GetComponent<PhotonView>().IsMine)
-        {
-            return;
-        }
-
-        Vector3 pos = Vector3.zero;
-        float x = Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
-        float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
-        pos.x = x + transform.position.x;
-        pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
-        //CharacterBase player = GameManager.Instance.SpawnPlayer(pos, newType);
-
-        string path = $"Prefabs/Character/Player/{newType.ToString()}";
-        GameObject obj = Resources.Load(path) as GameObject;
-        GameObject player = Instantiate(obj, pos, Quaternion.identity);
-
-        player.GetComponent<CharacterPlayer>().SetAttackCircle(this);
-        UpdateOwners(player.GetComponent<CharacterBase>());
-    }
 }
