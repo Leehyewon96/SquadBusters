@@ -979,7 +979,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4d0f47b0de46de47b00f02df43a1e97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDamage: 30
+  attackDamage: 3
   characterType: 0
   hpBarOrigin: {fileID: 2700314720743621606, guid: 4186091d41e6c554ab7336e563dc5c93, type: 3}
   attackCircleOrigin: {fileID: 769835126204654549, guid: 0f5515bcf25c2ff4399c5062415d4f50, type: 3}

@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 using UnityEngine.UIElements;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class AttackCircle : MonoBehaviour
 {
@@ -78,6 +79,7 @@ public class AttackCircle : MonoBehaviour
     {
         if(!owners.Contains(newOwner))
         {
+            Debug.Log($"[{gameObject.name}] UpdateOwners");
             owners.Add(newOwner);
             onDetectEnemy -= newOwner.UpdateEnemyList;
             onDetectEnemy += newOwner.UpdateEnemyList;
@@ -128,36 +130,33 @@ public class AttackCircle : MonoBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        if (!other.gameObject.layer.Equals(gameObject.layer) && !other.gameObject.layer.Equals(LayerMask.NameToLayer(LayerLocalize.item)))
+        if (other.gameObject.TryGetComponent<CharacterBase>(out CharacterBase character))
         {
-            if (other.gameObject.TryGetComponent<AttackCircle>(out AttackCircle circle))
+            if (owners.Contains(character))
             {
-                foreach (var owner in circle.owners)
-                {
-                    if (onDetectEnemy != null)
-                    {
-                        onDetectEnemy.Invoke(owner);
-                    }
-                }
+                return;
             }
+
+            if(onDetectEnemy == null)
+            {
+                return;
+            }
+            onDetectEnemy.Invoke(character);
         }
     }
 
     public void OnTriggerExit(Collider other)
     {
-        if (!other.gameObject.layer.Equals(gameObject.layer) && !other.gameObject.layer.Equals(LayerMask.NameToLayer(LayerLocalize.item)))
+        if (other.gameObject.TryGetComponent<CharacterBase>(out CharacterBase character))
         {
-            if (other.gameObject.TryGetComponent<AttackCircle>(out AttackCircle circle))
+            if (owners.Contains(character))
             {
-                foreach (var owner in circle.owners)
+                if (onUnDetectEnemy == null)
                 {
-                    if (onUnDetectEnemy != null)
-                    {
-                        onUnDetectEnemy.Invoke(owner);
-                    }
+                    return;
                 }
+                onUnDetectEnemy.Invoke(character);
             }
-
         }
     }
 

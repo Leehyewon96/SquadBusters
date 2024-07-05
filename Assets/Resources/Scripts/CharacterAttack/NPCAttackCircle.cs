@@ -25,9 +25,6 @@ public class NPCAttackCircle : AttackCircle
 
     public virtual void SpawnNPC(CharacterType characterType)
     {
-        if (photonView.IsMine)
-        {
-            CharacterBase character = SpawnPlayer(transform.position, characterType);
-        }
+        CharacterBase character = SpawnPlayer(transform.position, characterType);
     }
 }
