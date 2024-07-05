@@ -104,7 +104,14 @@ public class CharacterBase : MonoBehaviour
 
     public virtual void TakeDamage(float inDamage)
     {
-        if(isDead)
+        photonView.RPC("RPCTakeDamage", RpcTarget.AllBuffered, inDamage);
+    }
+
+    [PunRPC]
+    public virtual void RPCTakeDamage(float inDamage)
+    {
+        Debug.Log($"[{gameObject.name}] {characterStat.GetCurrentHp()}");
+        if (isDead)
         {
             return;
         }
