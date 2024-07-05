@@ -33,10 +33,11 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         else
         {
             animator.SetFloat(AnimLocalize.moveSpeed, 0);
-            if (!isAttacking)
-            {
-                MoveToEnemy();
-            }
+            //if (!isAttacking)
+            //{
+            //    MoveToEnemy();
+            //}
+            MoveToEnemy();
         }
     }
 
@@ -81,6 +82,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     protected override void Attack(GameObject target)
     {
         StartCoroutine(CoAttack(target));
+        isAttacking = true;
     }
 
 

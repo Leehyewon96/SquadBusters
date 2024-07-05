@@ -79,7 +79,6 @@ public class AttackCircle : MonoBehaviour
     {
         if(!owners.Contains(newOwner))
         {
-            Debug.Log($"[{gameObject.name}] UpdateOwners");
             owners.Add(newOwner);
             onDetectEnemy -= newOwner.UpdateEnemyList;
             onDetectEnemy += newOwner.UpdateEnemyList;
@@ -124,6 +123,7 @@ public class AttackCircle : MonoBehaviour
         string path = $"Prefabs/Character/{charType.ToString()}";
         GameObject character = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
         CharacterBase characterBase = character.GetComponent<CharacterBase>();
+        characterBase.gameObject.name += "mine";
         UpdateOwners(characterBase);
         return characterBase;
     }
@@ -149,14 +149,11 @@ public class AttackCircle : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent<CharacterBase>(out CharacterBase character))
         {
-            if (owners.Contains(character))
+            if (onUnDetectEnemy == null)
             {
-                if (onUnDetectEnemy == null)
-                {
-                    return;
-                }
-                onUnDetectEnemy.Invoke(character);
+                return;
             }
+            onUnDetectEnemy.Invoke(character);
         }
     }
 

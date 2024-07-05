@@ -169,6 +169,12 @@ public class CharacterBase : MonoBehaviour
         {
             StopAllCoroutines();
             animator.SetBool(AnimLocalize.contactEnemy, false);
+            isAttacking = false;
+            return;
+        }
+
+        if(isAttacking)
+        {
             return;
         }
 
@@ -179,7 +185,6 @@ public class CharacterBase : MonoBehaviour
             navMeshAgent.ResetPath();
             navMeshAgent.velocity = Vector3.zero;
             animator.SetFloat(AnimLocalize.moveSpeed, 0);
-            isAttacking = true;
             Attack(target);
         }
     }
