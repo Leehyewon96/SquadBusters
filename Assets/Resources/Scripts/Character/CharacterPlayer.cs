@@ -6,7 +6,7 @@ using UnityEngine;
 public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 {
     public delegate void OnTakeItem();
-    public List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
+    private List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
 
     protected override void Update()
     {
@@ -122,7 +122,15 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     public virtual void TakeItem(ItemType itemType)
     {
-        takeItemActions[(int)itemType].DynamicInvoke();
+        if (photonView.IsMine)
+        {
+            takeItemActions[(int)itemType].DynamicInvoke();
+        }
+    }
+
+    public virtual void AddTakeItemActions(OnTakeItem onTakeItem)
+    {
+        takeItemActions.Add(onTakeItem);
     }
 
     public virtual void GainTreasureBox()

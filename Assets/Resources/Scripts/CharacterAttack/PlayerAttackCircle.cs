@@ -51,6 +51,17 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
     public override void UpdateOwners(CharacterBase newOwner)
     {
         base.UpdateOwners(newOwner);
+        
+        if(newOwner.gameObject.TryGetComponent<CharacterPlayer>(out CharacterPlayer characterPlayer))
+        {
+            CharacterPlayer.OnTakeItem takeCoin = GainCoin;
+            characterPlayer.AddTakeItemActions(takeCoin);
+            CharacterPlayer.OnTakeItem takeGem = GainGem;
+            characterPlayer.AddTakeItemActions(takeGem);
+            CharacterPlayer.OnTakeItem takeTreasureBox = characterPlayer.GainTreasureBox;
+            characterPlayer.AddTakeItemActions(takeTreasureBox);
+        }
+
         if (owners.LastOrDefault() == newOwner)
         {
             //머지할 수 있는지 검사
