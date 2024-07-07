@@ -77,8 +77,8 @@ public class CharacterBase : MonoBehaviour
 
         characterStat.onCurrentHpChanged -= hpBar.UpdateCurrentHp;
         characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
-        characterStat.onCurrentHpZero -= RPCSetDead;
-        characterStat.onCurrentHpZero += RPCSetDead;
+        characterStat.onCurrentHpZero -= SetDead;
+        characterStat.onCurrentHpZero += SetDead;
 
         if (!photonView.IsMine)
         {
@@ -121,7 +121,7 @@ public class CharacterBase : MonoBehaviour
     
     public virtual void SetDead()
     {
-        photonView.RPC("SetDead", RpcTarget.AllBuffered);
+        photonView.RPC("RPCSetDead", RpcTarget.AllBuffered);
     }
 
     [PunRPC]
