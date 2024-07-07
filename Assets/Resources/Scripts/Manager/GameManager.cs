@@ -16,8 +16,6 @@ public class GameManager : MonoBehaviour
     public GameObject attackCircle = null;
     public bool isConnect { get; set; } = false;
 
-    private List<SpawnPos> spawnPoses;
-
     public static GameManager Instance
     {
         get
@@ -65,11 +63,14 @@ public class GameManager : MonoBehaviour
         itemManager = FindObjectOfType<ItemManager>();
         effectManager = FindObjectOfType<EffectManager>();
         uiManager = FindObjectOfType<UIManager>();
-        spawnPoses = FindObjectsOfType<SpawnPos>().ToList();
-        
-        if(PhotonNetwork.IsMasterClient)
+        List<Spawner> spawners = FindObjectsOfType<Spawner>().ToList();
+        List<TreasureBoxSpawner> treasureBoxSpawners = FindObjectsOfType<TreasureBoxSpawner>().ToList();
+
+
+        if (PhotonNetwork.IsMasterClient)
         {
-            spawnPoses.ForEach(s => s.StartSpawn());
+            spawners.ForEach(s => s.StartSpawn());
+            treasureBoxSpawners.ForEach(tb => tb.StartSpawn());
         }
         
 
