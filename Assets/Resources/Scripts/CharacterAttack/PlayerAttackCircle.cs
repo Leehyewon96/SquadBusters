@@ -1,9 +1,7 @@
-using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static CharacterPlayer;
 
 public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
 {
@@ -30,7 +28,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         moveObj.transform.position = transform.position;
     }
 
-    protected override void Update()
+    protected virtual void Update()
     {
         if (!photonView.IsMine)
         {

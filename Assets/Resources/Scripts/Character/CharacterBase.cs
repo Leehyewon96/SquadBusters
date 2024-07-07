@@ -110,7 +110,6 @@ public class CharacterBase : MonoBehaviour
     [PunRPC]
     public virtual void RPCTakeDamage(float inDamage)
     {
-        Debug.Log($"[{gameObject.name}] {characterStat.GetCurrentHp()}");
         if (isDead)
         {
             return;
@@ -130,7 +129,7 @@ public class CharacterBase : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public virtual void UpdateEnemyList(CharacterBase target)
+    public virtual void OnDetectEnemy(CharacterBase target)
     {
         if (!DetectedEnemies.Contains(target.gameObject))
         {

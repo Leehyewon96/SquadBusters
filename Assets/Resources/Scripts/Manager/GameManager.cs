@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
         attackCircle = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
         Camera.main.GetComponent<CameraFollow>().SetTarget(attackCircle.gameObject);
         PlayerAttackCircle circle = attackCircle.GetComponent<PlayerAttackCircle>();
-        circle.UpdateRadius(4f);
+        //circle.UpdateRadius(4f);
     }
 
     public void PauseGame()

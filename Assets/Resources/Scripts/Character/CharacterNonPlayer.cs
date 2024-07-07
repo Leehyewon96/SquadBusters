@@ -3,6 +3,18 @@ using UnityEngine;
 
 public class CharacterNonPlayer : CharacterBase
 {
+    protected override void Update()
+    {
+        base.Update();
+
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
+        MoveToEnemy();
+    }
+
     protected override void Attack(GameObject target)
     {
         StartCoroutine(CoAttack(target));
@@ -28,4 +40,9 @@ public class CharacterNonPlayer : CharacterBase
         }
     }
 
+
+    public override void OnUnDetectEnemy(CharacterBase target)
+    {
+        DetectedEnemies.Clear();
+    }
 }

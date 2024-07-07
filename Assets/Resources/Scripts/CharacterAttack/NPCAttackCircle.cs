@@ -1,16 +1,27 @@
 using System.Linq;
+using UnityEngine;
 
 public class NPCAttackCircle : AttackCircle
 {
+    private GameObject followTarget = null;
+
     protected override void Awake()
     {
         base.Awake();
         type = circleType.NPC;
     }
 
-    protected override void Update()
+    protected virtual void Update()
     {
-        Move();
+        if (followTarget != null)
+        {
+            transform.position = followTarget.transform.position;
+        }
+        else
+        {
+            Move();
+        }
+        
     }
 
     protected virtual void Move()

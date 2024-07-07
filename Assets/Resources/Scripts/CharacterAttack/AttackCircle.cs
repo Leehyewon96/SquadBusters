@@ -2,9 +2,6 @@ using Photon.Pun;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using UnityEngine.UIElements;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class AttackCircle : MonoBehaviour
 {
@@ -42,6 +39,7 @@ public class AttackCircle : MonoBehaviour
         sphereCollider = GetComponent<SphereCollider>();
         attackCircleStat = GetComponent<AttackCircleStat>();
         photonView = GetComponent<PhotonView>();
+        UpdateRadius(attackCircleStat.attackRadius);
     }
 
     protected virtual void Start()
@@ -52,17 +50,6 @@ public class AttackCircle : MonoBehaviour
         }
 
         transform.position = owners.FirstOrDefault().transform.position;
-    }
-
-    protected virtual void Update()
-    {
-        if(DetectedEnemies.Count == 0)
-        {
-            //owners.ForEach(o => o.SetDestination());
-            return;
-        }
-
-        owners.ForEach(o => o.SetDestination(DetectedEnemies.FirstOrDefault().transform.position));
     }
 
     public void SetActive(bool isActive)
@@ -80,8 +67,8 @@ public class AttackCircle : MonoBehaviour
         if(!owners.Contains(newOwner))
         {
             owners.Add(newOwner);
-            onDetectEnemy -= newOwner.UpdateEnemyList;
-            onDetectEnemy += newOwner.UpdateEnemyList;
+            onDetectEnemy -= newOwner.OnDetectEnemy;
+            onDetectEnemy += newOwner.OnDetectEnemy;
             onUnDetectEnemy -= newOwner.OnUnDetectEnemy;
             onUnDetectEnemy += newOwner.OnUnDetectEnemy;
             newOwner.deadAction -= RemoveOwner;
@@ -128,7 +115,7 @@ public class AttackCircle : MonoBehaviour
         return characterBase;
     }
 
-    public void OnTriggerStay(Collider other)
+    public virtual void OnTriggerStay(Collider other)
     {
         if (other.gameObject.TryGetComponent<CharacterBase>(out CharacterBase character))
         {
@@ -137,7 +124,7 @@ public class AttackCircle : MonoBehaviour
                 return;
             }
 
-            if(onDetectEnemy == null)
+            if (onDetectEnemy == null)
             {
                 return;
             }
@@ -145,7 +132,7 @@ public class AttackCircle : MonoBehaviour
         }
     }
 
-    public void OnTriggerExit(Collider other)
+    public virtual void OnTriggerExit(Collider other)
     {
         if (other.gameObject.TryGetComponent<CharacterBase>(out CharacterBase character))
         {
@@ -154,6 +141,7 @@ public class AttackCircle : MonoBehaviour
                 return;
             }
             onUnDetectEnemy.Invoke(character);
+
         }
     }
 

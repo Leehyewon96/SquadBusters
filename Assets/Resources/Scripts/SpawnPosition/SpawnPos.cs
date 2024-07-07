@@ -24,7 +24,7 @@ public class SpawnPos : MonoBehaviour
         {
             GameObject obj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
             obj.GetComponent<NPCAttackCircle>().SpawnNPC(characterType);
-            obj.GetComponent<NPCAttackCircle>().UpdateRadius(0.5f);
+            //obj.GetComponent<NPCAttackCircle>().UpdateRadius(0.5f);
             return spawnObject = obj;
         }
 
