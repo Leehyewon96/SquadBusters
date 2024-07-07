@@ -7,8 +7,6 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     private static GameManager instance = null;
-    //[HideInInspector] public HpBarManager hpBarManager = null;
-    //[HideInInspector] public AttackCircleManager attackCircleManager = null;
     [HideInInspector] public ItemManager itemManager = null;
     [HideInInspector] public EffectManager effectManager = null;
     [HideInInspector] public UIManager uiManager = null;

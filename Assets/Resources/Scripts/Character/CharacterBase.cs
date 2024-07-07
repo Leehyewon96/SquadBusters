@@ -62,6 +62,11 @@ public class CharacterBase : MonoBehaviour
         Init();
     }
 
+    protected virtual void OnEnable()
+    {
+        GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position);
+    }
+
     protected virtual void Update()
     {
         //attackCircle.MoveAttackCircle(transform.position);

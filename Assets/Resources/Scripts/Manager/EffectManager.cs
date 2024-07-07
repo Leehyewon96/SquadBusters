@@ -1,6 +1,7 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public enum EffectType
 { 
@@ -19,33 +20,29 @@ public class EffectManager : MonoBehaviour
     [SerializeField] private GameObject explosion = null;
     [SerializeField] private GameObject stoneHit = null;
     [SerializeField] private GameObject starAura = null;
+    
+    List<Effect> effects = new List<Effect>();
+
+    private void Awake()
+    {
+        effects = GetComponentsInChildren<Effect>(true).ToList();
+    }
 
     public void Play(EffectType type, Vector3 pos)
     {
-        GameObject effect = null;
-        switch (type)
+        Effect effect = effects.Find(e => e.effectType.Equals(type) && !e.GetIsPlaying());
+        if(effect == null)
         {
-            case EffectType.SnowHit:
-                effect = snowHit;
-                break;
-            case EffectType.Explosion:
-                effect = explosion;
-                break;
-            case EffectType.StoneHit:
-                effect = stoneHit;
-                break;
-            case EffectType.StarAura:
-                effect = starAura;
-                break;
-            default:
-                break;
+            Effect origin = effects.Find(e => e.effectType.Equals(type));
+            effect = Instantiate(origin, transform);
+            effects.Add(effect);
         }
 
-        pos.y += 0.5f;
-        effect.transform.position = pos;
+        //pos.y += 0.5f;
+        effect.gameObject.transform.position = pos;
 
         effect.gameObject.SetActive(true);
-        effect.GetComponent<ParticleSystem>().Play();
+        effect.Play();
     }
 
     public void AttachEffect(GameObject target, EffectType type)

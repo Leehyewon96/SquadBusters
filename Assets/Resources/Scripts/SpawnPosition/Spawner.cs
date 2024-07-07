@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System.Collections;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
@@ -20,6 +21,12 @@ public class Spawner : MonoBehaviour
 
     public virtual void StartSpawn()
     {
+        StartCoroutine(CoStartSpawn());
+    }
+
+    private IEnumerator CoStartSpawn()
+    {
+        yield return new WaitUntil(() => GameManager.Instance.effectManager != null);
         InvokeRepeating("Spawn", 0.0f, repeatInterval);
     }
 
@@ -27,7 +34,7 @@ public class Spawner : MonoBehaviour
     {
         if (spawnObject == null)
         {
-            GameObject obj = PhotonNetwork.Instantiate(path, transform.position + Vector3.up * 2.6f, Quaternion.identity);
+            GameObject obj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
             if(obj.TryGetComponent<NPCAttackCircle>(out NPCAttackCircle npcAttackCircle))
             {
                 obj.GetComponent<NPCAttackCircle>().SpawnNPC(characterType);
