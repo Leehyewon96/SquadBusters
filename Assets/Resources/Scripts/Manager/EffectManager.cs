@@ -1,5 +1,17 @@
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
+
+public enum EffectType
+{ 
+    SnowHit = 0,
+    Explosion,
+    StoneHit,
+    StarAura,
+
+    End,
+}
+
 
 public class EffectManager : MonoBehaviour
 {
@@ -8,53 +20,63 @@ public class EffectManager : MonoBehaviour
     [SerializeField] private GameObject stoneHit = null;
     [SerializeField] private GameObject starAura = null;
 
-    private void Awake()
+    public void Play(EffectType type, Vector3 pos)
     {
-        
+        GameObject effect = null;
+        switch (type)
+        {
+            case EffectType.SnowHit:
+                effect = snowHit;
+                break;
+            case EffectType.Explosion:
+                effect = explosion;
+                break;
+            case EffectType.StoneHit:
+                effect = stoneHit;
+                break;
+            case EffectType.StarAura:
+                effect = starAura;
+                break;
+            default:
+                break;
+        }
+
+        pos.y += 0.5f;
+        effect.transform.position = pos;
+
+        effect.gameObject.SetActive(true);
+        effect.GetComponent<ParticleSystem>().Play();
     }
 
-    public void SnowHit(Vector3 pos)
+    public void AttachEffect(GameObject target, EffectType type)
     {
-        snowHit.transform.position = pos;
-        pos.y = 1.2f;
-        snowHit.gameObject.SetActive(true);
-        snowHit.GetComponent<ParticleSystem>().Play();
-    }
+        GameObject effect = null;
+        switch (type)
+        {
+            case EffectType.SnowHit:
+                effect = snowHit;
+                break;
+            case EffectType.Explosion:
+                effect = explosion;
+                break;
+            case EffectType.StoneHit:
+                effect = stoneHit;
+                break;
+            case EffectType.StarAura:
+                effect = starAura;
+                break;
+            default:
+                break;
+        }
 
-    public void Explosion(Vector3 pos)
-    {
-        explosion.transform.position = pos;
-        pos.y = 1.2f;
-        explosion.gameObject.SetActive(true);
-        explosion.GetComponent<ParticleSystem>().Play();
-    }
+        effect.transform.position = target.transform.position + Vector3.up * 1.2f;
+        effect.transform.SetParent(target.transform);
 
-    public void StoneHit(Vector3 pos)
-    {
-        stoneHit.transform.position = pos;
-        pos.y = 1.2f;
-        stoneHit.gameObject.SetActive(true);
-        stoneHit.GetComponent<ParticleSystem>().Play();
-    }
-
-    public void StarAura(Vector3 pos)
-    {
-        starAura.transform.position = pos;
-        pos.y = 1.2f;
-        starAura.gameObject.SetActive(true);
-        starAura.GetComponent<ParticleSystem>().Play();
-    }
-
-    public void AttachStarAura(GameObject target)
-    {
-        starAura.transform.position = target.transform.position + Vector3.up * 1.2f;
-        starAura.transform.SetParent(target.transform);
-        
         //pos.y = 1.2f;
-        starAura.gameObject.SetActive(true);
-        starAura.GetComponent<ParticleSystem>().Play();
+        effect.gameObject.SetActive(true);
+        effect.GetComponent<ParticleSystem>().Play();
 
-        StartCoroutine(CoBackPos(starAura.GetComponent<ParticleSystem>().main.duration + 0.2f));
+        StartCoroutine(CoBackPos(effect.GetComponent<ParticleSystem>().main.duration + 0.2f));
     }
 
     private IEnumerator CoBackPos(float time)

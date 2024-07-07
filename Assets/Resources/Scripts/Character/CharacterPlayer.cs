@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 {
@@ -106,7 +108,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             }
             if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
             {
-                GameManager.Instance.effectManager.StoneHit(target.transform.position);
+                //GameManager.Instance.effectManager.Play(EffectType.StoneHit, target.transform.position);
                 targetObj.TakeDamage(attackDamage);
 
                 if (targetObj.isDead)

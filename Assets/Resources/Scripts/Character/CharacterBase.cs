@@ -77,8 +77,8 @@ public class CharacterBase : MonoBehaviour
 
         characterStat.onCurrentHpChanged -= hpBar.UpdateCurrentHp;
         characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
-        characterStat.onCurrentHpZero -= SetDead;
-        characterStat.onCurrentHpZero += SetDead;
+        characterStat.onCurrentHpZero -= RPCSetDead;
+        characterStat.onCurrentHpZero += RPCSetDead;
 
         if (!photonView.IsMine)
         {
@@ -115,9 +115,17 @@ public class CharacterBase : MonoBehaviour
             return;
         }
         characterStat.ApplyDamage(inDamage);
+        GameManager.Instance.effectManager.Play(EffectType.StoneHit, gameObject.transform.position);
     }
 
+    
     public virtual void SetDead()
+    {
+        photonView.RPC("SetDead", RpcTarget.AllBuffered);
+    }
+
+    [PunRPC]
+    public virtual void RPCSetDead()
     {
         isDead = true;
         hpBar.UPdateIsUsed(false);
@@ -126,6 +134,7 @@ public class CharacterBase : MonoBehaviour
         {
             deadAction.Invoke(this);
         }
+        GameManager.Instance.effectManager.Play(EffectType.Explosion, transform.position);
         gameObject.SetActive(false);
     }
 

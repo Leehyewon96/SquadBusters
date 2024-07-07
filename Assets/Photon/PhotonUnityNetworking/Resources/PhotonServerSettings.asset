@@ -49,6 +49,9 @@ MonoBehaviour:
   - RPCTakeDamage
   - OnDetectNPC
   - OnUnDetectNPC
+  - RPCEffect
+  - RPCSetDead
+  - SetDead
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
