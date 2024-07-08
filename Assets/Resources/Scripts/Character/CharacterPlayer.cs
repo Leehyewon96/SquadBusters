@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Realtime;
 
 public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 {
     public delegate void OnTakeItem();
     private List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
+
+    protected virtual void OnEnable()
+    {
+        StartCoroutine(CoEffect());
+    }
 
     protected override void Update()
     {
@@ -126,5 +130,11 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     public virtual void GainTreasureBox()
     {
         GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter);
+    }
+
+    protected IEnumerator CoEffect()
+    {
+        yield return new WaitUntil(() => GameManager.Instance.effectManager != null);
+        GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position);
     }
 }
