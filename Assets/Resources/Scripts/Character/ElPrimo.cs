@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 
 public class ElPrimo : CharacterPlayer
@@ -10,58 +9,35 @@ public class ElPrimo : CharacterPlayer
     private bool isFlyingElbowAttackMode = false;
     public Rigidbody body;
     float jumpForce = 100f;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        body = GetComponent<Rigidbody>();
+    }
+
     protected override void Update()
     {
-        //Jump();
-
+        //navMeshAgent.ResetPath();
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            FlyingElbowAttack(transform.position + transform.forward.normalized * 4f);
+            Vector3 endPos = transform.position + transform.forward.normalized * 5f;
+            FlyingElbowAttack(transform.position, endPos);
         }
 
     }
 
-    private void Jump()
+    private void FlyingElbowAttack(Vector3 startPos, Vector3 targetPos)
     {
-        // 스페이스바를 누르면(또는 누르고 있으면)
-        if (Input.GetKey(KeyCode.Space))
-        {
-            animator.SetTrigger(AnimLocalize.Jump);
-            // body에 힘을 가한다(AddForce)
-            // AddForce(방향, 힘을 어떻게 가할 것인가)
-            navMeshAgent.enabled = false;
-            body.AddForce(Vector3.up * jumpForce);
-            StartCoroutine(SetEnableNavMeshAgent(false));
-            //navMeshAgent.enabled = true;
-        }
-    }
-
-    private IEnumerator SetEnableNavMeshAgent(bool isEnabled)
-    {
-        yield return new WaitForSeconds(0.5f);
-        navMeshAgent.enabled = isEnabled;
-    }
-
-    private void FlyingElbowAttack(Vector3 target)
-    {
-        animator.SetBool(AnimLocalize.Jump, true);
-        AnimationClip clip = animatorController.animationClips.ToList().Find(c => c.name.Equals(AnimLocalize.Jump));
-        StartCoroutine(CoJump(clip.length, transform.position, target));
-    }
-
-    IEnumerator CoJump(float duration, Vector3 startPos, Vector3 targetPos)
-    {
-        var runTime = 0.0f;
-
-        while (runTime < duration)
-        {
-            runTime += Time.deltaTime;
-
-            characterController.Move((targetPos - startPos).normalized * Time.deltaTime);
-            //transform.position = Vector3.Lerp(startPos, targetPos, runTime / duration);
-
-            yield return null;
-        }
-        animator.SetBool(AnimLocalize.Jump, false);
+        navMeshAgent.enabled = false;
+        characterController.enabled = false;
+        Vector3 midPos = startPos + ((targetPos - startPos) / 2f) + Vector3.up * 3f;
+        Vector3[] jumpPath = { startPos, midPos, targetPos };
+        body.DOPath(jumpPath, 0.5f, PathType.CatmullRom, PathMode.Full3D).OnComplete(
+            () =>
+            {
+                navMeshAgent.enabled = true;
+                characterController.enabled = true;
+            });
     }
 }

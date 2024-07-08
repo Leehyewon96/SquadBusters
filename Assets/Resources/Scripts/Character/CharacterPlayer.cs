@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
@@ -39,10 +38,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         else
         {
             animator.SetFloat(AnimLocalize.moveSpeed, 0);
-            //if (!isAttacking)
-            //{
-            //    MoveToEnemy();
-            //}
+            
             MoveToEnemy();
         }
     }

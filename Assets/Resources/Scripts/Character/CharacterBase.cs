@@ -149,16 +149,28 @@ public class CharacterBase : MonoBehaviour
 
     public virtual void SetDestination(Vector3 destination)
     {
+        if(!navMeshAgent.enabled)
+        {
+            return;
+        }
         navMeshAgent.SetDestination(destination);
     }
 
     public virtual void ResetPath()
     {
+        if (!navMeshAgent.enabled)
+        {
+            return;
+        }
         navMeshAgent.ResetPath();
     }
 
     public virtual void SetSpeed(float inSpeed)
     {
+        if (!navMeshAgent.enabled)
+        {
+            return;
+        }
         navMeshAgent.speed = inSpeed;
     }
 
