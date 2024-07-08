@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 {
@@ -101,13 +102,18 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
                 if (targetObj.isDead)
                 {
-                    DetectedEnemies.Remove(target);
-                    animator.SetBool(AnimLocalize.contactEnemy, false);
-                    isAttacking = false;
+                    OnTargetDead(target);
                     yield break;
                 }
             }
         }
+    }
+
+    protected virtual void OnTargetDead(GameObject target)
+    {
+        DetectedEnemies.Remove(target);
+        animator.SetBool(AnimLocalize.contactEnemy, false);
+        isAttacking = false;
     }
 
     public virtual void TakeItem(ItemType itemType)

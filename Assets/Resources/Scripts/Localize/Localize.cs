@@ -4,7 +4,9 @@ public class AnimLocalize
     static public string contactEnemy = "contactEnemy";
     static public string dead = "dead";
     static public string attack = "Attack";
-    static public string Jump = "Jump";
+    static public string flyingElbow = "FlyingElbow";
+    static public string jump = "Jump";
+    static public string elbow = "Elbow";
 }
 
 public class LayerLocalize
