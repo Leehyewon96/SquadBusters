@@ -6,6 +6,7 @@ public class TreasureBoxSpawner : Spawner
 
     protected override void Awake()
     {
+        base.Awake();
         SetPath($"Prefabs/Item/TreasureBox");
     }
 }

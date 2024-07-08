@@ -1,7 +1,6 @@
+using UnityEngine;
+
 public interface ICharacterSpawnerInterface
 {
-    public bool GetIsDead();
-    public CharacterType GetCharacterType();
-    public void SetIsDead(bool value);
-    public void Init();
+    public void SetSpawnObject(GameObject obj);
 }

@@ -69,18 +69,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         return false;
     }
 
-    //public override void UpdateEnemyList(CharacterBase target)
-    //{
-    //    Debug.Log($"player UpdateEnemyList");
-    //    Debug.Log($"DetectedEnemies {DetectedEnemies.Count} / characterStat.GetAttackRadius() {characterStat.GetAttackRadius()} / 거리 : {Vector3.Distance(target.transform.position, transform.position)}");
-    //    if (!DetectedEnemies.Contains(target.gameObject)
-    //        && Vector3.Distance(target.transform.position, transform.position) <= characterStat.GetAttackRadius())
-    //    {
-    //        Debug.Log($"player가 {target.gameObject.name} 추가 ");
-    //        DetectedEnemies.Add(target.gameObject);
-    //    }
-    //}
-
     protected override void Attack(GameObject target)
     {
         StartCoroutine(CoAttack(target));

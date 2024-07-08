@@ -60,11 +60,7 @@ public class CharacterBase : MonoBehaviour
     protected virtual void Start()
     {
         Init();
-    }
-
-    protected virtual void OnEnable()
-    {
-        GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position);
+        
     }
 
     protected virtual void Update()

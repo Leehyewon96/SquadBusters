@@ -61,16 +61,33 @@ public class GameManager : MonoBehaviour
         itemManager = FindObjectOfType<ItemManager>();
         effectManager = FindObjectOfType<EffectManager>();
         uiManager = FindObjectOfType<UIManager>();
-        List<Spawner> spawners = FindObjectsOfType<Spawner>().ToList();
-        List<TreasureBoxSpawner> treasureBoxSpawners = FindObjectsOfType<TreasureBoxSpawner>().ToList();
 
+        List<NPCSpawnPoint> npcSpawnPoses = FindObjectsOfType<NPCSpawnPoint>().ToList();
+        List<TreasureBoxSpawnPoint> treasureBoxSpawnPoses = FindObjectsOfType<TreasureBoxSpawnPoint>().ToList();
 
-        if (PhotonNetwork.IsMasterClient)
+        string npcSpawnerPath = $"Prefabs/Spawner/NPCSpawner";
+        foreach (var spawnPoint in npcSpawnPoses)
         {
-            spawners.ForEach(s => s.StartSpawn());
-            treasureBoxSpawners.ForEach(tb => tb.StartSpawn());
+            GameObject spawner = PhotonNetwork.Instantiate(npcSpawnerPath, spawnPoint.gameObject.transform.position, spawnPoint.transform.rotation);
+            if(PhotonNetwork.IsMasterClient)
+            {
+                spawner.GetComponent<Spawner>().StartSpawn();
+            }
+            
         }
-        
+
+        string tbSpawnerPath = $"Prefabs/Spawner/TreasureBoxSpawner";
+        Debug.Log($"treasureBoxSpawnPoses {treasureBoxSpawnPoses.Count}");
+        foreach (var spawnPoint in treasureBoxSpawnPoses)
+        {
+            GameObject spawner = PhotonNetwork.Instantiate(tbSpawnerPath, spawnPoint.gameObject.transform.position, spawnPoint.transform.rotation);
+            
+            if (PhotonNetwork.IsMasterClient)
+            {
+                spawner.GetComponent<TreasureBoxSpawner>().StartSpawn();
+            }
+
+        }
 
         SpawnCharacter(Vector3.up * 2.26f, CharacterType.ElPrimo);
     }
