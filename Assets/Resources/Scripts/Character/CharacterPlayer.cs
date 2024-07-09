@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 {
@@ -23,11 +22,21 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             return;
         }
 
+        if (characterState == CharacterState.Skilled)
+        {
+            return;
+        }
+
+        if (characterState == CharacterState.KnockBack)
+        {
+            StopAllCoroutines();
+            return;
+        }
+
         if (CheckInput())
         {
             StopAllCoroutines();
-            navMeshAgent.ResetPath();
-            navMeshAgent.velocity = Vector3.zero;
+            ResetPath();
 
             isAttacking = false;
             DetectedEnemies.Clear();
@@ -72,6 +81,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected override void Attack(GameObject target)
     {
+        base.Attack(target);
         StartCoroutine(CoAttack(target));
         isAttacking = true;
     }

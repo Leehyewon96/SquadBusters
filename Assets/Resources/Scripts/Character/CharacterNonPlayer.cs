@@ -12,11 +12,23 @@ public class CharacterNonPlayer : CharacterBase
             return;
         }
 
+        if (characterState == CharacterState.Skilled)
+        {
+            return;
+        }
+
+        if (characterState == CharacterState.KnockBack)
+        {
+            StopAllCoroutines();
+            return;
+        }
+
         MoveToEnemy();
     }
 
     protected override void Attack(GameObject target)
     {
+        base.Attack(target);
         StartCoroutine(CoAttack(target));
     }
 

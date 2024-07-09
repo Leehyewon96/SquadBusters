@@ -1,11 +1,14 @@
 using DG.Tweening;
+using System.Collections;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ElPrimo : CharacterPlayer
 {
     private int killCount = 0;
     [SerializeField] private int FlyingElbowAttackValue = 2;
+    [SerializeField] private float waitTime = 1.7f;
 
     private bool isFlyingElbowAttackMode = false;
     public Rigidbody body;
@@ -22,24 +25,35 @@ public class ElPrimo : CharacterPlayer
         isAttacking = true;
         navMeshAgent.enabled = false;
         characterController.enabled = false;
+        characterState = CharacterState.Skilled;
         animator.SetTrigger(AnimLocalize.flyingElbow);
+
+        StartCoroutine(CoFlyingElbowAttack(target));
+    }
+
+    private IEnumerator CoFlyingElbowAttack(GameObject target)
+    {
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(AnimLocalize.jump));
 
         float jumpTime = animatorController.animationClips.ToList().Find(a => a.name.Equals(AnimLocalize.jump)).length;
         float elbowTime = animatorController.animationClips.ToList().Find(a => a.name.Equals(AnimLocalize.elbow)).length;
-        float dotTime = jumpTime + elbowTime;
 
         Vector3 startPos = transform.position;
         Vector3 targetPos = target.transform.position;
         Vector3 midPos = startPos + ((targetPos - startPos) / 2f) + Vector3.up * 3f;
         Vector3[] jumpPath = { startPos, midPos, targetPos };
-        body.DOPath(jumpPath, dotTime, PathType.CatmullRom, PathMode.Full3D).OnComplete(
-            () =>
-            {
-                navMeshAgent.enabled = true;
-                characterController.enabled = true;
-                //Å¸°Ù ³Ë¹é
-                isAttacking = false;
-            });
+        transform.LookAt(targetPos);
+
+        body.DOPath(jumpPath, jumpTime, PathType.CatmullRom, PathMode.Full3D);
+
+        yield return new WaitForSeconds(elbowTime);
+
+        isAttacking = false;
+        navMeshAgent.enabled = true;
+        characterController.enabled = true;
+
+        target.GetComponent<CharacterBase>().KnockBack(attackDamage * 2f);
+        characterState = CharacterState.Idle;
     }
 
     protected override void MoveToEnemy()
@@ -52,6 +66,7 @@ public class ElPrimo : CharacterPlayer
             StopAllCoroutines();
             animator.SetBool(AnimLocalize.contactEnemy, false);
             isAttacking = false;
+            navMeshAgent.enabled = true;
             return;
         }
 
@@ -67,12 +82,11 @@ public class ElPrimo : CharacterPlayer
             return;
         }
 
-        navMeshAgent.SetDestination(target.transform.position);
+        SetDestination(target.transform.position);
 
         if (Vector3.Distance(transform.position, target.transform.position) <= navMeshAgent.stoppingDistance)
         {
-            navMeshAgent.ResetPath();
-            navMeshAgent.velocity = Vector3.zero;
+            ResetPath();
             animator.SetFloat(AnimLocalize.moveSpeed, 0);
             Attack(target);
         }
@@ -83,4 +97,5 @@ public class ElPrimo : CharacterPlayer
         base.OnTargetDead(target);
         killCount++;
     }
+
 }

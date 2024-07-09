@@ -1029,8 +1029,8 @@ MonoBehaviour:
     SynchronizeType: 1
     Name: contactEnemy
   - Type: 9
-    SynchronizeType: 1
-    Name: Jump
+    SynchronizeType: 0
+    Name: FlyingElbow
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0

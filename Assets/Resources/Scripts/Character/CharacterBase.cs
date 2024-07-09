@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,15 @@ public enum CharacterType
     Eggy,
     Chilli,
     Kiwi,
+}
+
+public enum CharacterState
+{
+    Idle,
+    Attack,
+    Dead,
+    KnockBack,
+    Skilled,
 }
 
 public class CharacterBase : MonoBehaviour
@@ -31,6 +41,8 @@ public class CharacterBase : MonoBehaviour
     protected float attackRadius = 1f;
     [SerializeField] protected float attackDamage = 30f;
     protected WaitForSecondsRealtime attackTerm = new WaitForSecondsRealtime(0.933f);
+
+    protected CharacterState characterState = CharacterState.Idle;
     protected bool isAttacking = false; // CharacterStat안에 있어야 되나?
     public bool isDead { get; protected set; } = false;
 
@@ -66,6 +78,7 @@ public class CharacterBase : MonoBehaviour
     {
         //attackCircle.MoveAttackCircle(transform.position);
         hpBar.UpdatePos(transform.position + new Vector3(0, characterController.height + 0.5f, 0));
+
         //업데이트용 이벤트 하나 생성 후 상속받는 클래스에서 Start에서 다 등록.
         //여기서 업데이트용 이벤트 계속 Invoke하기(상속받는 클래스에는 Update 작성 X)
     }
@@ -162,6 +175,7 @@ public class CharacterBase : MonoBehaviour
             return;
         }
         navMeshAgent.ResetPath();
+        navMeshAgent.velocity = Vector3.zero;
     }
 
     public virtual void SetSpeed(float inSpeed)
@@ -197,6 +211,7 @@ public class CharacterBase : MonoBehaviour
             StopAllCoroutines();
             animator.SetBool(AnimLocalize.contactEnemy, false);
             isAttacking = false;
+            navMeshAgent.enabled = true;
             return;
         }
 
@@ -205,12 +220,11 @@ public class CharacterBase : MonoBehaviour
             return;
         }
 
-        navMeshAgent.SetDestination(target.transform.position);
+        SetDestination(target.transform.position);
 
         if (Vector3.Distance(transform.position, target.transform.position) <= navMeshAgent.stoppingDistance)
         {
-            navMeshAgent.ResetPath();
-            navMeshAgent.velocity = Vector3.zero;
+            ResetPath();
             animator.SetFloat(AnimLocalize.moveSpeed, 0);
             Attack(target);
         }
@@ -218,7 +232,7 @@ public class CharacterBase : MonoBehaviour
 
     protected virtual void Attack(GameObject target)
     {
-
+        navMeshAgent.enabled = false;
     }
 
     public virtual void OnUnDetectEnemy(CharacterBase target)
@@ -228,4 +242,21 @@ public class CharacterBase : MonoBehaviour
             DetectedEnemies.Remove(target.gameObject);
         }
     }
+
+    public virtual void KnockBack(float inDamage)
+    {
+        navMeshAgent.enabled = false;
+        characterController.enabled = false;
+        characterState = CharacterState.KnockBack;
+        Vector3 destination = transform.position + transform.forward.normalized * 3f;
+        Vector3[] path = { transform.position, destination };
+        transform.DOPath(path, 3f, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
+        {
+            navMeshAgent.enabled = true;
+            characterController.enabled = true;
+            characterState = CharacterState.Idle;
+            TakeDamage(inDamage);
+        });
+    }
+
 }

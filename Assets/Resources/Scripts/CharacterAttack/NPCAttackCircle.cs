@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class NPCAttackCircle : AttackCircle
 {
-    private GameObject followTarget = null;
-
     protected override void Awake()
     {
         base.Awake();
@@ -13,15 +11,7 @@ public class NPCAttackCircle : AttackCircle
 
     protected virtual void Update()
     {
-        if (followTarget != null)
-        {
-            transform.position = followTarget.transform.position;
-        }
-        else
-        {
-            Move();
-        }
-        
+        Move();
     }
 
     protected virtual void Move()
