@@ -1029,7 +1029,7 @@ MonoBehaviour:
     SynchronizeType: 1
     Name: contactEnemy
   - Type: 9
-    SynchronizeType: 0
+    SynchronizeType: 1
     Name: FlyingElbow
   m_SynchronizeLayers:
   - SynchronizeType: 0
@@ -1051,6 +1051,7 @@ MonoBehaviour:
   hpBarOrigin: {fileID: 0}
   attackCircleOrigin: {fileID: 0}
   FlyingElbowAttackValue: 2
+  waitTime: 1.7
   body: {fileID: 0}
 --- !u!54 &-3111719854583606445
 Rigidbody:

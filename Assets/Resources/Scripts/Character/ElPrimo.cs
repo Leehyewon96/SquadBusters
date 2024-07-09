@@ -31,8 +31,11 @@ public class ElPrimo : CharacterPlayer
         StartCoroutine(CoFlyingElbowAttack(target));
     }
 
-    private IEnumerator CoFlyingElbowAttack(GameObject target)
+    private IEnumerator CoFlyingElbowAttack(GameObject target) 
     {
+        transform.LookAt(target.transform.position);
+        target.transform.LookAt(gameObject.transform.position);
+
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(AnimLocalize.jump));
 
         float jumpTime = animatorController.animationClips.ToList().Find(a => a.name.Equals(AnimLocalize.jump)).length;
@@ -40,10 +43,9 @@ public class ElPrimo : CharacterPlayer
 
         Vector3 startPos = transform.position;
         Vector3 targetPos = target.transform.position;
-        Vector3 midPos = startPos + ((targetPos - startPos) / 2f) + Vector3.up * 3f;
+        Vector3 midPos = startPos + ((targetPos - startPos) / 2f) + Vector3.up * 2f;
         Vector3[] jumpPath = { startPos, midPos, targetPos };
-        transform.LookAt(targetPos);
-
+        
         body.DOPath(jumpPath, jumpTime, PathType.CatmullRom, PathMode.Full3D);
 
         yield return new WaitForSeconds(elbowTime);
@@ -51,7 +53,7 @@ public class ElPrimo : CharacterPlayer
         isAttacking = false;
         navMeshAgent.enabled = true;
         characterController.enabled = true;
-
+        
         target.GetComponent<CharacterBase>().KnockBack(attackDamage * 2f);
         characterState = CharacterState.Idle;
     }

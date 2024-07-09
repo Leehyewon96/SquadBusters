@@ -117,7 +117,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   coin: 0
   gem: 0
-  attackRadius: 8
+  attackRadius: 4
 --- !u!54 &769835126204654497
 Rigidbody:
   m_ObjectHideFlags: 0
