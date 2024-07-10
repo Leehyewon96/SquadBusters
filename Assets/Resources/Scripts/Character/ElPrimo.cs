@@ -118,5 +118,4 @@ public class ElPrimo : CharacterPlayer
         base.OnTargetDead(target);
         killCount++;
     }
-
 }

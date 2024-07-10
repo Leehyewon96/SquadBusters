@@ -157,6 +157,7 @@ public class CharacterBase : MonoBehaviour
             deadAction.Invoke(this);
         }
         GameManager.Instance.effectManager.Play(EffectType.Explosion, transform.position);
+
         gameObject.SetActive(false);
     }
 
@@ -297,5 +298,15 @@ public class CharacterBase : MonoBehaviour
             characterController.enabled = true;
             characterState = CharacterState.Idle;
         });
+    }
+
+    public virtual int GetCoin()
+    {
+        return characterStat.GetCoin();
+    }
+
+    public virtual int GetGem()
+    {
+        return characterStat.GetGem();
     }
 }

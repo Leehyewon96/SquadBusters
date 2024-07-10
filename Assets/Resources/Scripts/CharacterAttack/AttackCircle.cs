@@ -67,6 +67,8 @@ public class AttackCircle : MonoBehaviour
         if(!owners.Contains(newOwner))
         {
             owners.Add(newOwner);
+            attackCircleStat.AddCoin(newOwner.GetCoin());
+            attackCircleStat.AddGem(newOwner.GetGem());
             onDetectEnemy -= newOwner.OnDetectEnemy;
             onDetectEnemy += newOwner.OnDetectEnemy;
             onUnDetectEnemy -= newOwner.OnUnDetectEnemy;
@@ -82,8 +84,8 @@ public class AttackCircle : MonoBehaviour
         {
             owners.Remove(inOwner);
         }
-
-        if(owners.Count == 0)
+        
+        if (owners.Count == 0)
         {
             SetDead();
         }
@@ -144,23 +146,13 @@ public class AttackCircle : MonoBehaviour
         }
     }
 
-    public void SetCoin(int cnt)
-    {
-        attackCircleStat.coin = cnt;
-    }
-
-    public void SetGem(int cnt)
-    {
-        attackCircleStat.gem = cnt;
-    }
-
     public void GainCoin()
     {
-        attackCircleStat.coin += 1;
+        attackCircleStat.AddCoin(1);
     }
 
     public void GainGem()
     {
-        attackCircleStat.gem += 1;
+        attackCircleStat.AddCoin(1);
     }
 }

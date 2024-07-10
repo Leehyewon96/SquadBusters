@@ -28,6 +28,8 @@ public class CharacterStat : MonoBehaviour
     public float GetCurrentHp() { return currentHp; }
     public float GetMaxHp() { return maxHp; }
     public float GetAttackRadius() { return attackRadius; }
+    public int GetCoin() { return coin; }
+    public int GetGem() { return gem; }
 
     public void Init()
     {

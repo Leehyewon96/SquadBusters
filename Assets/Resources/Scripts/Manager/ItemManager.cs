@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -15,7 +16,7 @@ public class ItemManager : MonoBehaviour
 {
     List<Item> items = new List<Item>();
 
-    private void Awake()
+    private void Start()
     {
         items = GetComponentsInChildren<Item>().ToList();
         Init();
@@ -29,19 +30,19 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    public Item GetItem(ItemType itemType)
-    {
-        Item item = items.Find(it => !it.gameObject.activeSelf && it.GetItemType() == itemType);
-        if(item == null)
-        {
-            Item originItem = items.Find(it => it.GetItemType() == itemType);
-            item = Instantiate(originItem, transform);
-            item.UpdateItemType(itemType);
-            items.Add(item);
-        }
+    //public Item GetItem(ItemType itemType)
+    //{
+    //    Item item = items.Find(it => !it.gameObject.activeSelf && it.GetItemType() == itemType);
+    //    if(item == null)
+    //    {
+    //        Item originItem = items.Find(it => it.GetItemType() == itemType);
+    //        item = Instantiate(originItem, transform);
+    //        item.UpdateItemType(itemType);
+    //        items.Add(item);
+    //    }
 
-        return item;
-    }
+    //    return item;
+    //}
 
     public void ShowItem(int num, Vector3 pos, ItemType itemType)
     {
@@ -51,9 +52,16 @@ public class ItemManager : MonoBehaviour
         {
             randomPos.x = Random.Range(pos.x - 1, pos.x + 1);
             randomPos.z = Random.Range(pos.z - 1, pos.z + 1);
-            Item item = GetItem(itemType);
+            Item item = items.Find(it => !it.gameObject.activeSelf && it.GetItemType() == itemType); //GetItem(itemType);
+
+            if(item == null)
+            {
+                string path = $"Prefabs/Item/{itemType.ToString()}";
+                item = PhotonNetwork.Instantiate(path, randomPos, Quaternion.identity).GetComponent<Item>();
+            }
+
             item.SetActive(true);
-            item.transform.position = randomPos;
+            item.SetPosition(randomPos);
         }
     }
 }

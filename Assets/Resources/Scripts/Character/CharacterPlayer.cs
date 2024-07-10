@@ -2,12 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
+public class CharacterPlayer : CharacterBase
 {
-    public delegate void OnTakeItem();
-    private List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
-
     protected virtual void OnEnable()
     {
         StartCoroutine(CoEffect());
@@ -129,23 +128,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         isAttacking = false;
     }
 
-    public virtual void TakeItem(ItemType itemType)
-    {
-        if (photonView.IsMine)
-        {
-            takeItemActions[(int)itemType].DynamicInvoke();
-        }
-    }
-
-    public virtual void AddTakeItemActions(OnTakeItem onTakeItem)
-    {
-        takeItemActions.Add(onTakeItem);
-    }
-
-    public virtual void GainTreasureBox()
-    {
-        GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter);
-    }
+    
 
     protected IEnumerator CoEffect()
     {

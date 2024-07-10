@@ -67,7 +67,7 @@ GameObject:
   - component: {fileID: 6277392850918742258}
   - component: {fileID: 6185013124776873021}
   - component: {fileID: 129777886085344785}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: TreasureBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}

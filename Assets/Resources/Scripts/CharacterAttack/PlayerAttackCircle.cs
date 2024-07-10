@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
+public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAttackCircleUIInterface
 {
     protected GameObject moveObj = null;
     protected Movement3D movement3D = null;
     protected CharacterController characterController = null;
+
+    public delegate void OnTakeItem();
+    private List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
 
     protected override void Awake()
     {
@@ -26,6 +29,13 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
     protected override void Start()
     { 
         moveObj.transform.position = transform.position;
+
+        OnTakeItem takeCoin = GainCoin;
+        AddTakeItemActions(takeCoin);
+        OnTakeItem takeGem = GainGem;
+        AddTakeItemActions(takeGem);
+        OnTakeItem takeTreasureBox = GainTreasureBox;
+        AddTakeItemActions(takeTreasureBox);
     }
 
     protected virtual void Update()
@@ -52,16 +62,6 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
     {
         base.UpdateOwners(newOwner);
         
-        if(newOwner.gameObject.TryGetComponent<CharacterPlayer>(out CharacterPlayer characterPlayer))
-        {
-            CharacterPlayer.OnTakeItem takeCoin = GainCoin;
-            characterPlayer.AddTakeItemActions(takeCoin);
-            CharacterPlayer.OnTakeItem takeGem = GainGem;
-            characterPlayer.AddTakeItemActions(takeGem);
-            CharacterPlayer.OnTakeItem takeTreasureBox = characterPlayer.GainTreasureBox;
-            characterPlayer.AddTakeItemActions(takeTreasureBox);
-        }
-
         if (owners.LastOrDefault() == newOwner)
         {
             //머지할 수 있는지 검사
@@ -118,5 +118,23 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
         CharacterBase player = SpawnPlayer(pos, newType);
         UpdateOwners(player);
+    }
+
+    public virtual void TakeItem(ItemType itemType)
+    {
+        if (photonView.IsMine)
+        {
+            takeItemActions[(int)itemType].DynamicInvoke();
+        }
+    }
+
+    public virtual void AddTakeItemActions(OnTakeItem onTakeItem)
+    {
+        takeItemActions.Add(onTakeItem);
+    }
+
+    public virtual void GainTreasureBox()
+    {
+        GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter);
     }
 }
