@@ -56,7 +56,7 @@ public class ElPrimo : CharacterPlayer
         
         transform.DOPath(jumpPath, jumpTime, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
         {
-            photonView.RPC("RPCEffect", RpcTarget.AllBuffered, EffectType.MagicCircle2, transform.position);
+            photonView.RPC("RPCEffect", RpcTarget.AllBuffered, EffectType.PortalRed, transform.position);
         });
 
         yield return new WaitForSeconds(elbowTime);

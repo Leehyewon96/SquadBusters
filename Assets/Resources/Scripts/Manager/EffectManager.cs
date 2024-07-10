@@ -10,6 +10,7 @@ public enum EffectType
     StarAura,
     StoneSlash,
     MagicCircle2,
+    PortalRed,
 
 
     End,
