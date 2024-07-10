@@ -20,6 +20,11 @@ public class CharacterNonPlayer : CharacterBase
         if (characterState == CharacterState.KnockBack)
         {
             StopAllCoroutines();
+            ResetPath();
+            isAttacking = false;
+            DetectedEnemies.Clear();
+            animator.SetBool(AnimLocalize.contactEnemy, false);
+            animator.SetFloat(AnimLocalize.moveSpeed, 0);
             return;
         }
 

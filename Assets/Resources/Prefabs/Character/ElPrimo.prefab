@@ -959,7 +959,7 @@ NavMeshAgent:
   m_Acceleration: 20
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 1.5
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -1046,12 +1046,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7af4a2c9d49fed140a01afe84a1a2852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackDamage: 30
+  attackDamage: 3
   characterType: 0
   hpBarOrigin: {fileID: 0}
   attackCircleOrigin: {fileID: 0}
   FlyingElbowAttackValue: 2
-  waitTime: 1.7
+  knockBackTime: 3
+  knockBackDistance: 4
   body: {fileID: 0}
 --- !u!54 &-3111719854583606445
 Rigidbody:

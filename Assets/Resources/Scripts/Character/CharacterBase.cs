@@ -97,17 +97,25 @@ public class CharacterBase : MonoBehaviour
         {
             return;
         }
-        //attackCircle.onDetectEnemy -= UpdateEnemyList;
-        //attackCircle.onDetectEnemy += UpdateEnemyList;
-        //attackCircle.onUnDetectEnemy -= OnUnDetectEnemy;
-        //attackCircle.onUnDetectEnemy += OnUnDetectEnemy;
-        ////attackCircle.SetCoin(characterStat.coin);
-        //attackCircle.SetGem(characterStat.gem);
     }
 
     public virtual void SetCharacterType(CharacterType type)
     {
         characterType = type;
+    }
+
+    public virtual void SetCharacterState(CharacterState newState)
+    {
+        photonView.RPC("RPCSetCharacterState", RpcTarget.AllBuffered, newState);
+    }
+
+    [PunRPC]
+    public virtual void RPCSetCharacterState(CharacterState newState)
+    {
+        if(photonView.IsMine)
+        {
+            characterState = newState;
+        }
     }
 
     public virtual CharacterType GetCharacterType()
@@ -243,20 +251,27 @@ public class CharacterBase : MonoBehaviour
         }
     }
 
-    public virtual void KnockBack(float inDamage)
+    public virtual void KnockBack(float inDamage, float inKnockBackTime, float inKnockBackDis)
     {
-        navMeshAgent.enabled = false;
-        characterController.enabled = false;
-        characterState = CharacterState.KnockBack;
-        Vector3 destination = transform.position + transform.forward.normalized * 3f;
-        Vector3[] path = { transform.position, destination };
-        transform.DOPath(path, 3f, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
-        {
-            navMeshAgent.enabled = true;
-            characterController.enabled = true;
-            characterState = CharacterState.Idle;
-            TakeDamage(inDamage);
-        });
+        photonView.RPC("RPCKnockBack", RpcTarget.AllBuffered, inDamage, inKnockBackTime, inKnockBackDis);
     }
 
+    [PunRPC]
+    public virtual void RPCKnockBack(float inDamage, float inKnockBackTime, float inKnockBackDis)
+    {
+        if (photonView.IsMine)
+        {
+            navMeshAgent.enabled = false;
+            characterController.enabled = false;
+            Vector3 destination = transform.position - transform.forward.normalized * inKnockBackDis;
+            Vector3[] path = { transform.position, destination };
+            transform.DOPath(path, inKnockBackTime, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
+            {
+                navMeshAgent.enabled = true;
+                characterController.enabled = true;
+                characterState = CharacterState.Idle;
+                TakeDamage(inDamage);
+            });
+        }
+    }
 }

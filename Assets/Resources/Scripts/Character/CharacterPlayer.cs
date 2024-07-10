@@ -30,6 +30,11 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         if (characterState == CharacterState.KnockBack)
         {
             StopAllCoroutines();
+            ResetPath();
+            isAttacking = false;
+            DetectedEnemies.Clear();
+            animator.SetBool(AnimLocalize.contactEnemy, false);
+            animator.SetFloat(AnimLocalize.moveSpeed, 0);
             return;
         }
 
@@ -37,7 +42,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         {
             StopAllCoroutines();
             ResetPath();
-
             isAttacking = false;
             DetectedEnemies.Clear();
             animator.SetBool(AnimLocalize.contactEnemy, false);
@@ -95,8 +99,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
         while (true)
         {
-            yield return attackTerm;
-
             transform.LookAt(target.transform.position);
 
             if (characterController.enabled) //캐릭터 상태로 판단하도록 변경하기
@@ -107,7 +109,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             }
             if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
             {
-                //GameManager.Instance.effectManager.Play(EffectType.StoneHit, target.transform.position);
                 targetObj.TakeDamage(attackDamage);
 
                 if (targetObj.isDead)
@@ -116,6 +117,8 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
                     yield break;
                 }
             }
+
+            yield return attackTerm;
         }
     }
 

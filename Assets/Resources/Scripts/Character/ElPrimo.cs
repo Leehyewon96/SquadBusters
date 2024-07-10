@@ -1,14 +1,14 @@
 using DG.Tweening;
 using System.Collections;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ElPrimo : CharacterPlayer
 {
     private int killCount = 0;
     [SerializeField] private int FlyingElbowAttackValue = 2;
-    [SerializeField] private float waitTime = 1.7f;
+    [SerializeField] protected float knockBackTime = 3f;
+    [SerializeField] protected float knockBackDistance = 4f;
 
     private bool isFlyingElbowAttackMode = false;
     public Rigidbody body;
@@ -22,10 +22,12 @@ public class ElPrimo : CharacterPlayer
 
     private void FlyingElbowAttack(GameObject target)
     {
+        StopAllCoroutines();
+
         isAttacking = true;
         navMeshAgent.enabled = false;
         characterController.enabled = false;
-        characterState = CharacterState.Skilled;
+        SetCharacterState(CharacterState.Skilled);
         animator.SetTrigger(AnimLocalize.flyingElbow);
 
         StartCoroutine(CoFlyingElbowAttack(target));
@@ -35,6 +37,10 @@ public class ElPrimo : CharacterPlayer
     {
         transform.LookAt(target.transform.position);
         target.transform.LookAt(gameObject.transform.position);
+        if(target.TryGetComponent<CharacterBase>(out CharacterBase targetBase))
+        {
+            targetBase.SetCharacterState(CharacterState.KnockBack);
+        }
 
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(AnimLocalize.jump));
 
@@ -53,9 +59,9 @@ public class ElPrimo : CharacterPlayer
         isAttacking = false;
         navMeshAgent.enabled = true;
         characterController.enabled = true;
-        
-        target.GetComponent<CharacterBase>().KnockBack(attackDamage * 2f);
-        characterState = CharacterState.Idle;
+
+        targetBase.KnockBack(attackDamage * 2f, knockBackTime, knockBackDistance);
+        SetCharacterState(CharacterState.Idle);
     }
 
     protected override void MoveToEnemy()

@@ -52,6 +52,9 @@ MonoBehaviour:
   - RPCEffect
   - RPCSetDead
   - SetDead
+  - RPCSetCharacterState
+  - RPCKnockBack
+  - RPCStopAllCoroutines
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
