@@ -7,6 +7,7 @@ public class AnimLocalize
     static public string flyingElbow = "FlyingElbow";
     static public string jump = "Jump";
     static public string elbow = "Elbow";
+    static public string knockBack = "KnockBack";
 }
 
 public class LayerLocalize

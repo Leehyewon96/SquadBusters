@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -263,6 +264,8 @@ public class CharacterBase : MonoBehaviour
         {
             navMeshAgent.enabled = false;
             characterController.enabled = false;
+            animator.SetTrigger(AnimLocalize.knockBack);
+
             Vector3 destination = transform.position - transform.forward.normalized * inKnockBackDis;
             Vector3[] path = { transform.position, destination };
             TakeDamage(inDamage);
@@ -272,6 +275,27 @@ public class CharacterBase : MonoBehaviour
                 characterController.enabled = true;
                 characterState = CharacterState.Idle;
             });
+            //StartCoroutine(CoKnockBack(inDamage, inKnockBackTime, inKnockBackDis));
+
         }
+        
+    }
+
+    [PunRPC]
+    private IEnumerator CoKnockBack(float inDamage, float inKnockBackTime, float inKnockBackDis)
+    {
+        Debug.Log("Enter CoKnockBack");
+        yield return null;
+        //yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(AnimLocalize.knockBack));
+        Debug.Log("Exit CoKnockBack");
+        Vector3 destination = transform.position - transform.forward.normalized * inKnockBackDis;
+        Vector3[] path = { transform.position, destination };
+        TakeDamage(inDamage);
+        transform.DOPath(path, inKnockBackTime, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
+        {
+            navMeshAgent.enabled = true;
+            characterController.enabled = true;
+            characterState = CharacterState.Idle;
+        });
     }
 }

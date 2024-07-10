@@ -2,6 +2,8 @@ using DG.Tweening;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class ElPrimo : CharacterPlayer
 {
@@ -52,7 +54,10 @@ public class ElPrimo : CharacterPlayer
         Vector3 midPos = startPos + ((targetPos - startPos) / 2f) + Vector3.up * 2f;
         Vector3[] jumpPath = { startPos, midPos, targetPos };
         
-        body.DOPath(jumpPath, jumpTime, PathType.CatmullRom, PathMode.Full3D);
+        transform.DOPath(jumpPath, jumpTime, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
+        {
+            photonView.RPC("RPCEffect", RpcTarget.AllBuffered, EffectType.MagicCircle2, transform.position);
+        });
 
         yield return new WaitForSeconds(elbowTime);
 
@@ -63,6 +68,13 @@ public class ElPrimo : CharacterPlayer
         targetBase.KnockBack(attackDamage * 2f, knockBackTime, knockBackDistance);
         OnUnDetectEnemy(targetBase);
         SetCharacterState(CharacterState.Idle);
+    }
+
+    [PunRPC]
+    public void RPCEffect(EffectType type, Vector3 pos)
+    {
+        GameManager.Instance.effectManager.Play(type, pos);
+
     }
 
     protected override void MoveToEnemy()
