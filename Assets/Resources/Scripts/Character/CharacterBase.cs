@@ -265,12 +265,12 @@ public class CharacterBase : MonoBehaviour
             characterController.enabled = false;
             Vector3 destination = transform.position - transform.forward.normalized * inKnockBackDis;
             Vector3[] path = { transform.position, destination };
+            TakeDamage(inDamage);
             transform.DOPath(path, inKnockBackTime, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
             {
                 navMeshAgent.enabled = true;
                 characterController.enabled = true;
                 characterState = CharacterState.Idle;
-                TakeDamage(inDamage);
             });
         }
     }

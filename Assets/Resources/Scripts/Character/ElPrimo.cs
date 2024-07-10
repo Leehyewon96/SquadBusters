@@ -61,6 +61,7 @@ public class ElPrimo : CharacterPlayer
         characterController.enabled = true;
 
         targetBase.KnockBack(attackDamage * 2f, knockBackTime, knockBackDistance);
+        OnUnDetectEnemy(targetBase);
         SetCharacterState(CharacterState.Idle);
     }
 
