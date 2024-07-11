@@ -2,15 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static CharacterPlayer;
 
-public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAttackCircleUIInterface
+public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
 {
     protected GameObject moveObj = null;
     protected Movement3D movement3D = null;
     protected CharacterController characterController = null;
-
-    public delegate void OnTakeItem();
-    private List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
 
     [SerializeField] protected ParticleSystem circleEffect = null;
     protected ParticleSystem.MainModule mainCircleEffect;
@@ -36,12 +34,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
     {
         moveObj.transform.position = transform.position;
 
-        OnTakeItem takeCoin = GainCoin;
-        AddTakeItemActions(takeCoin);
-        OnTakeItem takeGem = GainGem;
-        AddTakeItemActions(takeGem);
-        OnTakeItem takeTreasureBox = GainTreasureBox;
-        AddTakeItemActions(takeTreasureBox);
+        
 
         if (!photonView.IsMine)
         {
@@ -72,9 +65,19 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
     public override void UpdateOwners(CharacterBase newOwner)
     {
         base.UpdateOwners(newOwner);
-        
+
         if (owners.LastOrDefault() == newOwner)
         {
+            if (newOwner.gameObject.TryGetComponent<CharacterPlayer>(out CharacterPlayer player))
+            {
+                OnTakeItem takeCoin = GainCoin;
+                player.AddTakeItemActions(takeCoin);
+                OnTakeItem takeGem = GainGem;
+                player.AddTakeItemActions(takeGem);
+                OnTakeItem takeTreasureBox = player.GainTreasureBox;
+                player.AddTakeItemActions(takeTreasureBox);
+            }
+
             //머지할 수 있는지 검사
             List<CharacterBase> chars = owners.FindAll(o => o.GetCharacterType() == newOwner.GetCharacterType()).ToList();
             if (chars.Count < 3)
@@ -131,26 +134,9 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
         UpdateOwners(player);
     }
 
-    public virtual void TakeItem(ItemType itemType)
-    {
-        if (photonView.IsMine)
-        {
-            takeItemActions[(int)itemType].DynamicInvoke();
-        }
-    }
+    
 
-    public virtual void AddTakeItemActions(OnTakeItem onTakeItem)
-    {
-        if (!takeItemActions.Contains(onTakeItem))
-        {
-            takeItemActions.Add(onTakeItem);
-        }
-    }
-
-    public virtual void GainTreasureBox()
-    {
-        GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter);
-    }
+    
 
     protected virtual void SetCircleColor(bool isMoving)
     {

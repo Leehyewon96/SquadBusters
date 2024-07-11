@@ -278,11 +278,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8445763112410648400, guid: 45e0f06c750176947862c10346226439, type: 3}
       propertyPath: InitialModule.startSize.scalar
-      value: 1
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 8445763112410648400, guid: 45e0f06c750176947862c10346226439, type: 3}
       propertyPath: InitialModule.startSizeY.scalar
-      value: 1
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8445763112410648400, guid: 45e0f06c750176947862c10346226439, type: 3}
+      propertyPath: InitialModule.startSizeZ.scalar
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 8817328400084507686, guid: 45e0f06c750176947862c10346226439, type: 3}
       propertyPath: m_IsActive

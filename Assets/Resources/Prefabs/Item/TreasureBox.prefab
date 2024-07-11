@@ -66,7 +66,7 @@ GameObject:
   - component: {fileID: 167233820273368880}
   - component: {fileID: 6277392850918742258}
   - component: {fileID: 6185013124776873021}
-  - component: {fileID: 129777886085344785}
+  - component: {fileID: 6127768595692232317}
   m_Layer: 7
   m_Name: TreasureBox
   m_TagString: Untagged
@@ -142,8 +142,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 2
---- !u!65 &129777886085344785
-BoxCollider:
+--- !u!135 &6127768595692232317
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -153,8 +153,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.7159448, z: 1}
-  m_Center: {x: 0, y: 0.3579724, z: 0}
+  m_Radius: 1.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4083464521096556461
 GameObject:
   m_ObjectHideFlags: 0

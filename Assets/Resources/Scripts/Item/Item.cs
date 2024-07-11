@@ -64,10 +64,8 @@ public class Item : MonoBehaviour
             return;
         }
 
-        if (other.gameObject.TryGetComponent<IAttackCircleItemInterface>(out IAttackCircleItemInterface attackCircleItemInterface))
+        if (other.gameObject.TryGetComponent<ICharacterPlayerItemInterface>(out ICharacterPlayerItemInterface attackCircleItemInterface))
         {
-            attackCircleItemInterface.TakeItem(type);
-
             if(type == ItemType.TreasureBox)
             {
                 SetActive(false);
@@ -76,6 +74,8 @@ public class Item : MonoBehaviour
             photonView.RPC("SetIsPicked", RpcTarget.AllBuffered, true);
             transform.DOMove(other.gameObject.transform.position + Vector3.up * 1.2f, 0.5f).OnComplete(() =>
             {
+                attackCircleItemInterface.TakeItem(type);
+
                 SetActive(false);
             });
         }
