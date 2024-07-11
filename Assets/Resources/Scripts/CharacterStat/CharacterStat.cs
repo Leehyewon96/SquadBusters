@@ -46,13 +46,27 @@ public class CharacterStat : MonoBehaviour
             onCurrentHpChanged.Invoke(currentHp);
         }
 
-        if(currentHp <= 0)
+        //if(currentHp <= 0)
+        //{
+        //    if (onCurrentHpZero != null)
+        //    {
+        //        onCurrentHpZero.Invoke();
+        //    }
+        //}
+    }
+
+    public bool CheckDead()
+    {
+        if (currentHp <= 0)
         {
             if (onCurrentHpZero != null)
             {
                 onCurrentHpZero.Invoke();
             }
+            return true;
         }
+
+        return false;
     }
 
     public void UpdateAttackCircle(float newRadius)

@@ -8,7 +8,14 @@ public enum UIType
 
 public class UIManager : MonoBehaviour
 {
-    public SelectCharacter selectCharacter = null;
+    [HideInInspector] public SelectCharacter selectCharacter = null;
+    [HideInInspector] public CoinUI coinUI = null;
+
+    private void Awake()
+    {
+        selectCharacter = GetComponentInChildren<SelectCharacter>();
+        coinUI = GetComponentInChildren<CoinUI>();
+    }
 
     public void ShowUI(UIType uiType)
     {

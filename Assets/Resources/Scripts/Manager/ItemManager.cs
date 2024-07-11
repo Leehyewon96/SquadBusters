@@ -1,6 +1,5 @@
 using Photon.Pun;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public enum ItemType
@@ -14,54 +13,74 @@ public enum ItemType
 
 public class ItemManager : MonoBehaviour
 {
+    private PhotonView photonView = null;
     List<Item> items = new List<Item>();
 
-    private void Start()
+    private void Awake()
     {
-        items = GetComponentsInChildren<Item>().ToList();
-        Init();
+        photonView = GetComponent<PhotonView>();
     }
-
-    public void Init()
-    {
-        foreach (Item item in items)
-        {
-            item.SetActive(false);
-        }
-    }
-
-    //public Item GetItem(ItemType itemType)
-    //{
-    //    Item item = items.Find(it => !it.gameObject.activeSelf && it.GetItemType() == itemType);
-    //    if(item == null)
-    //    {
-    //        Item originItem = items.Find(it => it.GetItemType() == itemType);
-    //        item = Instantiate(originItem, transform);
-    //        item.UpdateItemType(itemType);
-    //        items.Add(item);
-    //    }
-
-    //    return item;
-    //}
 
     public void ShowItem(int num, Vector3 pos, ItemType itemType)
     {
-        Vector3 randomPos = pos;
-        randomPos.y += 1.2f;
-        for (int i = 1; i <= num; ++i)
+        if (PhotonNetwork.IsMasterClient)
         {
-            randomPos.x = Random.Range(pos.x - 1, pos.x + 1);
-            randomPos.z = Random.Range(pos.z - 1, pos.z + 1);
-            Item item = items.Find(it => !it.gameObject.activeSelf && it.GetItemType() == itemType); //GetItem(itemType);
-
-            if(item == null)
+            Debug.Log($"ShowItem");
+            Vector3 randomPos = pos;
+            randomPos.y += 1.2f;
+            for (int i = 1; i <= num; ++i)
             {
-                string path = $"Prefabs/Item/{itemType.ToString()}";
-                item = PhotonNetwork.Instantiate(path, randomPos, Quaternion.identity).GetComponent<Item>();
-            }
+                randomPos.x = Random.Range(pos.x - 1, pos.x + 1);
+                randomPos.z = Random.Range(pos.z - 1, pos.z + 1);
+                Item item = null;
+                if (items.Count > 0)
+                {
+                    item = items.Find(it => !it.gameObject.activeSelf && it.GetItemType() == itemType);
+                }
 
-            item.SetActive(true);
-            item.SetPosition(randomPos);
+                if (item == null)
+                {
+                    string path = $"Prefabs/Item/{itemType.ToString()}";
+                    item = PhotonNetwork.Instantiate(path, randomPos, Quaternion.identity).GetComponent<Item>();
+                    items.Add(item);
+                }
+
+                item.transform.SetParent(transform);
+                item.SetPosition(randomPos);
+                item.SetActive(true);
+            }
+        }
+        //photonView.RPC("RPCShowItem", RpcTarget.AllBuffered, num, pos, itemType);
+    }
+
+    [PunRPC]
+    public void RPCShowItem(int num, Vector3 pos, ItemType itemType)
+    {
+        if (photonView.IsMine && PhotonNetwork.IsMasterClient)
+        {
+            Vector3 randomPos = pos;
+            randomPos.y += 1.2f;
+            for (int i = 1; i <= num; ++i)
+            {
+                randomPos.x = Random.Range(pos.x - 1, pos.x + 1);
+                randomPos.z = Random.Range(pos.z - 1, pos.z + 1);
+                Item item = null;
+                if (items.Count > 0)
+                {
+                    item = items.Find(it => !it.gameObject.activeSelf && it.GetItemType() == itemType);
+                }
+
+                if (item == null)
+                {
+                    string path = $"Prefabs/Item/{itemType.ToString()}";
+                    item = PhotonNetwork.Instantiate(path, randomPos, Quaternion.identity).GetComponent<Item>();
+                    items.Add(item);
+                }
+
+                item.transform.SetParent(transform);
+                item.SetPosition(randomPos);
+                item.SetActive(true);
+            }
         }
     }
 }

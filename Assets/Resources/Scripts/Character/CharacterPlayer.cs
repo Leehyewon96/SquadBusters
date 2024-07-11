@@ -1,9 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Realtime;
 
 public class CharacterPlayer : CharacterBase
 {
@@ -89,7 +86,6 @@ public class CharacterPlayer : CharacterBase
         isAttacking = true;
     }
 
-
     protected virtual IEnumerator CoAttack(GameObject target)
     {
         animator.SetBool(AnimLocalize.contactEnemy, true);
@@ -127,8 +123,6 @@ public class CharacterPlayer : CharacterBase
         animator.SetBool(AnimLocalize.contactEnemy, false);
         isAttacking = false;
     }
-
-    
 
     protected IEnumerator CoEffect()
     {

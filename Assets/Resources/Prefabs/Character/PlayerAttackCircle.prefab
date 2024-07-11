@@ -116,8 +116,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7274f35cf4d9dd445ad99fb059865d07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coin: 0
-  gem: 0
   attackRadius: 4
 --- !u!54 &769835126204654497
 Rigidbody:

@@ -14,6 +14,16 @@ public class NPCAttackCircle : AttackCircle
         Move();
     }
 
+    public override void UpdateOwners(CharacterBase newOwner)
+    {
+        base.UpdateOwners(newOwner);
+        if (!owners.Contains(newOwner))
+        {
+            attackCircleStat.SetCoin(newOwner.GetCoin());
+            attackCircleStat.SetGem(newOwner.GetGem());
+        }
+    }
+
     protected virtual void Move()
     {
         if(owners.Count == 0)

@@ -137,6 +137,17 @@ public class CharacterBase : MonoBehaviour
             return;
         }
         characterStat.ApplyDamage(inDamage);
+
+        if(characterStat.CheckDead())
+        {
+            if(photonView.IsMine)
+            {
+                if (deadAction != null)
+                {
+                    deadAction.Invoke(this);
+                }
+            }
+        }
         GameManager.Instance.effectManager.Play(EffectType.StoneHit, gameObject.transform.position);
     }
 
@@ -152,14 +163,19 @@ public class CharacterBase : MonoBehaviour
         isDead = true;
         hpBar.UPdateIsUsed(false);
         hpBar.SetActive(false);
-        if(deadAction != null)
-        {
-            deadAction.Invoke(this);
-        }
         GameManager.Instance.effectManager.Play(EffectType.Explosion, transform.position);
 
         gameObject.SetActive(false);
     }
+
+    //[PunRPC]
+    //public virtual void RPCDeadAction()
+    //{
+    //    if (deadAction != null)
+    //    {
+    //        deadAction.Invoke(this);
+    //    }
+    //}
 
     public virtual void OnDetectEnemy(CharacterBase target)
     {

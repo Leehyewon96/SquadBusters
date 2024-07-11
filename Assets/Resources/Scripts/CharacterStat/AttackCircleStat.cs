@@ -2,18 +2,28 @@ using UnityEngine;
 
 public class AttackCircleStat : MonoBehaviour
 {
-    public int coin = 0;
-    public int gem = 0;
+    protected int coin = 2;
+    protected int gem = 1;
 
     public float attackRadius = 2f;
 
-    public void AddCoin(int cnt)
+    public int GetCoin()
     {
-        coin += cnt;
+        return coin;
     }
 
-    public void AddGem(int cnt)
+    public int GetGem()
     {
-        gem += cnt;
+        return gem;
+    }
+
+    public void SetCoin(int cnt)
+    {
+        coin = cnt;
+    }
+
+    public void SetGem(int cnt)
+    {
+        gem = cnt;
     }
 }

@@ -46,7 +46,6 @@ public class Item : MonoBehaviour
 
     protected void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.name);
         if (other.gameObject.TryGetComponent<IAttackCircleItemInterface>(out IAttackCircleItemInterface attackCircleItemInterface))
         {
             attackCircleItemInterface.TakeItem(type);

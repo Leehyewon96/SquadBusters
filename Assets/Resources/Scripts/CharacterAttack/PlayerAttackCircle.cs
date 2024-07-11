@@ -2,8 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Realtime;
 
 public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAttackCircleUIInterface
 {
@@ -25,6 +23,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
         characterController = moveObj.AddComponent<CharacterController>();
         type = circleType.Player;
         mainCircleEffect = circleEffect.main;
+        attackCircleStat.SetCoin(0);
+        attackCircleStat.SetGem(0);
 
         if (photonView.IsMine)
         {
@@ -33,7 +33,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
     }
 
     protected override void Start()
-    { 
+    {
         moveObj.transform.position = transform.position;
 
         OnTakeItem takeCoin = GainCoin;
@@ -43,7 +43,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
         OnTakeItem takeTreasureBox = GainTreasureBox;
         AddTakeItemActions(takeTreasureBox);
 
-        if(!photonView.IsMine)
+        if (!photonView.IsMine)
         {
             circleEffect.gameObject.SetActive(false);
         }
@@ -66,9 +66,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
         foreach (var owner in owners)
         {
             owner.SetDestination(moveObj.transform.position);
-            //owner.SetSpeed(100f);
         }
-        //base.Update();
     }
 
     public override void UpdateOwners(CharacterBase newOwner)
@@ -143,7 +141,10 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
 
     public virtual void AddTakeItemActions(OnTakeItem onTakeItem)
     {
-        takeItemActions.Add(onTakeItem);
+        if (!takeItemActions.Contains(onTakeItem))
+        {
+            takeItemActions.Add(onTakeItem);
+        }
     }
 
     public virtual void GainTreasureBox()
@@ -160,6 +161,23 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
         else
         {
             mainCircleEffect.startColor = Color.red;
+        }
+    }
+
+    public void GainCoin()
+    {
+        if(photonView.IsMine)
+        {
+            attackCircleStat.SetCoin(attackCircleStat.GetCoin() + 1);
+            GameManager.Instance.uiManager.coinUI.SetCoin(attackCircleStat.GetCoin());
+        }
+    }
+
+    public void GainGem()
+    {
+        if (photonView.IsMine)
+        {
+            attackCircleStat.SetGem(attackCircleStat.GetGem() + 1);
         }
     }
 }
