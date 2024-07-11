@@ -51,10 +51,7 @@ public class Item : MonoBehaviour
     [PunRPC]
     public void SetIsPicked(bool picked)
     {
-        if(photonView.IsMine)
-        {
-            isPicked = picked;
-        }
+        isPicked = picked;
     }
 
     protected void OnTriggerEnter(Collider other)
