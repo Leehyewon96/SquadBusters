@@ -103,6 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 1
+  circleEffect: {fileID: 9194767392708506761}
 --- !u!114 &769835126204654510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,5 +295,10 @@ PrefabInstance:
 --- !u!4 &5053461984149735197 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5516487406859467972, guid: 45e0f06c750176947862c10346226439, type: 3}
+  m_PrefabInstance: {fileID: 769835125766208473}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &9194767392708506761 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8445763112410648400, guid: 45e0f06c750176947862c10346226439, type: 3}
   m_PrefabInstance: {fileID: 769835125766208473}
   m_PrefabAsset: {fileID: 0}

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAttackCircleUIInterface
 {
@@ -12,6 +14,9 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
     public delegate void OnTakeItem();
     private List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
 
+    [SerializeField] protected ParticleSystem circleEffect = null;
+    protected ParticleSystem.MainModule mainCircleEffect;
+
     protected override void Awake()
     {
         base.Awake();
@@ -19,6 +24,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
         movement3D = moveObj.AddComponent<Movement3D>();
         characterController = moveObj.AddComponent<CharacterController>();
         type = circleType.Player;
+        mainCircleEffect = circleEffect.main;
 
         if (photonView.IsMine)
         {
@@ -36,6 +42,11 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
         AddTakeItemActions(takeGem);
         OnTakeItem takeTreasureBox = GainTreasureBox;
         AddTakeItemActions(takeTreasureBox);
+
+        if(!photonView.IsMine)
+        {
+            circleEffect.gameObject.SetActive(false);
+        }
     }
 
     protected virtual void Update()
@@ -44,6 +55,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
         {
             return;
         }
+
+        SetCircleColor(CheckInput());
 
         if ((CheckInput()))
         {
@@ -136,5 +149,17 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleItemInterface, IAtt
     public virtual void GainTreasureBox()
     {
         GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter);
+    }
+
+    protected virtual void SetCircleColor(bool isMoving)
+    {
+        if (isMoving)
+        {
+            mainCircleEffect.startColor = Color.blue;
+        }
+        else
+        {
+            mainCircleEffect.startColor = Color.red;
+        }
     }
 }
