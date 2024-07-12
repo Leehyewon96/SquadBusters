@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -31,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
@@ -49,8 +50,9 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator CoInitGame()
     {
-        yield return new WaitUntil(() => isConnect);
-        yield return new WaitForSeconds(2f);
+        //yield return new WaitUntil(() => isConnect);
+        //yield return new WaitForSeconds(2f);
+        yield return new WaitUntil(() => SceneManager.GetActiveScene().name.Equals(SceneLocalize.gameScene));
         Debug.Log("게임씬 초기화.");
         InitGame();
         
@@ -103,7 +105,6 @@ public class GameManager : MonoBehaviour
         attackCircle = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
         Camera.main.GetComponent<CameraFollow>().SetTarget(attackCircle.gameObject);
         PlayerAttackCircle circle = attackCircle.GetComponent<PlayerAttackCircle>();
-        //circle.UpdateRadius(4f);
     }
 
     public void PauseGame()

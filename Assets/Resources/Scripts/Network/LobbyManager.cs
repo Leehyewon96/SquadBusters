@@ -1,23 +1,31 @@
+using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
+using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private Button btnStart = null;
+    [SerializeField] private GameObject loadingUI = null;
+    private TextMeshProUGUI loadingText = null;
+    ExitGames.Client.Photon.Hashtable ht = null;
 
     private void Awake()
     {
+        PhotonNetwork.AutomaticallySyncScene = true;
         btnStart.onClick.AddListener(delegate { PhotonNetwork.JoinRandomRoom(); });
+        loadingUI.SetActive(false);
+        loadingText = loadingUI.GetComponentInChildren<TextMeshProUGUI>(true);
     }
 
     public void CreateRoom()
     {
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.IsVisible = true;
-        roomOptions.MaxPlayers = 8;
+        roomOptions.MaxPlayers = 2;
 
         PhotonNetwork.CreateRoom(null, roomOptions);
     }
@@ -38,9 +46,34 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         base.OnJoinedRoom();
         Debug.Log("방 입장 완료");
-        SceneManager.LoadScene(SceneLocalize.gameScene);
-        GameManager.Instance.isConnect = true;
+        //SceneManager.LoadScene(SceneLocalize.gameScene);
+        //GameManager.Instance.isConnect = true;
+        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+        {
+            loadingText.SetText("게임 발견!");
+        }
+        loadingUI.SetActive(true);
+
     }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+        {
+            loadingText.SetText("게임 발견!");
+            if (PhotonNetwork.IsMasterClient)
+            {
+                StartCoroutine(CoStartGame());
+            }
+        }
+    }
+
+    private IEnumerator CoStartGame()
+    {
+        yield return new WaitForSecondsRealtime(2f);
+        PhotonNetwork.LoadLevel(SceneLocalize.gameScene);
+    }
+    
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
