@@ -118,12 +118,12 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
             if (characterController.enabled) //캐릭터 상태로 판단하도록 변경하기
             {
-                animator.SetBool(AnimLocalize.contactEnemy, false);
                 isAttacking = false;
                 yield break;
             }
             if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
             {
+                photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)EffectType.StoneSlash, transform.position);
                 targetObj.TakeDamage(attackDamage);
 
                 if (targetObj.isDead)
@@ -135,6 +135,12 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
             yield return attackTerm;
         }
+    }
+
+    [PunRPC]
+    public void RPCEffect(int type, Vector3 pos)
+    {
+        GameManager.Instance.effectManager.Play((EffectType)type, pos);
     }
 
     protected virtual void OnTargetDead(GameObject target)

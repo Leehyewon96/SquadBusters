@@ -10,7 +10,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     [SerializeField] private Button btnStart = null;
     [SerializeField] private GameObject loadingUI = null;
     private TextMeshProUGUI loadingText = null;
-    ExitGames.Client.Photon.Hashtable ht = null;
 
     private void Awake()
     {

@@ -56,7 +56,7 @@ public class ElPrimo : CharacterPlayer
         
         transform.DOPath(jumpPath, jumpTime, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
         {
-            photonView.RPC("RPCEffect", RpcTarget.AllBuffered, EffectType.PortalRed, transform.position);
+            photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)EffectType.PortalRed, transform.position);
         });
 
         yield return new WaitForSeconds(elbowTime);
@@ -68,13 +68,6 @@ public class ElPrimo : CharacterPlayer
         targetBase.KnockBack(attackDamage * 2f, knockBackTime, knockBackDistance);
         OnUnDetectEnemy(targetBase);
         SetCharacterState(CharacterState.Idle);
-    }
-
-    [PunRPC]
-    public void RPCEffect(EffectType type, Vector3 pos)
-    {
-        GameManager.Instance.effectManager.Play(type, pos);
-
     }
 
     protected override void MoveToEnemy()
