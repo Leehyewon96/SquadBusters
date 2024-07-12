@@ -25,5 +25,9 @@ public class Movement3D : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(moveDirection), 0.1f);
     }
 
-    
+    public void UpdateMoveSpeed(float newSpeed)
+    {
+        Debug.Log($"newSpeed {newSpeed}");
+        moveSpeed = newSpeed;
+    }
 }

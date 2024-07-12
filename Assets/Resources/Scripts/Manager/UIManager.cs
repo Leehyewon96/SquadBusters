@@ -11,12 +11,14 @@ public class UIManager : MonoBehaviour
     [HideInInspector] public SelectCharacter selectCharacter = null;
     [HideInInspector] public CoinUI coinUI = null;
     [HideInInspector] public TreasureBoxCostUI treasureBoxCostUI = null;
+    [HideInInspector] public FastMoveUI fastMoveUI = null;
 
     private void Awake()
     {
         selectCharacter = GetComponentInChildren<SelectCharacter>(true);
         coinUI = GetComponentInChildren<CoinUI>(true);
-        treasureBoxCostUI = GetComponentInChildren<TreasureBoxCostUI>();
+        treasureBoxCostUI = GetComponentInChildren<TreasureBoxCostUI>(true);
+        fastMoveUI = GetComponentInChildren<FastMoveUI>(true);
     }
 
     public void ShowUI(UIType uiType)

@@ -17,7 +17,16 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected virtual void OnEnable()
     {
-        StartCoroutine(CoEffect());
+        if(photonView.IsMine)
+        {
+            GameManager.Instance.uiManager.fastMoveUI.onMoveFast -= () => movement3D.UpdateMoveSpeed(30f);
+            GameManager.Instance.uiManager.fastMoveUI.onMoveFast += () => movement3D.UpdateMoveSpeed(30f);
+            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon -= () => movement3D.UpdateMoveSpeed(15f);
+            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += () => movement3D.UpdateMoveSpeed(15f);
+            GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position);
+        }
+        
+        //StartCoroutine(CoInit());
     }
 
     protected override void Update()
@@ -135,10 +144,11 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         isAttacking = false;
     }
 
-    protected IEnumerator CoEffect()
+    protected IEnumerator CoInit()
     {
         yield return new WaitUntil(() => GameManager.Instance.effectManager != null);
         GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position);
+        
     }
 
     public virtual void TakeItem(ItemType itemType)

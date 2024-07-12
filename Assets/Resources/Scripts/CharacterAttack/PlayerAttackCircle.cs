@@ -34,8 +34,14 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
     {
         moveObj.transform.position = transform.position;
 
+        if(photonView.IsMine)
+        {
+            GameManager.Instance.uiManager.fastMoveUI.onMoveFast -= () => movement3D.UpdateMoveSpeed(30f);
+            GameManager.Instance.uiManager.fastMoveUI.onMoveFast += () => movement3D.UpdateMoveSpeed(30f);
+            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon -= () => movement3D.UpdateMoveSpeed(15f);
+            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += () => movement3D.UpdateMoveSpeed(15f);
+        }
         
-
         if (!photonView.IsMine)
         {
             circleEffect.gameObject.SetActive(false);
@@ -135,10 +141,6 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         CharacterBase player = SpawnPlayer(pos, newType);
         UpdateOwners(player);
     }
-
-    
-
-    
 
     protected virtual void SetCircleColor(bool isMoving)
     {
