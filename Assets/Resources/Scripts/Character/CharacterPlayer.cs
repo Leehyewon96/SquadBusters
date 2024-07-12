@@ -46,7 +46,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         if (characterState == CharacterState.KnockBack)
         {
             StopAllCoroutines();
-            ResetPath();
+            //ResetPath();
             isAttacking = false;
             DetectedEnemies.Clear();
             animator.SetBool(AnimLocalize.contactEnemy, false);
@@ -92,10 +92,12 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
         {
             characterController.enabled = true;
+            navMeshAgent.enabled = false;
             return true;
         }
 
         characterController.enabled = false;
+        navMeshAgent.enabled = true;
         return false;
     }
 
