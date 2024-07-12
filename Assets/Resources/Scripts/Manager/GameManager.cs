@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class GameManager : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class GameManager : MonoBehaviour
     public bool isConnect { get; set; } = false;
 
     public int treasureBoxCost { get; private set; } = 3;
+    private int playTime = 240; 
 
     public static GameManager Instance
     {
@@ -53,9 +55,30 @@ public class GameManager : MonoBehaviour
         //yield return new WaitUntil(() => isConnect);
         //yield return new WaitForSeconds(2f);
         yield return new WaitUntil(() => SceneManager.GetActiveScene().name.Equals(SceneLocalize.gameScene));
-        Debug.Log("게임씬 초기화.");
         InitGame();
+        if(PhotonNetwork.IsMasterClient)
+        {
+            StartCoroutine(CoStartTimer());
+        }
         
+    }
+
+    private IEnumerator CoStartTimer()
+    {
+        while(playTime > 0)
+        {
+            string newTime = $"{playTime / 60} : {playTime % 60}";
+
+            GetComponent<PhotonView>().RPC("RPCUpdateTimer", RpcTarget.AllBuffered, newTime);
+            yield return new WaitForSecondsRealtime(1f);
+            playTime -= 1;
+        }
+    }
+
+    [PunRPC]
+    public void RPCUpdateTimer(string newTime)
+    {
+        uiManager.timeUI.UpdateTime(newTime);
     }
 
     public void InitGame()
