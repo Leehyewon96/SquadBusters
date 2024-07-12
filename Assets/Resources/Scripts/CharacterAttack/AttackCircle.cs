@@ -73,6 +73,7 @@ public class AttackCircle : MonoBehaviour
             onUnDetectEnemy += newOwner.OnUnDetectEnemy;
             newOwner.deadAction -= RemoveOwner;
             newOwner.deadAction += RemoveOwner;
+
         }
     }
 

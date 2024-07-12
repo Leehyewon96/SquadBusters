@@ -1,14 +1,13 @@
 using DG.Tweening;
 using Photon.Pun;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Item : MonoBehaviour
 {
     protected PhotonView photonView = null;
-    [SerializeField] private ItemType type = ItemType.Coin;
+    [SerializeField] protected ItemType type = ItemType.Coin;
 
-    private bool isPicked = false;
+    protected bool isPicked = false;
 
     protected virtual void Awake()
     {
@@ -54,7 +53,7 @@ public class Item : MonoBehaviour
         isPicked = picked;
     }
 
-    protected void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
         if (isPicked)
         {
@@ -63,11 +62,6 @@ public class Item : MonoBehaviour
 
         if (other.gameObject.TryGetComponent<ICharacterPlayerItemInterface>(out ICharacterPlayerItemInterface attackCircleItemInterface))
         {
-            if(type == ItemType.TreasureBox)
-            {
-                SetActive(false);
-                return;
-            }
             photonView.RPC("SetIsPicked", RpcTarget.AllBuffered, true);
             transform.DOMove(other.gameObject.transform.position + Vector3.up * 1.2f, 0.5f).OnComplete(() =>
             {

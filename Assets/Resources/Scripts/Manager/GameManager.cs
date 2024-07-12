@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     public GameObject attackCircle = null;
     public bool isConnect { get; set; } = false;
 
+    public int treasureBoxCost { get; private set; } = 3;
+
     public static GameManager Instance
     {
         get
@@ -90,6 +92,8 @@ public class GameManager : MonoBehaviour
         }
 
         SpawnCharacter(Vector3.up * 2.26f, CharacterType.ElPrimo);
+
+        SetTreasureBoxCost(treasureBoxCost);
     }
 
     //게임시작시 최초로 AttackCircle, Player 스폰시키는 함수
@@ -120,5 +124,11 @@ public class GameManager : MonoBehaviour
     public void StopGame()
     {
 
+    }
+
+    public void SetTreasureBoxCost(int newCost)
+    {
+        treasureBoxCost = newCost;
+        uiManager.treasureBoxCostUI.SetBoxCostText(treasureBoxCost);
     }
 }

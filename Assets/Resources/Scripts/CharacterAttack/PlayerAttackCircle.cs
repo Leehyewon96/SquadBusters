@@ -74,8 +74,10 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
                 player.AddTakeItemActions(takeCoin);
                 OnTakeItem takeGem = GainGem;
                 player.AddTakeItemActions(takeGem);
-                OnTakeItem takeTreasureBox = player.GainTreasureBox;
+                OnTakeItem takeTreasureBox = GainTreasureBox;
                 player.AddTakeItemActions(takeTreasureBox);
+                player.updateCoin = SetCoin;
+                player.totalCoin = GetCoin;
             }
 
             //머지할 수 있는지 검사
@@ -165,5 +167,21 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         {
             attackCircleStat.SetGem(attackCircleStat.GetGem() + 1);
         }
+    }
+
+    public int GetCoin()
+    {
+        return attackCircleStat.GetCoin();
+    }
+
+    public void SetCoin(int newCoin)
+    {
+        attackCircleStat.SetCoin(newCoin);
+        GameManager.Instance.uiManager.coinUI.SetCoin(newCoin);
+    }
+
+    public virtual void GainTreasureBox()
+    {
+        GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter);
     }
 }

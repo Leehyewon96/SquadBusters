@@ -1,14 +1,19 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Realtime;
 
 public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 {
     public delegate void OnTakeItem();
     private List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
+
+    public delegate void UpdateCoin(int newcoin);
+    public UpdateCoin updateCoin;
+
+    public delegate int TotalCoin();
+    public TotalCoin totalCoin;
 
     protected virtual void OnEnable()
     {
@@ -158,8 +163,20 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         }
     }
 
-    public virtual void GainTreasureBox()
+    public virtual void UpdateTotalCoin(int newCoin)
     {
-        GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter);
+        if (updateCoin != null)
+        {
+            updateCoin.Invoke(newCoin);
+        }
+    }
+
+    public int GetTotalCoin()
+    {
+        if(totalCoin != null)
+        {
+            return totalCoin.Invoke();
+        }
+        return 0;
     }
 }
