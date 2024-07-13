@@ -2,7 +2,11 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static UnityEngine.GraphicsBuffer;
 
 public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 {
@@ -110,19 +114,25 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected virtual IEnumerator CoAttack(GameObject target)
     {
+        transform.LookAt(target.transform.position);
+
+        
         animator.SetBool(AnimLocalize.contactEnemy, true);
         AnimationClip clip = animatorController.animationClips.ToList().Find(anim => anim.name.Equals(AnimLocalize.attack));
         attackTerm = new WaitForSecondsRealtime(clip.length);
 
         while (true)
         {
-            transform.LookAt(target.transform.position);
+            //transform.LookAt(target.transform.position);
+            CoRotate(target);
 
             if (characterController.enabled) //캐릭터 상태로 판단하도록 변경하기
             {
                 isAttacking = false;
                 yield break;
             }
+            yield return attackTerm;
+
             if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
             {
                 photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)EffectType.StoneSlash, transform.position);
@@ -134,8 +144,29 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
                     yield break;
                 }
             }
+        }
+    }
 
-            yield return attackTerm;
+    protected IEnumerator CoRotate(GameObject target)
+    {
+        Vector3 dirVec = target.transform.position - transform.position;
+        dirVec.Normalize();
+        float RotSpeed = 10f;
+        RaycastHit hit;
+        while (true)
+        {
+            if (Physics.Raycast(transform.position, transform.forward.normalized, out hit))
+            {
+                if(hit.transform.gameObject.TryGetComponent<CharacterBase>(out _))
+                {
+                    yield break;
+                }
+            }
+
+            yield return new WaitForFixedUpdate();
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dirVec), RotSpeed * Time.deltaTime);
+
+            dirVec = target.transform.position - transform.position;
         }
     }
 
