@@ -50,7 +50,7 @@ public class ElPrimo : CharacterPlayer
         float elbowTime = animatorController.animationClips.ToList().Find(a => a.name.Equals(AnimLocalize.elbow)).length;
 
         Vector3 startPos = transform.position;
-        Vector3 targetPos = target.transform.position;
+        Vector3 targetPos = target.transform.position - transform.forward.normalized * 0.5f; // 타겟지점에서 0.5만큼 거리 두기
         Vector3 midPos = startPos + ((targetPos - startPos) / 2f) + Vector3.up * 2f;
         Vector3[] jumpPath = { startPos, midPos, targetPos };
         
