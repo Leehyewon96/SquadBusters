@@ -26,7 +26,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
 
         if (photonView.IsMine)
         {
-            CharacterBase character = SpawnPlayer(transform.position, CharacterType.ElPrimo);
+            CharacterBase character = SpawnPlayer(transform.position, CharacterType.ElPrimo, false);
         }
     }
 
@@ -57,20 +57,23 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
 
         SetCircleColor(CheckInput());
 
-        if ((CheckInput()))
+        if (CheckInput())
         {
             Move();
             transform.position = moveObj.transform.position;
         }
         foreach (var owner in owners)
         {
-            owner.SetDestination(moveObj.transform.position);
+            if(owner.gameObject.activeSelf)
+            {
+                owner.SetDestination(moveObj.transform.position);
+            }            
         }
     }
 
-    public override void UpdateOwners(CharacterBase newOwner)
+    public override void UpdateOwners(CharacterBase newOwner, bool isMerged)
     {
-        base.UpdateOwners(newOwner);
+        base.UpdateOwners(newOwner, isMerged);
 
         if (owners.LastOrDefault() == newOwner)
         {
@@ -86,8 +89,13 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
                 player.totalCoin = GetCoin;
             }
 
+            if(!isMerged)
+            {
+                return;
+            }
+
             //머지할 수 있는지 검사
-            List<CharacterBase> chars = owners.FindAll(o => o.GetCharacterType() == newOwner.GetCharacterType()).ToList();
+            List<CharacterBase> chars = owners.FindAll(o => o.gameObject.activeSelf && o.GetCharacterType() == newOwner.GetCharacterType()).ToList();
             if (chars.Count < 3)
             {
                 return;
@@ -99,12 +107,14 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
 
     private IEnumerator CoMergeCharacter(List<CharacterBase> chars, Vector3 pos)
     {
-        yield return new WaitForSeconds(0.7f);
-        SpawnPlayer(transform.position, CharacterType.ElPrimo2);
+        yield return new WaitForSeconds(0.3f);
         foreach (var ch in chars)
         {
+            //ch.Merged();
             ch.SetDead();
         }
+        SpawnPlayer(transform.position, CharacterType.ElPrimo2, false);
+        
 
         owners.LastOrDefault().transform.position = pos;
     }
@@ -129,17 +139,6 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
 
         characterController.enabled = false;
         return false;
-    }
-
-    public void SelectCharacter(CharacterType newType)
-    {
-        Vector3 pos = Vector3.zero;
-        float x = Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
-        float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
-        pos.x = x + transform.position.x;
-        pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
-        CharacterBase player = SpawnPlayer(pos, newType);
-        UpdateOwners(player);
     }
 
     protected virtual void SetCircleColor(bool isMoving)
@@ -186,4 +185,17 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
     {
         GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter);
     }
+
+    #region IAttackCircleUIInterface
+    public void SelectCharacter(CharacterType newType)
+    {
+        Vector3 pos = Vector3.zero;
+        float x = Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
+        float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
+        pos.x = x + transform.position.x;
+        pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
+        CharacterBase player = SpawnPlayer(pos, newType, true);
+        //UpdateOwners(player, false);
+    }
+    #endregion
 }

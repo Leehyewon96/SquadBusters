@@ -77,6 +77,11 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     public void RPCUpdateTimer(string newTime)
     {
+        if(uiManager == null)
+        {
+            return;
+        }
+
         uiManager.timeUI.UpdateTime(newTime);
     }
 

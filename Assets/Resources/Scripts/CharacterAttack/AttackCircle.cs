@@ -62,7 +62,7 @@ public class AttackCircle : MonoBehaviour
         isUsed = used;
     }
 
-    public virtual void UpdateOwners(CharacterBase newOwner)
+    public virtual void UpdateOwners(CharacterBase newOwner, bool isMerged)
     {
         if(!owners.Contains(newOwner))
         {
@@ -105,13 +105,13 @@ public class AttackCircle : MonoBehaviour
         transform.localScale = Vector3.one * newRadius * 2; // 콜라이더의 반지름이 아닌 전체 구 오브젝트의 지름이라서 *2
     }
 
-    public CharacterBase SpawnPlayer(Vector3 pos, CharacterType charType)
+    public CharacterBase SpawnPlayer(Vector3 pos, CharacterType charType, bool isMerged = false)
     {
         string path = $"Prefabs/Character/{charType.ToString()}";
         GameObject character = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
         CharacterBase characterBase = character.GetComponent<CharacterBase>();
         characterBase.gameObject.name += "mine";
-        UpdateOwners(characterBase);
+        UpdateOwners(characterBase, isMerged);
         return characterBase;
     }
 

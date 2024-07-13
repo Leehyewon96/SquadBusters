@@ -14,9 +14,9 @@ public class NPCAttackCircle : AttackCircle
         Move();
     }
 
-    public override void UpdateOwners(CharacterBase newOwner)
+    public override void UpdateOwners(CharacterBase newOwner, bool isMerged)
     {
-        base.UpdateOwners(newOwner);
+        base.UpdateOwners(newOwner, isMerged);
         if (!owners.Contains(newOwner))
         {
             attackCircleStat.SetCoin(newOwner.GetCoin());
@@ -36,6 +36,6 @@ public class NPCAttackCircle : AttackCircle
 
     public virtual void SpawnNPC(CharacterType characterType)
     {
-        CharacterBase character = SpawnPlayer(transform.position, characterType);
+        CharacterBase character = SpawnPlayer(transform.position, characterType, false);
     }
 }

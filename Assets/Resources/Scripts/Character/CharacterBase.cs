@@ -151,6 +151,15 @@ public class CharacterBase : MonoBehaviour
         GameManager.Instance.effectManager.Play(EffectType.StoneHit, gameObject.transform.position);
     }
 
+    public virtual void Merged()
+    {
+        isDead = true;
+        hpBar.UPdateIsUsed(false);
+        hpBar.SetActive(false);
+        GameManager.Instance.effectManager.Play(EffectType.Explosion, transform.position);
+
+        gameObject.SetActive(false);
+    }
     
     public virtual void SetDead()
     {
@@ -168,15 +177,6 @@ public class CharacterBase : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    //[PunRPC]
-    //public virtual void RPCDeadAction()
-    //{
-    //    if (deadAction != null)
-    //    {
-    //        deadAction.Invoke(this);
-    //    }
-    //}
-
     public virtual void OnDetectEnemy(CharacterBase target)
     {
         if (!DetectedEnemies.Contains(target.gameObject))
@@ -187,7 +187,7 @@ public class CharacterBase : MonoBehaviour
 
     public virtual void SetDestination(Vector3 destination)
     {
-        if(!navMeshAgent.enabled)
+        if(navMeshAgent == null || !navMeshAgent.enabled)
         {
             return;
         }

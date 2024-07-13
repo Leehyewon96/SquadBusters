@@ -19,10 +19,11 @@ public class TreasureBoxItem : Item
 
         if (other.gameObject.TryGetComponent<ICharacterPlayerItemInterface>(out ICharacterPlayerItemInterface attackCircleItemInterface))
         {
-            if (attackCircleItemInterface.GetTotalCoin() < GameManager.Instance.treasureBoxCost)
-            {
-                return;
-            }
+            //테스트를 위하여 코인 제한 없앰
+            //if (attackCircleItemInterface.GetTotalCoin() < GameManager.Instance.treasureBoxCost)
+            //{
+            //    return;
+            //}
             photonView.RPC("SetIsPicked", RpcTarget.AllBuffered, true);
             attackCircleItemInterface.TakeItem(type);
             attackCircleItemInterface.UpdateTotalCoin(attackCircleItemInterface.GetTotalCoin() - GameManager.Instance.treasureBoxCost);
