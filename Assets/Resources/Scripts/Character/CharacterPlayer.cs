@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static UnityEngine.GraphicsBuffer;
@@ -27,7 +28,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             GameManager.Instance.uiManager.fastMoveUI.onMoveFast += () => movement3D.UpdateMoveSpeed(30f);
             GameManager.Instance.uiManager.fastMoveUI.onMoveCommon -= () => movement3D.UpdateMoveSpeed(15f);
             GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += () => movement3D.UpdateMoveSpeed(15f);
-            GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position);
+            GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position, transform.forward);
         }
         
         //StartCoroutine(CoInit());
@@ -61,7 +62,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         if (CheckInput())
         {
             StopAllCoroutines();
-            ResetPath();
+            //ResetPath();
             isAttacking = false;
             DetectedEnemies.Clear();
             animator.SetBool(AnimLocalize.contactEnemy, false);
@@ -114,9 +115,30 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected virtual IEnumerator CoAttack(GameObject target)
     {
-        transform.LookAt(target.transform.position);
+        //transform.LookAt(target.transform.position);
+        Vector3 dirVec = target.transform.position - transform.position;
+        dirVec.Normalize();
+        float RotSpeed = 10f;
+        RaycastHit hit;
+        while (true)
+        {
+            if (Physics.Raycast(transform.position + Vector3.up * 1.2f, transform.forward, out hit))
+            {
+                Debug.Log($"{hit.transform.root.gameObject.name}");
+                if (hit.transform.root.gameObject == target)
+                {
+                    
+                    break;
+                }
+            }
 
-        
+            yield return new WaitForFixedUpdate();
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dirVec), RotSpeed * Time.deltaTime);
+
+            dirVec = target.transform.position - transform.position;
+        }
+
+
         animator.SetBool(AnimLocalize.contactEnemy, true);
         AnimationClip clip = animatorController.animationClips.ToList().Find(anim => anim.name.Equals(AnimLocalize.attack));
         attackTerm = new WaitForSecondsRealtime(clip.length);
@@ -124,7 +146,21 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         while (true)
         {
             //transform.LookAt(target.transform.position);
-            CoRotate(target);
+            while (true)
+            {
+                if (Physics.Raycast(transform.position + Vector3.up * 1.2f, transform.forward.normalized, out hit))
+                {
+                    if (hit.transform.root.gameObject == target)
+                    {
+                        break;
+                    }
+                }
+
+                yield return new WaitForFixedUpdate();
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dirVec), RotSpeed * Time.deltaTime);
+
+                dirVec = target.transform.position - transform.position;
+            }
 
             if (characterController.enabled) //캐릭터 상태로 판단하도록 변경하기
             {
@@ -135,7 +171,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
             if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
             {
-                photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)EffectType.StoneSlash, transform.position);
+                photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)EffectType.ChargeSlashPurple, transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
                 targetObj.TakeDamage(attackDamage);
 
                 if (targetObj.isDead)
@@ -157,9 +193,9 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         {
             if (Physics.Raycast(transform.position, transform.forward.normalized, out hit))
             {
-                if(hit.transform.gameObject.TryGetComponent<CharacterBase>(out _))
+                if(hit.transform.gameObject == target)
                 {
-                    yield break;
+                    break;
                 }
             }
 
@@ -171,9 +207,9 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     }
 
     [PunRPC]
-    public void RPCEffect(int type, Vector3 pos)
+    public void RPCEffect(int type, Vector3 pos, Vector3 rot)
     {
-        GameManager.Instance.effectManager.Play((EffectType)type, pos);
+        GameManager.Instance.effectManager.Play((EffectType)type, pos, rot);
     }
 
     protected virtual void OnTargetDead(GameObject target)
@@ -186,7 +222,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     protected IEnumerator CoInit()
     {
         yield return new WaitUntil(() => GameManager.Instance.effectManager != null);
-        GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position);
+        GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position, transform.forward);
         
     }
 

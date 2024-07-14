@@ -64,6 +64,6 @@ public class Spawner : MonoBehaviour
     protected IEnumerator CoEffect()
     {
         yield return new WaitUntil(() => GameManager.Instance.effectManager != null);
-        GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position);
+        GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position, transform.forward);
     }
 }

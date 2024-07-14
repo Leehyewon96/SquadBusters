@@ -148,7 +148,7 @@ public class CharacterBase : MonoBehaviour
                 }
             }
         }
-        GameManager.Instance.effectManager.Play(EffectType.StoneHit, gameObject.transform.position);
+        GameManager.Instance.effectManager.Play(EffectType.StoneHit, gameObject.transform.position, transform.forward);
     }
 
     public virtual void Merged()
@@ -156,7 +156,7 @@ public class CharacterBase : MonoBehaviour
         isDead = true;
         hpBar.UPdateIsUsed(false);
         hpBar.SetActive(false);
-        GameManager.Instance.effectManager.Play(EffectType.Explosion, transform.position);
+        GameManager.Instance.effectManager.Play(EffectType.Explosion, transform.position, transform.forward);
 
         gameObject.SetActive(false);
     }
@@ -172,7 +172,7 @@ public class CharacterBase : MonoBehaviour
         isDead = true;
         hpBar.UPdateIsUsed(false);
         hpBar.SetActive(false);
-        GameManager.Instance.effectManager.Play(EffectType.Explosion, transform.position);
+        GameManager.Instance.effectManager.Play(EffectType.Explosion, transform.position, transform.forward);
 
         gameObject.SetActive(false);
     }

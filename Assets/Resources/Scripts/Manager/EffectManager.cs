@@ -11,7 +11,7 @@ public enum EffectType
     StoneSlash,
     MagicCircle2,
     PortalRed,
-
+    ChargeSlashPurple,
 
     End,
 }
@@ -26,7 +26,7 @@ public class EffectManager : MonoBehaviour
         effects = GetComponentsInChildren<Effect>(true).ToList();
     }
 
-    public void Play(EffectType type, Vector3 pos)
+    public void Play(EffectType type, Vector3 pos, Vector3 rot)
     {
         Effect effect = effects.Find(e => e.effectType.Equals(type) && !e.GetIsPlaying());
         if(effect == null)
@@ -36,7 +36,7 @@ public class EffectManager : MonoBehaviour
             effects.Add(effect);
         }
 
-        //pos.y += 0.5f;
+        effect.transform.rotation = Quaternion.LookRotation(rot);
         effect.gameObject.transform.position = pos;
 
         effect.gameObject.SetActive(true);
