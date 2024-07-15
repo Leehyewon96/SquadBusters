@@ -13,6 +13,7 @@ public enum EffectType
     MagicCircle2,
     PortalRed,
     ChargeSlashPurple,
+    LaserAOE,
 
     End,
 }

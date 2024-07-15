@@ -2655,7 +2655,7 @@ GameObject:
   - component: {fileID: 3585405619393935085}
   - component: {fileID: 7457122769995963694}
   - component: {fileID: 920172937614208065}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Usurper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4288,6 +4288,22 @@ PrefabInstance:
     - target: {fileID: 3986196816743314551, guid: 3aedfc92fec4ff047b1eb048a8cf5356, type: 3}
       propertyPath: m_Name
       value: NPCHpBarCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 3986196816743314551, guid: 3aedfc92fec4ff047b1eb048a8cf5356, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3986292740668587120, guid: 3aedfc92fec4ff047b1eb048a8cf5356, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3987801600557383526, guid: 3aedfc92fec4ff047b1eb048a8cf5356, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3987845802837797212, guid: 3aedfc92fec4ff047b1eb048a8cf5356, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3aedfc92fec4ff047b1eb048a8cf5356, type: 3}

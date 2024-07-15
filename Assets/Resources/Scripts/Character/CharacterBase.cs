@@ -15,7 +15,7 @@ public enum CharacterType
     Eggy,
     Chilli,
     Kiwi,
-    Userper,
+    Usurper,
 
     End,
 }
@@ -199,7 +199,7 @@ public class CharacterBase : MonoBehaviour
 
     public virtual void ResetPath()
     {
-        if (!navMeshAgent.enabled)
+        if (navMeshAgent == null || !navMeshAgent.enabled)
         {
             return;
         }
