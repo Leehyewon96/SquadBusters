@@ -16,6 +16,14 @@ public class Spawner : MonoBehaviour
         SetPath($"Prefabs/Character/NPCAttackCircle");
     }
 
+    protected virtual void Start()
+    {
+        if(PhotonNetwork.IsMasterClient)
+        {
+            StartSpawn();
+        }
+    }
+
     protected virtual void SetPath(string inPath)
     {
         path = inPath;

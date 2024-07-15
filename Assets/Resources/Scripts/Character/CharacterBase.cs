@@ -151,7 +151,7 @@ public class CharacterBase : MonoBehaviour
                 }
             }
         }
-        GameManager.Instance.effectManager.Play(EffectType.StoneHit, gameObject.transform.position, transform.forward);
+        GameManager.Instance.effectManager.Play(EffectType.StonesHit, gameObject.transform.position, transform.forward);
     }
 
     public virtual void Merged()
@@ -220,7 +220,7 @@ public class CharacterBase : MonoBehaviour
     {
         if (DetectedEnemies.Count > 0)
         {
-            GameObject target = DetectedEnemies.Find(e => !e.GetComponent<CharacterBase>().isDead);
+            GameObject target = DetectedEnemies.Find(e => e != null && !e.GetComponent<CharacterBase>().isDead);
             if (target != null)
             {
                 return target;
