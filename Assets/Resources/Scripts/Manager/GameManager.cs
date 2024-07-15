@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public ItemManager itemManager = null;
     [HideInInspector] public EffectManager effectManager = null;
     [HideInInspector] public UIManager uiManager = null;
+    [HideInInspector] public ProjectileManager projectileManager = null;
 
     public GameObject attackCircle = null;
     public bool isConnect { get; set; } = false;
@@ -92,6 +93,7 @@ public class GameManager : MonoBehaviour
         itemManager = FindObjectOfType<ItemManager>();
         effectManager = FindObjectOfType<EffectManager>();
         uiManager = FindObjectOfType<UIManager>();
+        projectileManager = FindObjectOfType<ProjectileManager>();
 
         List<NPCSpawnPoint> npcSpawnPoses = FindObjectsOfType<NPCSpawnPoint>().ToList();
         List<TreasureBoxSpawnPoint> treasureBoxSpawnPoses = FindObjectsOfType<TreasureBoxSpawnPoint>().ToList();

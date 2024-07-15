@@ -2,14 +2,9 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEngine.GraphicsBuffer;
 
-public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
+public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICharacterPlayerProjectileInterface
 {
     public delegate void OnTakeItem();
     private List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
@@ -43,12 +38,12 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             return;
         }
 
-        if (characterState == CharacterState.Skilled)
+        if (characterState == CharacterState.InVincible)
         {
             return;
         }
 
-        if (characterState == CharacterState.KnockBack)
+        if (characterState == CharacterState.Stun)
         {
             StopAllCoroutines();
             //ResetPath();
@@ -263,5 +258,19 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             return totalCoin.Invoke();
         }
         return 0;
+    }
+
+    public virtual void Stun(float duration)
+    {
+        navMeshAgent.enabled = false;
+        characterController.enabled = false;
+        StartCoroutine(CoStun(duration));
+    }
+
+    private IEnumerator CoStun(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        navMeshAgent.enabled = true;
+        characterController.enabled = true;
     }
 }

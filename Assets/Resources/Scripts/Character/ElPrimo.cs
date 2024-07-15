@@ -1,9 +1,8 @@
 using DG.Tweening;
+using Photon.Pun;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Realtime;
 
 public class ElPrimo : CharacterPlayer
 {
@@ -29,7 +28,7 @@ public class ElPrimo : CharacterPlayer
         isAttacking = true;
         navMeshAgent.enabled = false;
         characterController.enabled = false;
-        SetCharacterState(CharacterState.Skilled);
+        SetCharacterState(CharacterState.InVincible);
         animator.SetTrigger(AnimLocalize.flyingElbow);
 
         StartCoroutine(CoFlyingElbowAttack(target));
@@ -41,7 +40,7 @@ public class ElPrimo : CharacterPlayer
         target.transform.LookAt(gameObject.transform.position);
         if(target.TryGetComponent<CharacterBase>(out CharacterBase targetBase))
         {
-            targetBase.SetCharacterState(CharacterState.KnockBack);
+            targetBase.SetCharacterState(CharacterState.Stun);
         }
 
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(AnimLocalize.jump));

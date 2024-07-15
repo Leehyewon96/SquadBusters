@@ -12,12 +12,12 @@ public class CharacterNonPlayer : CharacterBase
             return;
         }
 
-        if (characterState == CharacterState.Skilled)
+        if (characterState == CharacterState.InVincible)
         {
             return;
         }
 
-        if (characterState == CharacterState.KnockBack)
+        if (characterState == CharacterState.Stun)
         {
             StopAllCoroutines();
             ResetPath();

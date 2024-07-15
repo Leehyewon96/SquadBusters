@@ -15,6 +15,9 @@ public enum CharacterType
     Eggy,
     Chilli,
     Kiwi,
+    Userper,
+
+    End,
 }
 
 public enum CharacterState
@@ -22,8 +25,8 @@ public enum CharacterState
     Idle,
     Attack,
     Dead,
-    KnockBack,
-    Skilled,
+    Stun,
+    InVincible,
 }
 
 public class CharacterBase : MonoBehaviour
@@ -292,28 +295,7 @@ public class CharacterBase : MonoBehaviour
                 characterController.enabled = true;
                 characterState = CharacterState.Idle;
             });
-            //StartCoroutine(CoKnockBack(inDamage, inKnockBackTime, inKnockBackDis));
-
         }
-        
-    }
-
-    [PunRPC]
-    private IEnumerator CoKnockBack(float inDamage, float inKnockBackTime, float inKnockBackDis)
-    {
-        Debug.Log("Enter CoKnockBack");
-        yield return null;
-        //yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(AnimLocalize.knockBack));
-        Debug.Log("Exit CoKnockBack");
-        Vector3 destination = transform.position - transform.forward.normalized * inKnockBackDis;
-        Vector3[] path = { transform.position, destination };
-        TakeDamage(inDamage);
-        transform.DOPath(path, inKnockBackTime, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
-        {
-            navMeshAgent.enabled = true;
-            characterController.enabled = true;
-            characterState = CharacterState.Idle;
-        });
     }
 
     public virtual int GetCoin()
