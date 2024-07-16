@@ -36,7 +36,7 @@ public class Usurper : CharacterNonPlayer
             dirVec = Vector3.up * angle;
         }
 
-        transform.DORotate(dirVec, 2f).OnComplete(() =>
+        transform.DORotate(dirVec, 1f).OnComplete(() =>
         {
             //파이어볼 공격
             if (attackCount < 3)
