@@ -24,7 +24,7 @@ public class ProjectileManager : MonoBehaviour
         }
 
         bullet.transform.position = pos;
-        bullet.gameObject.SetActive(true);
+        bullet.SetActive(true);
 
         return bullet;
     }
