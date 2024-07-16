@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using static CharacterPlayer;
 
@@ -87,6 +88,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
                 player.AddTakeItemActions(takeTreasureBox);
                 player.updateCoin = SetCoin;
                 player.totalCoin = GetCoin;
+                player.onStun = Stun;
             }
 
             if(!isMerged)
@@ -186,6 +188,18 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter);
     }
 
+    protected virtual void Stun(float stunTime)
+    {
+        StartCoroutine(CoStun(stunTime));
+    }
+
+    protected IEnumerator CoStun(float stunTime)
+    {
+        movement3D.UpdateMoveSpeed(0.5f);
+        yield return new WaitForSeconds(stunTime);
+        movement3D.UpdateMoveSpeed(15f);
+    }
+
     #region IAttackCircleUIInterface
     public void SelectCharacter(CharacterType newType)
     {
@@ -195,7 +209,6 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         pos.x = x + transform.position.x;
         pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
         CharacterBase player = SpawnPlayer(pos, newType, true);
-        //UpdateOwners(player, false);
     }
     #endregion
 }

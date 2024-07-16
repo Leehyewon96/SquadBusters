@@ -2,6 +2,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
 public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICharacterPlayerProjectileInterface
@@ -14,6 +15,9 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICh
 
     public delegate int TotalCoin();
     public TotalCoin totalCoin;
+
+    public delegate void OnStun(float duration);
+    public OnStun onStun;
 
     protected virtual void OnEnable()
     {
@@ -119,10 +123,8 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICh
         {
             if (Physics.Raycast(transform.position + Vector3.up * 1.2f, transform.forward, out hit))
             {
-                Debug.Log($"{hit.transform.root.gameObject.name}");
                 if (hit.transform.root.gameObject == target)
                 {
-                    
                     break;
                 }
             }
@@ -262,15 +264,33 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICh
 
     public virtual void Stun(float duration)
     {
-        navMeshAgent.enabled = false;
-        characterController.enabled = false;
+        if (onStun != null)
+        {
+            onStun.Invoke(duration);
+        }
         StartCoroutine(CoStun(duration));
+
+        //photonView.RPC("RPCStun", RpcTarget.AllBuffered, duration);
+    }
+
+    [PunRPC]
+    public virtual void RPCStun(float duration)
+    {
+        if(photonView.IsMine)
+        {
+            if (onStun != null)
+            {
+                onStun.Invoke(duration);
+            }
+            StartCoroutine(CoStun(duration));
+        }
     }
 
     private IEnumerator CoStun(float duration)
     {
+        SetCharacterState(CharacterState.Stun);
+        animator.SetTrigger(AnimLocalize.knockBack);
         yield return new WaitForSeconds(duration);
-        navMeshAgent.enabled = true;
-        characterController.enabled = true;
+        SetCharacterState(CharacterState.Idle);
     }
 }

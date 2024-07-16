@@ -27,7 +27,6 @@ public class Movement3D : MonoBehaviour
 
     public void UpdateMoveSpeed(float newSpeed)
     {
-        Debug.Log($"newSpeed {newSpeed}");
         moveSpeed = newSpeed;
     }
 }

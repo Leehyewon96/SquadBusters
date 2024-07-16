@@ -10,7 +10,7 @@ public class Usurper : CharacterNonPlayer
     protected WaitForSecondsRealtime attackReadyTime = new WaitForSecondsRealtime(5f);
     protected float attackDistance = 10f;
     protected float attackIntervalAngle = 30f;
-    protected float stunTime = 5f;
+    protected float stunTime = 3.233f;
 
     protected override void MoveToEnemy()
     {
