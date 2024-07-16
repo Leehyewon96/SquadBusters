@@ -1,15 +1,14 @@
 using DG.Tweening;
+using Photon.Pun;
 using System.Collections;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Realtime;
 
 public class Usurper : CharacterNonPlayer
 {
     protected int attackCount = 0;
     protected WaitForSecondsRealtime attackReadyTime = new WaitForSecondsRealtime(5f);
     protected float attackDistance = 10f;
-    protected float attackIntervalAngle = 30f;
+    protected float attackIntervalAngle = 45f;
     protected float stunTime = 3.233f;
 
     protected override void MoveToEnemy()
@@ -69,12 +68,15 @@ public class Usurper : CharacterNonPlayer
 
         yield return attackReadyTime;
 
-        characterState = CharacterState.Idle;
+        
         //파이어볼 발사
         foreach (Vector3 dir in dirVecs)
         {
             ShotFireBall(dir);
         }
+
+        yield return new WaitForSeconds(2f);
+        characterState = CharacterState.Idle;
     }
 
     protected virtual void ShotFireBall(Vector3 dirVec)
