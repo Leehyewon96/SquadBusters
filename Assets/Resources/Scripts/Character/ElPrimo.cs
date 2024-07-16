@@ -3,6 +3,7 @@ using Photon.Pun;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ElPrimo : CharacterPlayer
 {
@@ -96,6 +97,7 @@ public class ElPrimo : CharacterPlayer
         }
 
         SetDestination(target.transform.position);
+        navMeshAgent.stoppingDistance = characterController.radius * 1.5f + target.GetComponent<CharacterController>().radius * 1.3f;
 
         if (Vector3.Distance(transform.position, target.transform.position) <= navMeshAgent.stoppingDistance)
         {

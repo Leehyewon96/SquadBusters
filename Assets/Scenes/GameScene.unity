@@ -10277,6 +10277,10 @@ PrefabInstance:
       propertyPath: characterType
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 5024328161941894166, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
+      propertyPath: m_SynchronizeScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5471749793252968026, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: sceneViewId
       value: 12
@@ -10301,7 +10305,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2524569460480353124, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.5
+      value: 10.27
       objectReference: {fileID: 0}
     - target: {fileID: 2524569460480353124, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -10309,7 +10313,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2524569460480353124, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.69
+      value: 22.47
       objectReference: {fileID: 0}
     - target: {fileID: 2524569460480353124, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: m_LocalRotation.w

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
@@ -114,51 +115,22 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICh
 
     protected virtual IEnumerator CoAttack(GameObject target)
     {
-        //transform.LookAt(target.transform.position);
         Vector3 dirVec = target.transform.position - transform.position;
-        dirVec.Normalize();
-        float RotSpeed = 10f;
-        RaycastHit hit;
+        float angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
+        dirVec = Vector3.up * angle;
+        transform.DORotate(dirVec, 1f).OnComplete(() =>
+        {
+            animator.SetBool(AnimLocalize.contactEnemy, true);
+            AnimationClip clip = animatorController.animationClips.ToList().Find(anim => anim.name.Equals(AnimLocalize.attack));
+            attackTerm = new WaitForSecondsRealtime(clip.length);
+        });
+
         while (true)
         {
-            if (Physics.Raycast(transform.position + Vector3.up * 1.2f, transform.forward, out hit))
-            {
-                if (hit.transform.root.gameObject == target)
-                {
-                    break;
-                }
-            }
-
-            yield return new WaitForFixedUpdate();
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dirVec), RotSpeed * Time.deltaTime);
-
             dirVec = target.transform.position - transform.position;
-        }
-
-
-        animator.SetBool(AnimLocalize.contactEnemy, true);
-        AnimationClip clip = animatorController.animationClips.ToList().Find(anim => anim.name.Equals(AnimLocalize.attack));
-        attackTerm = new WaitForSecondsRealtime(clip.length);
-
-        while (true)
-        {
-            //transform.LookAt(target.transform.position);
-            while (true)
-            {
-                if (Physics.Raycast(transform.position + Vector3.up * 1.2f, transform.forward.normalized, out hit))
-                {
-                    if (hit.transform.root.gameObject == target)
-                    {
-                        break;
-                    }
-                }
-
-                yield return new WaitForFixedUpdate();
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dirVec), RotSpeed * Time.deltaTime);
-
-                dirVec = target.transform.position - transform.position;
-            }
-
+            angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
+            dirVec = Vector3.up * angle;
+            transform.DORotate(dirVec, 1f);
             if (characterController.enabled) //캐릭터 상태로 판단하도록 변경하기
             {
                 isAttacking = false;
