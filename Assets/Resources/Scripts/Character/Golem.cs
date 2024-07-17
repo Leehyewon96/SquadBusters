@@ -27,6 +27,7 @@ public class Golem : CharacterNonPlayer
         Debug.Log($"[{gameObject.name}] Attack");
         Vector3 dirVec = target.transform.position - transform.position;
         float angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
+        angle += Quaternion.FromToRotation(Vector3.forward ,transform.forward).eulerAngles.y;
         dirVec = Vector3.up * angle;
 
         transform.DORotate(dirVec, 1f).OnComplete(() =>
@@ -40,6 +41,7 @@ public class Golem : CharacterNonPlayer
     {
         animator.SetBool(AnimLocalize.contactEnemy, true);
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(AnimLocalize.attack));
+        yield return new WaitForSeconds(0.6f);
         AOE aoe = GameManager.Instance.aoeManager.GetAOE(transform.position + transform.forward.normalized * 2f);
         animator.SetBool(AnimLocalize.contactEnemy, false);
 
