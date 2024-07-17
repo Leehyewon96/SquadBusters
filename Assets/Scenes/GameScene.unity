@@ -3040,7 +3040,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2524569460480353127, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: characterType
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5471749793252968026, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: sceneViewId
@@ -3889,6 +3889,10 @@ PrefabInstance:
     - target: {fileID: 2524569460480353126, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: m_Name
       value: NPCSpawner (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2524569460480353127, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
+      propertyPath: characterType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5471749793252968026, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: sceneViewId
@@ -9175,7 +9179,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2524569460480353127, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: characterType
-      value: 6
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5471749793252968026, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: sceneViewId
@@ -10389,7 +10393,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2524569460480353127, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: characterType
-      value: 7
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5024328161941894166, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: m_SynchronizeScale
@@ -10460,6 +10464,10 @@ PrefabInstance:
     - target: {fileID: 2524569460480353126, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: m_Name
       value: NPCSpawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 2524569460480353127, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
+      propertyPath: characterType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5471749793252968026, guid: c8a2f85b690a63e42badf11b4b9008e5, type: 3}
       propertyPath: sceneViewId

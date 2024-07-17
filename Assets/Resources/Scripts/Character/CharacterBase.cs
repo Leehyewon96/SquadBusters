@@ -1,6 +1,5 @@
 using DG.Tweening;
 using Photon.Pun;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,15 +7,23 @@ using UnityEngine.AI;
 public enum CharacterType
 {
     ElPrimo,
-    ElPrimo2,
     Babarian,
-    Player,
 
     Eggy,
     Chilli,
     Kiwi,
     Usurper,
     Golem,
+
+    End,
+}
+
+public enum CharacterLevel
+{
+    NPC,
+    Classic,
+    Super,
+    Ultra,
 
     End,
 }
@@ -42,12 +49,10 @@ public class CharacterBase : MonoBehaviour
     protected NavMeshAgent navMeshAgent = null;
     protected CharacterController characterController = null;
 
-    protected float attackRange = 2f;
-    protected float attackRadius = 1f;
-    [SerializeField] protected float attackDamage = 30f;
     protected WaitForSecondsRealtime attackTerm = new WaitForSecondsRealtime(0.933f);
 
     protected CharacterState characterState = CharacterState.Idle;
+    protected CharacterLevel characterLevel = CharacterLevel.Classic;
     protected bool isAttacking = false; // CharacterStat안에 있어야 되나?
     public bool isDead { get; protected set; } = false;
 
@@ -326,5 +331,10 @@ public class CharacterBase : MonoBehaviour
             TakeDamage(inDamage);
             characterState = CharacterState.Idle;
         });
+    }
+
+    public virtual CharacterLevel GetCharacterLevel()
+    {
+        return characterLevel;
     }
 }

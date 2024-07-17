@@ -3,8 +3,9 @@ using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
+
+
 
 public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICharacterPlayerProjectileInterface
 {
@@ -141,7 +142,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICh
             if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
             {
                 photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)EffectType.ChargeSlashPurple, transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
-                targetObj.TakeDamage(attackDamage);
+                targetObj.TakeDamage(characterStat.GetAttackDamage());
 
                 if (targetObj.isDead)
                 {

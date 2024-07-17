@@ -34,6 +34,7 @@ public class CharacterNonPlayer : CharacterBase
     protected override void Attack(GameObject target)
     {
         base.Attack(target);
+        characterLevel = CharacterLevel.NPC;
         StartCoroutine(CoAttack(target));
     }
 
@@ -46,7 +47,7 @@ public class CharacterNonPlayer : CharacterBase
             yield return attackTerm;
             if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
             {
-                targetObj.TakeDamage(attackDamage);
+                targetObj.TakeDamage(characterStat.GetAttackDamage());
                 if (targetObj.isDead)
                 {
                     animator.SetBool(AnimLocalize.contactEnemy, false);

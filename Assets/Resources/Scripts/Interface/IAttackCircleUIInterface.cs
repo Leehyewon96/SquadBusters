@@ -1,4 +1,4 @@
 public interface IAttackCircleUIInterface
 {
-    public void SelectCharacter(CharacterType newType);
+    public void SelectCharacter(CharacterType newType, CharacterLevel newLevel);
 }

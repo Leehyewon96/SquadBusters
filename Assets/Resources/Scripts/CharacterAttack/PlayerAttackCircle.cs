@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using static CharacterPlayer;
 
@@ -27,7 +26,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
 
         if (photonView.IsMine)
         {
-            CharacterBase character = SpawnPlayer(transform.position, CharacterType.ElPrimo, false);
+            CharacterBase character = SpawnCharacter(transform.position, CharacterType.ElPrimo, CharacterLevel.Classic, false);
         }
     }
 
@@ -97,7 +96,13 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
             }
 
             //머지할 수 있는지 검사
-            List<CharacterBase> chars = owners.FindAll(o => o.gameObject.activeSelf && o.GetCharacterType() == newOwner.GetCharacterType()).ToList();
+            if(newOwner.GetCharacterLevel() == CharacterLevel.End - 1)
+            {
+                return;
+            }
+            List<CharacterBase> chars = owners.FindAll(o => o.gameObject.activeSelf &&
+            o.GetCharacterType() == newOwner.GetCharacterType() &&
+            o.GetCharacterLevel() == newOwner.GetCharacterLevel()).ToList();
             if (chars.Count < 3)
             {
                 return;
@@ -110,12 +115,14 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
     private IEnumerator CoMergeCharacter(List<CharacterBase> chars, Vector3 pos)
     {
         yield return new WaitForSeconds(0.3f);
+        CharacterType type = chars.FirstOrDefault().GetCharacterType();
+        CharacterLevel nextLevel = chars.FirstOrDefault().GetCharacterLevel() + 1;
         foreach (var ch in chars)
         {
             //ch.Merged();
             ch.SetDead();
         }
-        SpawnPlayer(transform.position, CharacterType.ElPrimo2, false);
+        SpawnCharacter(transform.position, type, nextLevel, false);
         
 
         owners.LastOrDefault().transform.position = pos;
@@ -201,14 +208,14 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
     }
 
     #region IAttackCircleUIInterface
-    public void SelectCharacter(CharacterType newType)
+    public void SelectCharacter(CharacterType newType, CharacterLevel newLevel)
     {
         Vector3 pos = Vector3.zero;
         float x = Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
         float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
         pos.x = x + transform.position.x;
         pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
-        CharacterBase player = SpawnPlayer(pos, newType, true);
+        CharacterBase player = SpawnCharacter(pos, newType, newLevel, true);
     }
     #endregion
 }

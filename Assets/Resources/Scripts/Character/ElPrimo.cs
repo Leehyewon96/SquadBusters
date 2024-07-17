@@ -16,10 +16,14 @@ public class ElPrimo : CharacterPlayer
     public Rigidbody body;
     float jumpForce = 100f;
 
+    protected float flyingElbowDamage = 0;
+
     protected override void Awake()
     {
         base.Awake();
         body = GetComponent<Rigidbody>();
+        flyingElbowDamage = 100f;
+        characterLevel = CharacterLevel.Classic;
     }
 
     private void FlyingElbowAttack(GameObject target)
@@ -65,7 +69,7 @@ public class ElPrimo : CharacterPlayer
         navMeshAgent.enabled = true;
         characterController.enabled = true;
 
-        targetBase.KnockBack(attackDamage * 2f, knockBackTime, knockBackDistance);
+        targetBase.KnockBack(flyingElbowDamage, knockBackTime, knockBackDistance);
         OnUnDetectEnemy(targetBase);
         SetCharacterState(CharacterState.Idle);
     }

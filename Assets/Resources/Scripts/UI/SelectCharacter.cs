@@ -9,13 +9,13 @@ public class SelectCharacter : MonoBehaviour
 
     private void Awake()
     {
-        char1.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.Player));
-        char2.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.Player));
-        char3.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.Player));
+        char1.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.ElPrimo + 1));
+        char2.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.ElPrimo + 1));
+        char3.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.ElPrimo + 1));
 
-        char1.GetComponent<Button>().onClick.AddListener(delegate { SelectChar(char1.characterType); });
-        char2.GetComponent<Button>().onClick.AddListener(delegate { SelectChar(char2.characterType); });
-        char3.GetComponent<Button>().onClick.AddListener(delegate { SelectChar(char3.characterType); });
+        char1.GetComponent<Button>().onClick.AddListener(delegate { SelectChar(char1.characterType, CharacterLevel.Classic); });
+        char2.GetComponent<Button>().onClick.AddListener(delegate { SelectChar(char2.characterType, CharacterLevel.Classic); });
+        char3.GetComponent<Button>().onClick.AddListener(delegate { SelectChar(char3.characterType, CharacterLevel.Classic); });
     }
 
     public void SetActive(bool isActive)
@@ -23,9 +23,9 @@ public class SelectCharacter : MonoBehaviour
         gameObject.SetActive(isActive);
     }
 
-    public void SelectChar(CharacterType newType)
+    public void SelectChar(CharacterType newType, CharacterLevel newLevel)
     {
-        GameManager.Instance.attackCircle.GetComponent<IAttackCircleUIInterface>().SelectCharacter(newType);
+        GameManager.Instance.attackCircle.GetComponent<IAttackCircleUIInterface>().SelectCharacter(newType, newLevel);
         SetActive(false);
     }
 }

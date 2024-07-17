@@ -36,6 +36,6 @@ public class NPCAttackCircle : AttackCircle
 
     public virtual void SpawnNPC(CharacterType characterType)
     {
-        CharacterBase character = SpawnPlayer(transform.position, characterType, false);
+        CharacterBase character = SpawnCharacter(transform.position, characterType, CharacterLevel.NPC, false);
     }
 }

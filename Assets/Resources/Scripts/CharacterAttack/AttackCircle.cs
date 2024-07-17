@@ -105,9 +105,9 @@ public class AttackCircle : MonoBehaviour
         transform.localScale = Vector3.one * newRadius * 2; // 콜라이더의 반지름이 아닌 전체 구 오브젝트의 지름이라서 *2
     }
 
-    public CharacterBase SpawnPlayer(Vector3 pos, CharacterType charType, bool isMerged = false)
+    public CharacterBase SpawnCharacter(Vector3 pos, CharacterType charType, CharacterLevel level, bool isMerged = false)
     {
-        string path = $"Prefabs/Character/{charType.ToString()}";
+        string path = $"Prefabs/Character/{charType.ToString()}{level.ToString()}";
         GameObject character = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
         CharacterBase characterBase = character.GetComponent<CharacterBase>();
         characterBase.gameObject.name += "mine";
