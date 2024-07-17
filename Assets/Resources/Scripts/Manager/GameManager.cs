@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public EffectManager effectManager = null;
     [HideInInspector] public UIManager uiManager = null;
     [HideInInspector] public ProjectileManager projectileManager = null;
+    [HideInInspector] public AOEManager aoeManager = null;
 
     public GameObject attackCircle = null;
     public bool isConnect { get; set; } = false;
@@ -94,6 +95,7 @@ public class GameManager : MonoBehaviour
         effectManager = FindObjectOfType<EffectManager>();
         uiManager = FindObjectOfType<UIManager>();
         projectileManager = FindObjectOfType<ProjectileManager>();
+        aoeManager = FindObjectOfType<AOEManager>();
 
         //List<NPCSpawnPoint> npcSpawnPoses = FindObjectsOfType<NPCSpawnPoint>().ToList();
         //List<TreasureBoxSpawnPoint> treasureBoxSpawnPoses = FindObjectsOfType<TreasureBoxSpawnPoint>().ToList();
@@ -106,7 +108,7 @@ public class GameManager : MonoBehaviour
         //    {
         //        spawner.GetComponent<Spawner>().StartSpawn();
         //    }
-            
+
         //}
 
         //string tbSpawnerPath = $"Prefabs/Spawner/TreasureBoxSpawner";
@@ -114,7 +116,7 @@ public class GameManager : MonoBehaviour
         //foreach (var spawnPoint in treasureBoxSpawnPoses)
         //{
         //    GameObject spawner = PhotonNetwork.Instantiate(tbSpawnerPath, spawnPoint.gameObject.transform.position, spawnPoint.transform.rotation);
-            
+
         //    if (PhotonNetwork.IsMasterClient)
         //    {
         //        spawner.GetComponent<TreasureBoxSpawner>().StartSpawn();

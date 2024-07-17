@@ -16,6 +16,7 @@ public enum CharacterType
     Chilli,
     Kiwi,
     Usurper,
+    Golem,
 
     End,
 }
@@ -75,7 +76,6 @@ public class CharacterBase : MonoBehaviour
     protected virtual void Start()
     {
         Init();
-        
     }
 
     protected virtual void Update()
