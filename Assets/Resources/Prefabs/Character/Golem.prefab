@@ -677,8 +677,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHp: 100
   attackRadius: 7
-  coin: 0
-  gem: 0
+  coin: 10
+  gem: 5
 --- !u!143 &6168182666268554940
 CharacterController:
   m_ObjectHideFlags: 0

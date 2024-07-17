@@ -307,4 +307,24 @@ public class CharacterBase : MonoBehaviour
     {
         return characterStat.GetGem();
     }
+
+    public virtual void GetAOE(float inDamage)
+    {
+        photonView.RPC("RPCGetAOE", RpcTarget.AllBuffered, inDamage);
+    }
+
+    [PunRPC]
+    public virtual void RPCGetAOE(float inDamage)
+    {
+        characterState = CharacterState.Stun;
+        Vector3 endPoint = transform.position - transform.forward.normalized * 2f;
+        Vector3 midPoint = transform.position + (endPoint - transform.position) * 0.5f;
+        midPoint.y += 2f;
+        Vector3[] paths = { transform.position, midPoint, endPoint };
+        transform.DOPath(paths, 1f, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
+        {
+            TakeDamage(inDamage);
+            characterState = CharacterState.Idle;
+        });
+    }
 }

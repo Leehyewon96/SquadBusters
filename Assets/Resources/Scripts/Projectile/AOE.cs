@@ -30,7 +30,7 @@ public class AOE : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent<ICharacterPlayerProjectileInterface>(out ICharacterPlayerProjectileInterface player))
         {
-            player.TakeDamage(damage);
+            player.GetAOE(damage);
         }
     }
 

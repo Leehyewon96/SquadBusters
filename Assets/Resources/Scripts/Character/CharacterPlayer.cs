@@ -131,7 +131,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICh
             angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
             dirVec = Vector3.up * angle;
             transform.DORotate(dirVec, 1f);
-            if (characterController.enabled) //캐릭터 상태로 판단하도록 변경하기
+            if (characterController.enabled || characterState == CharacterState.Stun) //캐릭터 상태로 판단하도록 변경하기
             {
                 isAttacking = false;
                 yield break;
@@ -234,34 +234,19 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICh
         return 0;
     }
 
-    public virtual void Stun(float duration)
+    public virtual void Stun(float duration, string animName)
     {
         if (onStun != null)
         {
             onStun.Invoke(duration);
         }
-        StartCoroutine(CoStun(duration));
-
-        //photonView.RPC("RPCStun", RpcTarget.AllBuffered, duration);
+        StartCoroutine(CoStun(duration, animName));
     }
 
-    [PunRPC]
-    public virtual void RPCStun(float duration)
-    {
-        if(photonView.IsMine)
-        {
-            if (onStun != null)
-            {
-                onStun.Invoke(duration);
-            }
-            StartCoroutine(CoStun(duration));
-        }
-    }
-
-    private IEnumerator CoStun(float duration)
+    private IEnumerator CoStun(float duration, string animName)
     {
         SetCharacterState(CharacterState.Stun);
-        animator.SetTrigger(AnimLocalize.knockBack);
+        animator.SetTrigger(animName);
         yield return new WaitForSeconds(duration);
         SetCharacterState(CharacterState.Idle);
     }

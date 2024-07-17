@@ -30,7 +30,7 @@ public class FireBullet : MonoBehaviour
     {
         if(other.gameObject.TryGetComponent<ICharacterPlayerProjectileInterface>(out ICharacterPlayerProjectileInterface player))
         {
-            player.Stun(stunTime);
+            player.Stun(stunTime, AnimLocalize.knockBack);
         }
     }
 

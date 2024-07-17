@@ -1,5 +1,5 @@
 public interface ICharacterPlayerProjectileInterface
 {
-    public void Stun(float duration);
-    public void TakeDamage(float inDamage);
+    public void Stun(float duration, string animName);
+    public void GetAOE(float inDamage);
 }

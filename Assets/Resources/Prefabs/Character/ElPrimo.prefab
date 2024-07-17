@@ -987,6 +987,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 5679458444343880641}
+  - {fileID: -5969228014820462761}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1056,8 +1057,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowLayerWeightsInspector: 1
   ShowParameterInspector: 1
-  m_SynchronizeParameters: []
-  m_SynchronizeLayers: []
+  m_SynchronizeParameters:
+  - Type: 1
+    SynchronizeType: 1
+    Name: moveSpeed
+  - Type: 4
+    SynchronizeType: 1
+    Name: ContactEnemy
+  - Type: 9
+    SynchronizeType: 1
+    Name: FlyingElbow
+  - Type: 9
+    SynchronizeType: 1
+    Name: KnockBack
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!1 &5784154998071375014
 GameObject:
   m_ObjectHideFlags: 0
