@@ -24440,7 +24440,7 @@ GameObject:
   - component: {fileID: 6590602752231017545}
   - component: {fileID: 6590602752231017591}
   - component: {fileID: -381204577448922189}
-  - component: {fileID: -3345772079924192705}
+  - component: {fileID: 6897565365015252371}
   m_Layer: 0
   m_Name: AOE
   m_TagString: Untagged
@@ -24508,11 +24508,11 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
-  - {fileID: -3345772079924192705}
+  - {fileID: 6897565365015252371}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-3345772079924192705
+--- !u!114 &6897565365015252371
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -24527,7 +24527,7 @@ MonoBehaviour:
   m_SynchronizePosition: 1
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 1
-  m_UseLocal: 1
+  m_UseLocal: 0
 --- !u!1 &6826492875379376160
 GameObject:
   m_ObjectHideFlags: 0

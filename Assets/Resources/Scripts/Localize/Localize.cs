@@ -1,5 +1,6 @@
 public class AnimLocalize
 {
+    static public string idle = "Idle";
     static public string moveSpeed = "moveSpeed";
     static public string contactEnemy = "ContactEnemy";
     static public string dead = "dead";

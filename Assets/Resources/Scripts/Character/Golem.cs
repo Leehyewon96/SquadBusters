@@ -6,13 +6,13 @@ public class Golem : CharacterNonPlayer
 {
     protected override void MoveToEnemy()
     {
-        GameObject target = GetTarget();
-        if (target == gameObject)
+        if (characterState == CharacterState.Attack)
         {
             return;
         }
 
-        if(characterState == CharacterState.Attack)
+        GameObject target = GetTarget();
+        if (target == gameObject)
         {
             return;
         }
@@ -24,6 +24,7 @@ public class Golem : CharacterNonPlayer
 
     protected override void Attack(GameObject target)
     {
+        Debug.Log($"[{gameObject.name}] Attack");
         Vector3 dirVec = target.transform.position - transform.position;
         float angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
         dirVec = Vector3.up * angle;
@@ -39,8 +40,10 @@ public class Golem : CharacterNonPlayer
     {
         animator.SetBool(AnimLocalize.contactEnemy, true);
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(AnimLocalize.attack));
-        GameManager.Instance.aoeManager.GetAOE(transform.position + transform.forward.normalized * 2f);
+        AOE aoe = GameManager.Instance.aoeManager.GetAOE(transform.position + transform.forward.normalized * 2f);
         animator.SetBool(AnimLocalize.contactEnemy, false);
+
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(AnimLocalize.idle));
         characterState = CharacterState.Idle;
     }
 }

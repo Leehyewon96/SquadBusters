@@ -19,11 +19,11 @@ public class AOEManager : MonoBehaviour
             string path = $"Prefabs/AOE/AOE";
             GameObject newAoe = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
             aoe = newAoe.GetComponent<AOE>();
-            aoe.transform.parent = transform;
+            aoe.gameObject.transform.SetParent(transform);
             aoes.Add(aoe);
         }
 
-        aoe.transform.position = pos;
+        aoe.gameObject.transform.position = pos;
         aoe.SetActive(true);
 
         return aoe;
