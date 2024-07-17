@@ -616,8 +616,8 @@ GameObject:
   - component: {fileID: 2031378435638563820}
   - component: {fileID: 7326290230530205336}
   - component: {fileID: 1510268865294268382}
-  - component: {fileID: 7825422466762987464}
   - component: {fileID: 6073645151388313052}
+  - component: {fileID: 5076228924023001655}
   m_Layer: 6
   m_Name: Golem
   m_TagString: Untagged
@@ -753,7 +753,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 1510268865294268382}
-  - {fileID: 7825422466762987464}
+  - {fileID: 5076228924023001655}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -773,27 +773,6 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 1
   m_UseLocal: 1
---- !u!114 &7825422466762987464
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2272855640038774138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowLayerWeightsInspector: 1
-  ShowParameterInspector: 1
-  m_SynchronizeParameters:
-  - Type: 9
-    SynchronizeType: 1
-    Name: Attack
-  m_SynchronizeLayers:
-  - SynchronizeType: 0
-    LayerIndex: 0
 --- !u!114 &6073645151388313052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -810,6 +789,27 @@ MonoBehaviour:
   characterType: 8
   hpBarOrigin: {fileID: 0}
   attackCircleOrigin: {fileID: 0}
+--- !u!114 &5076228924023001655
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2272855640038774138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 4
+    SynchronizeType: 1
+    Name: ContactEnemy
+  m_SynchronizeLayers:
+  - SynchronizeType: 0
+    LayerIndex: 0
 --- !u!1 &2418383334023700969
 GameObject:
   m_ObjectHideFlags: 0

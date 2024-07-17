@@ -37,11 +37,10 @@ public class Golem : CharacterNonPlayer
 
     protected override IEnumerator CoAttack(GameObject target)
     {
-        Debug.Log("Enter");
-        animator.SetTrigger(AnimLocalize.attack);
-        yield return new WaitForSeconds(7.5f);
-        Debug.Log("Out");
+        animator.SetBool(AnimLocalize.contactEnemy, true);
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(AnimLocalize.attack));
         GameManager.Instance.aoeManager.GetAOE(transform.position + transform.forward.normalized * 2f);
+        animator.SetBool(AnimLocalize.contactEnemy, false);
         characterState = CharacterState.Idle;
     }
 }
