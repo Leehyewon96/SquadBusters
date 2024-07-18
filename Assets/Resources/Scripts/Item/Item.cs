@@ -5,7 +5,7 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     protected PhotonView photonView = null;
-    [SerializeField] protected ItemType type = ItemType.Coin;
+    protected ItemType type = ItemType.Coin;
 
     protected bool isPicked = false;
 

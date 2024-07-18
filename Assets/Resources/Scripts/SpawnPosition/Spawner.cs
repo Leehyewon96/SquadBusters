@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] protected CharacterType characterType;
     protected float repeatInterval = 5f;
     protected string path = null;
     protected GameObject spawnObject = null;
@@ -13,7 +12,6 @@ public class Spawner : MonoBehaviour
     protected virtual void Awake()
     {
         photonView = GetComponent<PhotonView>();
-        SetPath($"Prefabs/Character/NPCAttackCircle");
     }
 
     protected virtual void Start()
@@ -27,11 +25,6 @@ public class Spawner : MonoBehaviour
     protected virtual void SetPath(string inPath)
     {
         path = inPath;
-    }
-
-    public virtual void SetCharacterType(CharacterType type)
-    {
-        characterType = type;
     }
 
     public virtual void StartSpawn()
@@ -53,10 +46,6 @@ public class Spawner : MonoBehaviour
 
             GameObject obj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
             
-            if (obj.TryGetComponent<NPCAttackCircle>(out NPCAttackCircle npcAttackCircle))
-            {
-                obj.GetComponent<NPCAttackCircle>().SpawnNPC(characterType);
-            }
             return spawnObject = obj;
         }
 

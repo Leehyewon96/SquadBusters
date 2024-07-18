@@ -40,6 +40,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
             GameManager.Instance.uiManager.fastMoveUI.onMoveFast += () => movement3D.UpdateMoveSpeed(30f);
             GameManager.Instance.uiManager.fastMoveUI.onMoveCommon -= () => movement3D.UpdateMoveSpeed(15f);
             GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += () => movement3D.UpdateMoveSpeed(15f);
+            GameManager.Instance.uiManager.skillUI.doSkill += DoItemSkill;
         }
         
         if (!photonView.IsMine)
@@ -85,6 +86,9 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
                 player.AddTakeItemActions(takeGem);
                 OnTakeItem takeTreasureBox = GainTreasureBox;
                 player.AddTakeItemActions(takeTreasureBox);
+                OnTakeItem takeBomb = GainBomb;
+                player.AddTakeItemActions(takeBomb);
+
                 player.updateCoin = SetCoin;
                 player.totalCoin = GetCoin;
                 player.onStun = Stun;
@@ -179,6 +183,12 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         }
     }
 
+    public void GainBomb()
+    {
+        GameManager.Instance.uiManager.skillUI.UpdateSkillType(ItemType.Bomb);
+        GameManager.Instance.uiManager.skillUI.SetInteractable(true);
+    }
+
     public int GetCoin()
     {
         return attackCircleStat.GetCoin();
@@ -216,6 +226,13 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         pos.x = x + transform.position.x;
         pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
         CharacterBase player = SpawnCharacter(pos, newType, newLevel, true);
+    }
+
+    public void DoItemSkill(ItemType itemType)
+    {
+        Projectile projectile = GameManager.Instance.projectileManager.GetProjectile(transform.position, ProjectileType.Bomb);
+        Bomb bomb = projectile.gameObject.GetComponent<Bomb>();
+        bomb.Explode(2f);
     }
     #endregion
 }

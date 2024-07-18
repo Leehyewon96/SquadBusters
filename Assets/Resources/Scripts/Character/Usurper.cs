@@ -82,7 +82,8 @@ public class Usurper : CharacterNonPlayer
     protected virtual void ShotFireBall(Vector3 dirVec)
     {
         animator.SetTrigger(AnimLocalize.attack);
-        FireBullet bullet = GameManager.Instance.projectileManager.GetBullet(transform.position + transform.forward.normalized * 0.5f + Vector3.up * 2.5f);
+        Projectile projectile = GameManager.Instance.projectileManager.GetProjectile(transform.position + transform.forward.normalized * 0.5f + Vector3.up * 2.5f, ProjectileType.FireBullet);
+        FireBullet bullet = projectile.gameObject.GetComponent<FireBullet>();
         bullet.transform.rotation = Quaternion.LookRotation(dirVec);
         bullet.SetStunTime(stunTime);
         bullet.Shot(transform.position + dirVec.normalized * attackDistance);

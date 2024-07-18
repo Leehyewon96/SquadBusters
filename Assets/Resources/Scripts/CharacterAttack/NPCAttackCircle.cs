@@ -34,8 +34,4 @@ public class NPCAttackCircle : AttackCircle
         transform.position = owners.FirstOrDefault().transform.position;
     }
 
-    public virtual void SpawnNPC(CharacterType characterType)
-    {
-        CharacterBase character = SpawnCharacter(transform.position, characterType, CharacterLevel.NPC, false);
-    }
 }

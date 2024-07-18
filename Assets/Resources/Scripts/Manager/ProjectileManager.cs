@@ -2,30 +2,38 @@ using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum ProjectileType
+{
+    FireBullet,
+    Bomb,
+
+    End
+}
+
 public class ProjectileManager : MonoBehaviour
 {
-    private List<FireBullet> bullets = new List<FireBullet>();
+    private List<Projectile> projectiles = new List<Projectile>();
 
-    public FireBullet GetBullet(Vector3 pos)
+    public Projectile GetProjectile(Vector3 pos, ProjectileType type)
     {
-        FireBullet bullet = null;
-        if(bullets.Count > 0)
+        Projectile projectile = null;
+        if(projectiles.Count > 0)
         {
-            bullet = bullets.Find(b => !b.gameObject.activeSelf);
+            projectile = projectiles.Find(p => !p.gameObject.activeSelf && p.GetProjectileType() == type);
         }
         
-        if (bullet == null)
+        if (projectile == null)
         {
-            string path = $"Prefabs/Projectile/Firebullet";
+            string path = $"Prefabs/Projectile/{type.ToString()}";
             GameObject newBullet = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
-            bullet = newBullet.GetComponent<FireBullet>();
-            bullet.transform.SetParent(transform);
-            bullets.Add(bullet);
+            projectile = newBullet.GetComponent<Projectile>();
+            projectile.transform.SetParent(transform);
+            projectiles.Add(projectile);
         }
 
-        bullet.transform.position = pos;
-        bullet.SetActive(true);
+        projectile.transform.position = pos;
+        projectile.SetActive(true);
 
-        return bullet;
+        return projectile;
     }
 }

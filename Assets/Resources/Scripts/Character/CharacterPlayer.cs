@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static SkillUI;
 
 
 
@@ -30,9 +31,8 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICh
             GameManager.Instance.uiManager.fastMoveUI.onMoveCommon -= () => movement3D.UpdateMoveSpeed(15f);
             GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += () => movement3D.UpdateMoveSpeed(15f);
             GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position, transform.forward);
+            
         }
-        
-        //StartCoroutine(CoInit());
     }
 
     protected override void Update()

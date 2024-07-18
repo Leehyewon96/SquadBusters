@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 2869013036097602996}
   - component: {fileID: 1188690484535429649}
   - component: {fileID: 4007048062119706331}
-  - component: {fileID: 4007048062119706328}
   - component: {fileID: 4007048062119706334}
   - component: {fileID: 4007048062119706332}
   - component: {fileID: 4007048062119706335}
   - component: {fileID: 1124454046594928889}
+  - component: {fileID: 3199285605235009951}
   m_Layer: 7
   m_Name: Gem
   m_TagString: Untagged
@@ -88,19 +88,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4007048062119706328
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3214189745447919374}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b5ce2b38cb4b614a90054c1d51a5146, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  type: 1
 --- !u!54 &4007048062119706334
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -169,3 +156,15 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 1
   m_Center: {x: 0, y: 0, z: -0.012520604}
+--- !u!114 &3199285605235009951
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3214189745447919374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73737737ab120ca4b87a73295b995174, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

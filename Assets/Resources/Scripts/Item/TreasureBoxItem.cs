@@ -3,11 +3,10 @@ using UnityEngine;
 
 public class TreasureBoxItem : Item
 {
-    
-
     protected override void Awake()
     {
         base.Awake();
+        type = ItemType.TreasureBox;
     }
 
     protected override void OnTriggerEnter(Collider other)

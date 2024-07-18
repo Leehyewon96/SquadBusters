@@ -13,6 +13,7 @@ public class UIManager : MonoBehaviour
     [HideInInspector] public TreasureBoxCostUI treasureBoxCostUI = null;
     [HideInInspector] public FastMoveUI fastMoveUI = null;
     [HideInInspector] public TimeUI timeUI = null;
+    [HideInInspector] public SkillUI skillUI = null;
 
     private void Awake()
     {
@@ -21,6 +22,7 @@ public class UIManager : MonoBehaviour
         treasureBoxCostUI = GetComponentInChildren<TreasureBoxCostUI>(true);
         fastMoveUI = GetComponentInChildren<FastMoveUI>(true);
         timeUI = GetComponentInChildren<TimeUI>(true);
+        skillUI = GetComponentInChildren<SkillUI>(true);
     }
 
     public void ShowUI(UIType uiType)
