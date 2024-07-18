@@ -323,7 +323,7 @@ public class CharacterBase : MonoBehaviour
     {
         characterState = CharacterState.Stun;
         fromPos.y = transform.position.y;
-        Vector3 dir = transform.forward - fromPos;
+        Vector3 dir = transform.position - fromPos;
         Vector3 startPos = transform.position;
         Vector3 endPoint = startPos + dir.normalized * distance;
         Vector3 midPoint = startPos + (endPoint - transform.position) * 0.5f;
