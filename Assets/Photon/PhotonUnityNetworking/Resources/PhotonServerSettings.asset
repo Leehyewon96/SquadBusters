@@ -76,6 +76,7 @@ MonoBehaviour:
   - RPCStun
   - SetCharacterState
   - RPCGetAOE
+  - RPCUpdateColor
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

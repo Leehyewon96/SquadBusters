@@ -8,16 +8,20 @@ public class AOE : MonoBehaviour
     private float damage = 10f;
 
     private PhotonView photonView = null;
+    private ParticleSystem particle = null;
+    private ParticleSystem.MainModule particleMain;
+    [SerializeField] private AOEType aoeType;
 
     private void Awake()
     {
         photonView = GetComponent<PhotonView>();
+        particle = GetComponentInChildren<ParticleSystem>();
+        particleMain = particle.main;
     }
 
     private void OnEnable()
     {
         StartCoroutine(CoSetActive(false));
-
     }
 
     private IEnumerator CoSetActive(bool isActive)
@@ -43,5 +47,10 @@ public class AOE : MonoBehaviour
     public void RPCSetActive(bool isActive)
     {
         gameObject.SetActive(isActive);
+    }
+
+    public AOEType GetAoeType()
+    {
+        return aoeType;
     }
 }

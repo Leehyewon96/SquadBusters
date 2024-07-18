@@ -19,7 +19,7 @@ public class Bomb : Projectile
         yield return new WaitForSeconds(waiting);
         SetActive(false);
 
-        GameManager.Instance.aoeManager.GetAOE(transform.position);
+        AOE aoe = GameManager.Instance.aoeManager.GetAOE(transform.position, AOEType.Red);
         GameManager.Instance.effectManager.Play(EffectType.Explosion, transform.position, transform.forward);
     }
 }

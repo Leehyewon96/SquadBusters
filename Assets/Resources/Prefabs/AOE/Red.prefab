@@ -229,7 +229,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.9433962, g: 0.84950894, b: 0.30704877, a: 1}
+      maxColor: {r: 0.94509804, g: 0.30588233, b: 0.31552628, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5135,7 +5135,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.9433962, g: 0.84950894, b: 0.30704877, a: 1}
+      maxColor: {r: 0.94509804, g: 0.32565135, b: 0.30588233, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -10041,7 +10041,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.9245283, g: 0.8760809, b: 0.45790315, a: 1}
+      maxColor: {r: 0.9254902, g: 0.47689167, b: 0.45882353, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -14910,8 +14910,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 0.8490566, g: 0.5697974, b: 0.17221431, a: 1}
-      maxColor: {r: 0.8490566, g: 0.7931617, b: 0.16420433, a: 1}
+      minColor: {r: 0.8509804, g: 0.17254902, b: 0.17932606, a: 1}
+      maxColor: {r: 0.8509804, g: 0.192399, b: 0.16470587, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -19781,7 +19781,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.8962264, g: 0.82155955, b: 0.20714669, a: 1}
+      maxColor: {r: 0.8980392, g: 0.20784311, b: 0.20784311, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -24442,7 +24442,7 @@ GameObject:
   - component: {fileID: -381204577448922189}
   - component: {fileID: 6897565365015252371}
   m_Layer: 0
-  m_Name: AOE
+  m_Name: Red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24476,6 +24476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee6a301cfda184441aec837fbd568a36, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aoeType: 0
 --- !u!135 &6590602752231017591
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -24750,8 +24751,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 0.8584906, g: 0.7749651, b: 0.14173192, a: 1}
-      maxColor: {r: 0.8136022, g: 0.8584906, b: 0.31990921, a: 1}
+      minColor: {r: 0.85882354, g: 0.15566431, b: 0.14117645, a: 1}
+      maxColor: {r: 0.85882354, g: 0.33701766, b: 0.32156864, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -29632,7 +29633,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.92235553, g: 0.9339623, b: 0.3304112, a: 1}
+      maxColor: {r: 0.93333334, g: 0.3294118, b: 0.3352611, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
