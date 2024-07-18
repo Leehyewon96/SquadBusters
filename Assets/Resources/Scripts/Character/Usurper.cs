@@ -32,7 +32,8 @@ public class Usurper : CharacterNonPlayer
         {
             //타겟쪽으로 회전
             Vector3 dir = target.transform.position - transform.position;
-            float angle = Quaternion.FromToRotation(Vector3.forward, dir).eulerAngles.y;
+            float angle = Quaternion.FromToRotation(transform.forward, dir).eulerAngles.y;
+            angle += Quaternion.FromToRotation(Vector3.forward, transform.forward).eulerAngles.y;
             dirVec = Vector3.up * angle;
         }
 

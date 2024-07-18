@@ -18,9 +18,9 @@ TagManager:
   - playerAttackCircle
   - enemyAttackCircle
   - map
-  - 
-  - 
-  - 
+  - aoe
+  - projectile
+  - ground
   - 
   - 
   - 

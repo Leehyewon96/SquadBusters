@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
@@ -11,7 +12,15 @@ public class Bomb : Projectile
 
     public void Explode(float waiting)
     {
-        StartCoroutine(CoExplode(waiting));
+        Vector3 startPos = transform.position + Vector3.up;
+        Vector3 endPos = transform.position;
+        Vector3 midPos = transform.position;
+        midPos.y += 2f;
+        Vector3[] path = { startPos, midPos, endPos };
+        transform.DOPath(path, 0.5f, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
+        {
+            StartCoroutine(CoExplode(waiting));
+        });
     }
 
     private IEnumerator CoExplode(float waiting)

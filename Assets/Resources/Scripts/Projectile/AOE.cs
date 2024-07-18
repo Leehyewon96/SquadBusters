@@ -11,16 +11,19 @@ public class AOE : MonoBehaviour
     private ParticleSystem particle = null;
     private ParticleSystem.MainModule particleMain;
     [SerializeField] private AOEType aoeType;
+    private CapsuleCollider capsuleCollider = null;
 
     private void Awake()
     {
         photonView = GetComponent<PhotonView>();
         particle = GetComponentInChildren<ParticleSystem>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
         particleMain = particle.main;
     }
 
     private void OnEnable()
     {
+        SetEnable(true);
         StartCoroutine(CoSetActive(false));
     }
 
@@ -34,7 +37,8 @@ public class AOE : MonoBehaviour
     {
         if (other.gameObject.TryGetComponent<ICharacterPlayerProjectileInterface>(out ICharacterPlayerProjectileInterface player))
         {
-            player.GetAOE(damage);
+            player.GetAOE(damage, transform.position, 5f);
+            SetEnable(false);
         }
     }
 
@@ -52,5 +56,10 @@ public class AOE : MonoBehaviour
     public AOEType GetAoeType()
     {
         return aoeType;
+    }
+
+    private void SetEnable(bool isEnabled)
+    {
+        capsuleCollider.enabled = isEnabled;
     }
 }

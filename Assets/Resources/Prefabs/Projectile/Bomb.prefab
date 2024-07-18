@@ -4920,7 +4920,7 @@ GameObject:
   - component: {fileID: 708775719569471453}
   - component: {fileID: -3201384486960898598}
   - component: {fileID: 7278698285939954394}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Bomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}

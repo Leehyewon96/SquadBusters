@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static SkillUI;
 
 
 
@@ -118,6 +117,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICh
     {
         Vector3 dirVec = target.transform.position - transform.position;
         float angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
+        angle += Quaternion.FromToRotation(Vector3.forward, transform.forward).eulerAngles.y;
         dirVec = Vector3.up * angle;
         transform.DORotate(dirVec, 1f).OnComplete(() =>
         {
