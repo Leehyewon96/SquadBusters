@@ -3718,6 +3718,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   delayTime: 100
+  m_roughness: 150
+  m_magnitude: 8
 --- !u!114 &1165401968
 MonoBehaviour:
   m_ObjectHideFlags: 0

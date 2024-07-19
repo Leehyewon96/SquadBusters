@@ -231,4 +231,19 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         }
         return 0;
     }
+
+    [PunRPC]
+    public override void RPCGetAOE(float inDamage, Vector3 fromPos, float distance)
+    {
+        if (photonView.IsMine && Camera.main.TryGetComponent<CameraFollow>(out CameraFollow cam))
+        {
+            if (cam.onCameraShake != null)
+            {
+                cam.onCameraShake.Invoke(0.5f);
+            }
+        }
+
+        base.RPCGetAOE(inDamage, fromPos, distance);
+    }
+
 }

@@ -326,7 +326,6 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
     [PunRPC]
     public virtual void RPCGetAOE(float inDamage, Vector3 fromPos, float distance)
     {
-        Debug.Log($"[{gameObject.name}] GetAOE");
         characterState = CharacterState.Stun;
         fromPos.y = transform.position.y;
         Vector3 dir = transform.position - fromPos;
@@ -338,7 +337,6 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         Vector3[] paths = { startPos, midPoint, endPoint };
         transform.DOPath(paths, 0.5f, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
         {
-            Debug.Log("RPCGetAOE");
             TakeDamage(inDamage);
             characterState = CharacterState.Idle;
         });
