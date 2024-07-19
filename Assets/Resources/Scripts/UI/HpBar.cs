@@ -18,18 +18,6 @@ public class HpBar : MonoBehaviour
     private float maxHp = -1;
     [HideInInspector] public bool isUsed = false;
 
-    private Camera cam = null;
-
-    private void Awake()
-    {
-        cam = Camera.main;
-    }
-
-    private void FixedUpdate()
-    {
-        transform.LookAt(transform.position + cam.transform.rotation * Vector3.forward, cam.transform.rotation * Vector3.up);
-    }
-
     public void SetActive(bool isActive)
     {
         gameObject.SetActive(isActive);

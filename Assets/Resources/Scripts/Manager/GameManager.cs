@@ -1,7 +1,5 @@
 using Photon.Pun;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,7 +16,9 @@ public class GameManager : MonoBehaviour
     public bool isConnect { get; set; } = false;
 
     public int treasureBoxCost { get; private set; } = 3;
-    private int playTime = 240; 
+    private int playTime = 240;
+
+    public string userName = "ÇÁ·ç´Ï";
 
     public static GameManager Instance
     {

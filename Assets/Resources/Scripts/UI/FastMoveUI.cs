@@ -30,20 +30,16 @@ public class FastMoveUI : MonoBehaviour
 
     public void MoveFast(BaseEventData e)
     {
-        Debug.Log($"MoveFast");
         if(onMoveFast != null)
         {
-            Debug.Log($"MoveFast Invoke");
             onMoveFast.Invoke();
         }
     }
 
     public void MoveCommon(BaseEventData e)
     {
-        Debug.Log($"MoveCommon");
         if (onMoveCommon != null)
         {
-            Debug.Log($"onMoveCommon Invoke");
             onMoveCommon.Invoke();
         }
     }
