@@ -675,9 +675,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37e9e786d2ad40249a7026190837ab3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 100
+  maxHp: 6000
   attackRadius: 7
-  attackDamage: 30
+  attackDamage: 700
   coin: 10
   gem: 5
 --- !u!143 &6168182666268554940
