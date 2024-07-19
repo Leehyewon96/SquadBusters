@@ -63,7 +63,7 @@ public class Item : MonoBehaviour
         if (other.gameObject.TryGetComponent<ICharacterPlayerItemInterface>(out ICharacterPlayerItemInterface attackCircleItemInterface))
         {
             photonView.RPC("SetIsPicked", RpcTarget.AllBuffered, true);
-            transform.DOMove(other.gameObject.transform.position + Vector3.up * 1.2f, 0.5f).OnComplete(() =>
+            transform.DOMove(other.gameObject.transform.position + Vector3.up * 1.2f, 0.25f).OnComplete(() =>
             {
                 attackCircleItemInterface.TakeItem(type);
 

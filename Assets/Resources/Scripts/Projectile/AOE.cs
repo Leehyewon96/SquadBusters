@@ -25,6 +25,7 @@ public class AOE : MonoBehaviour
     {
         SetEnable(true);
         StartCoroutine(CoSetActive(false));
+        StartCoroutine(CoSetEnable(false));
     }
 
     private IEnumerator CoSetActive(bool isActive)
@@ -38,8 +39,13 @@ public class AOE : MonoBehaviour
         if (other.gameObject.TryGetComponent<ICharacterProjectileInterface>(out ICharacterProjectileInterface player))
         {
             player.GetAOE(damage, transform.position, 5f);
-            SetEnable(false);
         }
+    }
+
+    private IEnumerator CoSetEnable(bool isEnabled)
+    {
+        yield return new WaitForSeconds(0.1f);
+        SetEnable(false);
     }
 
     public void SetActive(bool isActive)
@@ -59,6 +65,12 @@ public class AOE : MonoBehaviour
     }
 
     private void SetEnable(bool isEnabled)
+    {
+        photonView.RPC("RPCSetEnable", RpcTarget.AllBuffered, isEnabled);
+    }
+
+    [PunRPC]
+    public void RPCSetEnable(bool isEnabled)
     {
         capsuleCollider.enabled = isEnabled;
     }

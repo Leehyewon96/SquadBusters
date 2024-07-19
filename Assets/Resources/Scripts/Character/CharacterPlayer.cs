@@ -239,7 +239,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         {
             if (cam.onCameraShake != null)
             {
-                cam.onCameraShake.Invoke(0.5f);
+                cam.onCameraShake.Invoke(0.65f);
             }
         }
 
