@@ -7,7 +7,7 @@ using UnityEngine;
 
 
 
-public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICharacterPlayerProjectileInterface
+public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 {
     public delegate void OnTakeItem();
     private List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
@@ -17,9 +17,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICh
 
     public delegate int TotalCoin();
     public TotalCoin totalCoin;
-
-    public delegate void OnStun(float duration);
-    public OnStun onStun;
 
     protected virtual void OnEnable()
     {
@@ -233,22 +230,5 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface, ICh
             return totalCoin.Invoke();
         }
         return 0;
-    }
-
-    public virtual void Stun(float duration, string animName)
-    {
-        if (onStun != null)
-        {
-            onStun.Invoke(duration);
-        }
-        StartCoroutine(CoStun(duration, animName));
-    }
-
-    private IEnumerator CoStun(float duration, string animName)
-    {
-        SetCharacterState(CharacterState.Stun);
-        animator.SetTrigger(animName);
-        yield return new WaitForSeconds(duration);
-        SetCharacterState(CharacterState.Idle);
     }
 }

@@ -18,10 +18,10 @@ TagManager:
   - playerAttackCircle
   - enemyAttackCircle
   - map
-  - aoe
+  - aoeYellow
   - projectile
   - ground
-  - 
+  - aoeRed
   - 
   - 
   - 

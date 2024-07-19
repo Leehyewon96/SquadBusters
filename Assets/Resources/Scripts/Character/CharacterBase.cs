@@ -1,8 +1,10 @@
 using DG.Tweening;
 using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static CharacterPlayer;
 
 public enum CharacterType
 {
@@ -37,7 +39,7 @@ public enum CharacterState
     InVincible,
 }
 
-public class CharacterBase : MonoBehaviour
+public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 {
     //protected AttackCircle attackCircle = null;
     protected HpBar hpBar = null;
@@ -65,6 +67,9 @@ public class CharacterBase : MonoBehaviour
 
     public delegate void DeadAction(CharacterBase characterBase);
     public DeadAction deadAction = null;
+
+    public delegate void OnStun(float duration);
+    public OnStun onStun;
 
     protected virtual void Awake()
     {
@@ -321,6 +326,7 @@ public class CharacterBase : MonoBehaviour
     [PunRPC]
     public virtual void RPCGetAOE(float inDamage, Vector3 fromPos, float distance)
     {
+        Debug.Log($"[{gameObject.name}] GetAOE");
         characterState = CharacterState.Stun;
         fromPos.y = transform.position.y;
         Vector3 dir = transform.position - fromPos;
@@ -341,5 +347,22 @@ public class CharacterBase : MonoBehaviour
     public virtual CharacterLevel GetCharacterLevel()
     {
         return characterLevel;
+    }
+
+    public virtual void Stun(float duration, string animName)
+    {
+        if (onStun != null)
+        {
+            onStun.Invoke(duration);
+        }
+        StartCoroutine(CoStun(duration, animName));
+    }
+
+    private IEnumerator CoStun(float duration, string animName)
+    {
+        SetCharacterState(CharacterState.Stun);
+        animator.SetTrigger(animName);
+        yield return new WaitForSeconds(duration);
+        SetCharacterState(CharacterState.Idle);
     }
 }

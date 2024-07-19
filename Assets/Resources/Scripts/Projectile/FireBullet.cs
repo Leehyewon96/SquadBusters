@@ -28,7 +28,7 @@ public class FireBullet : Projectile
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.TryGetComponent<ICharacterPlayerProjectileInterface>(out ICharacterPlayerProjectileInterface player))
+        if(other.gameObject.TryGetComponent<ICharacterProjectileInterface>(out ICharacterProjectileInterface player))
         {
             player.Stun(stunTime, AnimLocalize.knockBack);
         }
