@@ -47,7 +47,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
             GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += () => movement3D.UpdateMoveSpeed(7.5f);
             GameManager.Instance.uiManager.skillUI.doSkill += DoItemSkill;
 
-            photonView.RPC("SetUserName", RpcTarget.AllBuffered);
+            photonView.RPC("SetUserName", RpcTarget.AllBuffered, GameManager.Instance.userName);
         }
         
         if (!photonView.IsMine)
@@ -80,9 +80,9 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
     }
 
     [PunRPC]
-    public virtual void SetUserName()
+    public virtual void SetUserName(string username)
     {
-        userName.SetText(GameManager.Instance.userName);
+        userName.SetText(username);
     }
 
     public override void UpdateOwners(CharacterBase newOwner, bool isMerged)

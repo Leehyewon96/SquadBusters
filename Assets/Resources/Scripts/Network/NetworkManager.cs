@@ -1,10 +1,9 @@
-using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using TMPro;
 using System.Collections;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
@@ -12,14 +11,23 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     [SerializeField] private TextMeshProUGUI stateText = null;
     [SerializeField] private TMP_InputField idInputField = null;
     [SerializeField] private Button btnLogin = null;
+    [SerializeField] private Button btnStart = null;
+    [SerializeField] private GameObject lobbyLoadingUI = null;
+    [SerializeField] private TextMeshProUGUI lobbyLoadingText = null;
 
     private void Awake()
     {
+        PhotonNetwork.AutomaticallySyncScene = true;
+
         loading.SetActive(true);
         stateText.SetText("연결 중...");
         btnLogin.onClick.AddListener(RequestJoinLobby);
         btnLogin.interactable = false;
         idInputField.interactable = false;
+
+        btnStart.gameObject.SetActive(false);
+        lobbyLoadingUI.SetActive(false);
+        btnStart.onClick.AddListener(OnClickBtnStart);
     }
 
     private void Start()
@@ -48,7 +56,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         base.OnJoinedLobby();
         print(System.Reflection.MethodBase.GetCurrentMethod().Name);
 
-        SceneManager.LoadScene(SceneLocalize.lobbyScene);
+        //SceneManager.LoadScene(SceneLocalize.lobbyScene);
+        stateText.SetText($"{idInputField.text}님! 반가워요!");
+        idInputField.gameObject.SetActive(false);
+        btnLogin.gameObject.SetActive(false);
+        btnStart.gameObject.SetActive(true);
         Debug.Log("로비 입장 완료");
     }
 
@@ -76,4 +88,75 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(1.5f);
         PhotonNetwork.JoinLobby();
     }
+
+    #region InLobby
+    public void CreateRoom()
+    {
+        RoomOptions roomOptions = new RoomOptions();
+        roomOptions.IsVisible = true;
+        roomOptions.MaxPlayers = 2;
+
+        PhotonNetwork.CreateRoom(null, roomOptions);
+    }
+
+    public override void OnCreatedRoom()
+    {
+        base.OnCreatedRoom();
+        Debug.Log("방생성 완료");
+    }
+
+    public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        base.OnCreateRoomFailed(returnCode, message);
+        Debug.Log($"방생성 실패, {returnCode}, {message}");
+    }
+
+    public override void OnJoinedRoom()
+    {
+        base.OnJoinedRoom();
+        Debug.Log("방 입장 완료");
+        //SceneManager.LoadScene(SceneLocalize.gameScene);
+        //GameManager.Instance.isConnect = true;
+        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+        {
+            lobbyLoadingText.SetText("게임 발견!");
+        }
+        //lobbyLoadingUI.SetActive(true);
+
+    }
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+        {
+            lobbyLoadingText.SetText("게임 발견!");
+            if (PhotonNetwork.IsMasterClient)
+            {
+                StartCoroutine(CoStartGame());
+            }
+        }
+    }
+
+    private IEnumerator CoStartGame()
+    {
+        yield return new WaitForSecondsRealtime(2f);
+        PhotonNetwork.LoadLevel(SceneLocalize.gameScene);
+    }
+
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        base.OnJoinRandomFailed(returnCode, message);
+        Debug.Log("방입장 실패. 새로운 방 생성");
+        CreateRoom();
+    }
+
+    public void OnClickBtnStart()
+    {
+        btnStart.interactable = false;
+        lobbyLoadingText.SetText("로딩중...");
+        lobbyLoadingUI.SetActive(true);
+        PhotonNetwork.JoinRandomRoom();
+    }
+    #endregion
 }

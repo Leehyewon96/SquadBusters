@@ -105,6 +105,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   circleEffect: {fileID: 9194767392708506761}
+  userName: {fileID: 6097032324155351718}
 --- !u!114 &769835126204654510
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -492,6 +493,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 35e4ef4fd2b78544b93916d52357cdaf, type: 3}
+--- !u!114 &6097032324155351718 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 385943844207399509, guid: 35e4ef4fd2b78544b93916d52357cdaf, type: 3}
+  m_PrefabInstance: {fileID: 5892440566333026547}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &9219627959069893830 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3329450668715889717, guid: 35e4ef4fd2b78544b93916d52357cdaf, type: 3}

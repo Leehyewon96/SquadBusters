@@ -1139,7 +1139,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 0}
-  moveSpeed: 15
 --- !u!195 &4972546740958827104
 NavMeshAgent:
   m_ObjectHideFlags: 0
