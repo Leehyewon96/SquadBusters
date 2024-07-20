@@ -16,17 +16,17 @@ public class TreasureBoxItem : Item
             return;
         }
 
-        if (other.gameObject.TryGetComponent<ICharacterPlayerItemInterface>(out ICharacterPlayerItemInterface attackCircleItemInterface))
+        if (other.gameObject.TryGetComponent<IAttackCircleItemInterface>(out IAttackCircleItemInterface attackCircleItemInterface))
         {
             //테스트를 위하여 코인 제한 없앰
-            //if (attackCircleItemInterface.GetTotalCoin() < GameManager.Instance.treasureBoxCost)
-            //{
-            //    return;
-            //}
+            if (attackCircleItemInterface.GetCoin() < GameManager.Instance.treasureBoxCost)
+            {
+                return;
+            }
             photonView.RPC("SetIsPicked", RpcTarget.AllBuffered, true);
-            attackCircleItemInterface.TakeItem(type);
-            attackCircleItemInterface.UpdateTotalCoin(attackCircleItemInterface.GetTotalCoin() - GameManager.Instance.treasureBoxCost);
-            GameManager.Instance.SetTreasureBoxCost(GameManager.Instance.treasureBoxCost * 2);
+            attackCircleItemInterface.GainTreasureBox();
+            attackCircleItemInterface.SetCoin(attackCircleItemInterface.GetCoin() - GameManager.Instance.treasureBoxCost);
+            GameManager.Instance.SetTreasureBoxCost(GameManager.Instance.treasureBoxCost + 2);
             SetActive(false);
         }
     }

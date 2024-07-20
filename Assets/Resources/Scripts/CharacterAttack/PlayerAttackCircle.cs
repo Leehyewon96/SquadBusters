@@ -1,13 +1,12 @@
+using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using Photon.Pun;
 using static CharacterPlayer;
-using System.Security.Cryptography;
 
-public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
+public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttackCircleItemInterface
 {
     protected GameObject moveObj = null;
     protected Movement3D movement3D = null;
@@ -97,8 +96,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
                 player.AddTakeItemActions(takeCoin);
                 OnTakeItem takeGem = GainGem;
                 player.AddTakeItemActions(takeGem);
-                OnTakeItem takeTreasureBox = GainTreasureBox;
-                player.AddTakeItemActions(takeTreasureBox);
+                //OnTakeItem takeTreasureBox = GainTreasureBox;
+                //player.AddTakeItemActions(takeTreasureBox);
                 OnTakeItem takeBomb = GainBomb;
                 player.AddTakeItemActions(takeBomb);
 
@@ -248,4 +247,6 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
         bomb.Explode(2f);
     }
     #endregion
+
+    
 }
