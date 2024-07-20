@@ -1,8 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
+using Photon.Pun;
 using static CharacterPlayer;
+using System.Security.Cryptography;
 
 public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
 {
@@ -12,6 +15,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
 
     [SerializeField] protected ParticleSystem circleEffect = null;
     protected ParticleSystem.MainModule mainCircleEffect;
+
+    [SerializeField] protected TextMeshProUGUI userName = null;
 
     protected override void Awake()
     {
@@ -41,6 +46,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
             GameManager.Instance.uiManager.fastMoveUI.onMoveCommon -= () => movement3D.UpdateMoveSpeed(7.5f);
             GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += () => movement3D.UpdateMoveSpeed(7.5f);
             GameManager.Instance.uiManager.skillUI.doSkill += DoItemSkill;
+
+            photonView.RPC("SetUserName", RpcTarget.AllBuffered);
         }
         
         if (!photonView.IsMine)
@@ -70,6 +77,12 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface
                 owner.SetDestination(moveObj.transform.position);
             }            
         }
+    }
+
+    [PunRPC]
+    public virtual void SetUserName()
+    {
+        userName.SetText(GameManager.Instance.userName);
     }
 
     public override void UpdateOwners(CharacterBase newOwner, bool isMerged)
