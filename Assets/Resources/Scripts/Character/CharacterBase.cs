@@ -100,6 +100,7 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     public virtual void Init()
     {
+        InitCharacterStat();
         hpBar.SetMaxHp(characterStat.GetMaxHp());
         hpBar.UpdateCurrentHp(characterStat.GetCurrentHp());
 
@@ -107,8 +108,6 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
         characterStat.onCurrentHpZero -= SetDead;
         characterStat.onCurrentHpZero += SetDead;
-
-        InitCharacterStat();
 
         if (!photonView.IsMine)
         {
