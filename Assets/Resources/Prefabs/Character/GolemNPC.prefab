@@ -675,9 +675,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37e9e786d2ad40249a7026190837ab3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 6000
-  attackRadius: 7
-  attackDamage: 700
   coin: 10
   gem: 5
 --- !u!143 &6168182666268554940
@@ -785,7 +782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82727002a0581e5448a74f6044b0f4e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterType: 8
+  characterType: 6
   hpBarOrigin: {fileID: 0}
   attackCircleOrigin: {fileID: 0}
 --- !u!114 &5076228924023001655

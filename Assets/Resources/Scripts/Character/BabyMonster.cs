@@ -3,7 +3,7 @@ using Photon.Pun;
 using System.Collections;
 using UnityEngine;
 
-public class Usurper : CharacterNonPlayer
+public class BabyMonster : CharacterNonPlayer
 {
     protected int attackCount = 0;
     protected WaitForSecondsRealtime attackReadyTime = new WaitForSecondsRealtime(5f);

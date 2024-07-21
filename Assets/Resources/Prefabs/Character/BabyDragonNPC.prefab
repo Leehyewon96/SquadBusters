@@ -2656,7 +2656,7 @@ GameObject:
   - component: {fileID: 7457122769995963694}
   - component: {fileID: 920172937614208065}
   m_Layer: 6
-  m_Name: UsurperNPC
+  m_Name: BabyDragonNPC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2712,7 +2712,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b3b741fce045004db05a26eb2bc1446, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterType: 7
+  characterType: 5
   hpBarOrigin: {fileID: 0}
   attackCircleOrigin: {fileID: 0}
 --- !u!143 &105987494785472023
@@ -2745,9 +2745,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37e9e786d2ad40249a7026190837ab3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 5000
-  attackRadius: 5
-  attackDamage: 76
   coin: 8
   gem: 4
 --- !u!114 &3585405619393935085

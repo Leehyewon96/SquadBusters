@@ -362,9 +362,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37e9e786d2ad40249a7026190837ab3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 10
-  attackRadius: 5
-  attackDamage: 30
   coin: 0
   gem: 0
 --- !u!114 &2656522768901584192
@@ -379,7 +376,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e49b19ab05f46a488c44bd59ed22183, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterType: 4
+  characterType: 3
   hpBarOrigin: {fileID: 9014925201690911801}
   attackCircleOrigin: {fileID: 1797897590569033847, guid: 19bd2eab4472b604299019c79057e75d, type: 3}
 --- !u!114 &2656522768901584193
@@ -395,7 +392,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterController: {fileID: 0}
-  moveSpeed: 5
 --- !u!195 &4960156766142342463
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -1,10 +1,11 @@
 using DG.Tweening;
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
-using static CharacterPlayer;
 
 public enum CharacterType
 {
@@ -14,7 +15,7 @@ public enum CharacterType
     Eggy,
     Chilli,
     Kiwi,
-    Usurper,
+    BabyDragon,
     Golem,
 
     End,
@@ -107,15 +108,24 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         characterStat.onCurrentHpZero -= SetDead;
         characterStat.onCurrentHpZero += SetDead;
 
+        InitCharacterStat();
+
         if (!photonView.IsMine)
         {
             return;
         }
     }
 
-    public virtual void SetCharacterType(CharacterType type)
+    protected virtual void InitCharacterStat()
     {
-        characterType = type;
+        Dictionary<string, object> stat = CSVReader.Read("CharacterStat").Find(s => s["name"].ToString().Equals(characterType.ToString()));
+        if(stat == null)
+        {
+            Debug.Log($"{characterType.ToString()} ¾øÀ½");
+        }
+        else
+            characterStat.Init(float.Parse(stat.GetValueOrDefault("maxHp").ToString()), float.Parse(stat.GetValueOrDefault("attackDamage").ToString()), int.Parse(stat.GetValueOrDefault("coin").ToString()), int.Parse(stat.GetValueOrDefault("gem").ToString()));
+        //Debug.Log($"[{gameObject.name}] : maxHp : {characterStat.GetMaxHp()}");
     }
 
     public virtual void SetCharacterState(CharacterState newState)
