@@ -1,5 +1,7 @@
 using Photon.Pun;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,14 +13,16 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public UIManager uiManager = null;
     [HideInInspector] public ProjectileManager projectileManager = null;
     [HideInInspector] public AOEManager aoeManager = null;
-
+    private PhotonView photonView = null;
     public GameObject attackCircle = null;
     public bool isConnect { get; set; } = false;
 
-    public int treasureBoxCost { get; private set; } = 3;
+    public int treasureBoxCost { get; private set; } = 0;
     private int playTime = 240;
 
     public string userName = "프루니";
+
+    private List<PlayerAttackCircleSpawnPoint> playerSpawnPoints = new List<PlayerAttackCircleSpawnPoint>();
 
     public static GameManager Instance
     {
@@ -48,6 +52,7 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
+        photonView = gameObject.GetComponent<PhotonView>();
         StartCoroutine(CoInitGame());
     }
 
@@ -95,13 +100,31 @@ public class GameManager : MonoBehaviour
         projectileManager = FindObjectOfType<ProjectileManager>();
         aoeManager = FindObjectOfType<AOEManager>();
 
-        SpawnCharacter(Vector3.up * 2.26f, CharacterType.ElPrimo);
+        if(PhotonNetwork.IsMasterClient)
+        {
+            SpawnCharacter();
+        }
+        
 
         SetTreasureBoxCost(treasureBoxCost);
     }
 
     //게임시작시 최초로 AttackCircle, Player 스폰시키는 함수
-    public void SpawnCharacter(Vector3 pos, CharacterType chartype)
+    public void SpawnCharacter()
+    {
+        playerSpawnPoints = FindObjectsOfType<PlayerAttackCircleSpawnPoint>().ToList();
+
+        foreach (var p in PhotonNetwork.PlayerList)
+        {
+            PlayerAttackCircleSpawnPoint spawnPoint = playerSpawnPoints.Find(p => !p.GetIsAssigned());
+            spawnPoint.SetIsAssigned(true);
+            Vector3 pos = spawnPoint.gameObject.transform.position;
+            photonView.RPC("RPCSpawnCharacter", p, pos);
+        }
+    }
+
+    [PunRPC]
+    public void RPCSpawnCharacter(Vector3 pos)
     {
         string path = $"Prefabs/Character/PlayerAttackCircle";
         attackCircle = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);

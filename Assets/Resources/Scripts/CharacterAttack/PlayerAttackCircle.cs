@@ -28,10 +28,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         attackCircleStat.SetCoin(0);
         attackCircleStat.SetGem(0);
 
-        if (photonView.IsMine)
-        {
-            CharacterBase character = SpawnCharacter(transform.position, CharacterType.ElPrimo, CharacterLevel.Classic, false);
-        }
+        circleEffect.gameObject.SetActive(false);
     }
 
     protected override void Start()
@@ -49,10 +46,10 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
             photonView.RPC("SetUserName", RpcTarget.AllBuffered, GameManager.Instance.userName);
         }
         
-        if (!photonView.IsMine)
-        {
-            circleEffect.gameObject.SetActive(false);
-        }
+        //if (photonView.IsMine)
+        //{
+        //    circleEffect.gameObject.SetActive(true);
+        //}
     }
 
     protected virtual void Update()
@@ -238,6 +235,11 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         pos.x = x + transform.position.x;
         pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
         CharacterBase player = SpawnCharacter(pos, newType, newLevel, true);
+
+        if (photonView.IsMine)
+        {
+            circleEffect.gameObject.SetActive(true);
+        }
     }
 
     public void DoItemSkill(ItemType itemType)

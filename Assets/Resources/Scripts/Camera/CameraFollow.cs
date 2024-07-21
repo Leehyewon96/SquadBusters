@@ -50,7 +50,8 @@ public class CameraFollow : MonoBehaviour
     public void SetTarget(GameObject inTarget)
     {
         target = inTarget;
-        offsetVec = cam.transform.position - target.transform.position;
+        //offsetVec = cam.transform.position - target.transform.position;
+        offsetVec = new Vector3(0, 9.3f, -7.43f);
     }
 
     private void ShakeCamera(float duration)
