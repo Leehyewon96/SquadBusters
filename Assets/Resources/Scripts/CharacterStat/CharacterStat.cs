@@ -7,8 +7,8 @@ public class CharacterStat : MonoBehaviour
     private float attackDamage = 30f;
     private float currentHp = -1f;
 
-    public int coin = 0;
-    public int gem = 0;
+    private int coin = 0;
+    private int gem = 0;
 
     public delegate void OnCurrentHpChanged(float newHp);
     public delegate void OnCurrentHpZero();

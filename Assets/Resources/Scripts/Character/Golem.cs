@@ -24,7 +24,6 @@ public class Golem : CharacterNonPlayer
 
     protected override void Attack(GameObject target)
     {
-        Debug.Log($"[{gameObject.name}] Attack");
         Vector3 dirVec = target.transform.position - transform.position;
         float angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
         angle += Quaternion.FromToRotation(Vector3.forward ,transform.forward).eulerAngles.y;

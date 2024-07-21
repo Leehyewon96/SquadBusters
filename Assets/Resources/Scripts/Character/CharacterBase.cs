@@ -82,11 +82,12 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         characterController = GetComponent<CharacterController>();
         hpBar = GetComponentInChildren<HpBar>();
         photonView = GetComponent<PhotonView>();
+        Init();
     }
 
     protected virtual void Start()
     {
-        Init();
+        
     }
 
     protected virtual void Update()

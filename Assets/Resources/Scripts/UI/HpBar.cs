@@ -36,7 +36,6 @@ public class HpBar : MonoBehaviour
     public void UpdateCurrentHp(float newHp)
     {
         imgFill.fillAmount = newHp / maxHp;
-        Debug.Log($"newHp {newHp}, maxHp {maxHp}, imgFill : {imgFill.fillAmount}");
     }
 
     public void UpdatePos(Vector3 newPos)

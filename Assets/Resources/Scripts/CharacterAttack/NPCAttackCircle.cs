@@ -17,7 +17,7 @@ public class NPCAttackCircle : AttackCircle
     public override void UpdateOwners(CharacterBase newOwner, bool isMerged)
     {
         base.UpdateOwners(newOwner, isMerged);
-        if (!owners.Contains(newOwner))
+        if (owners.LastOrDefault() == newOwner)
         {
             attackCircleStat.SetCoin(newOwner.GetCoin());
             attackCircleStat.SetGem(newOwner.GetGem());

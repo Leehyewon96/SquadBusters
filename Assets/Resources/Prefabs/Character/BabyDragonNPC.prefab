@@ -2745,8 +2745,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37e9e786d2ad40249a7026190837ab3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coin: 8
-  gem: 4
 --- !u!114 &3585405619393935085
 MonoBehaviour:
   m_ObjectHideFlags: 0

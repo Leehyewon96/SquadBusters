@@ -26,7 +26,7 @@ public class CharacterSpawner : Spawner
 
             GameObject obj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
 
-            if (obj.TryGetComponent<AttackCircle>(out AttackCircle attackCircle))
+            if (obj.TryGetComponent<NPCAttackCircle>(out NPCAttackCircle attackCircle))
             {
                 attackCircle.SpawnCharacter(transform.position, characterType);
             }

@@ -675,8 +675,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37e9e786d2ad40249a7026190837ab3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coin: 10
-  gem: 5
 --- !u!143 &6168182666268554940
 CharacterController:
   m_ObjectHideFlags: 0

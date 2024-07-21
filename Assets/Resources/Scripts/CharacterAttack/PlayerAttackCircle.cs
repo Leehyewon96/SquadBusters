@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using static CharacterPlayer;
 
@@ -16,6 +17,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
     protected ParticleSystem.MainModule mainCircleEffect;
 
     [SerializeField] protected TextMeshProUGUI userName = null;
+    [SerializeField] protected TextMeshProUGUI gemCnt = null;
 
     protected override void Awake()
     {
@@ -44,12 +46,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
             GameManager.Instance.uiManager.skillUI.doSkill += DoItemSkill;
 
             photonView.RPC("SetUserName", RpcTarget.AllBuffered, GameManager.Instance.userName);
+            photonView.RPC("UpdateGemCnt", RpcTarget.AllBuffered, attackCircleStat.GetGem());
         }
-        
-        //if (photonView.IsMine)
-        //{
-        //    circleEffect.gameObject.SetActive(true);
-        //}
     }
 
     protected virtual void Update()
@@ -79,6 +77,12 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
     public virtual void SetUserName(string username)
     {
         userName.SetText(username);
+    }
+
+    [PunRPC]
+    public virtual void UpdateGemCnt(int cnt)
+    {
+        gemCnt.SetText(cnt.ToString());
     }
 
     public override void UpdateOwners(CharacterBase newOwner, bool isMerged)
@@ -189,6 +193,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         if (photonView.IsMine)
         {
             attackCircleStat.SetGem(attackCircleStat.GetGem() + 1);
+            photonView.RPC("UpdateGemCnt", RpcTarget.AllBuffered, attackCircleStat.GetGem());
         }
     }
 
