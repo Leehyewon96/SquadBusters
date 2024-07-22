@@ -1,4 +1,5 @@
 using UnityEngine;
+using static SelectCharacter;
 
 public enum UIType
 {
@@ -27,14 +28,31 @@ public class UIManager : MonoBehaviour
         skillUI = GetComponentInChildren<SkillUI>(true);
         rankUI = GetComponentInChildren<RankUI>(true);
         endingUI = GetComponentInChildren<EndingUI>(true);
+
+        selectCharacter.onDisabled += delegate { ShowUI(UIType.SelectCharacter, false); };
     }
 
-    public void ShowUI(UIType uiType)
+    public void ShowUI(UIType uiType, bool isActive)
     {
         switch (uiType)
         {
             case UIType.SelectCharacter:
-                selectCharacter.SetActive(true);
+                if(isActive == selectCharacter.gameObject.activeSelf)
+                {
+                    return;
+                }
+                selectCharacter.SetActive(isActive);
+                fastMoveUI.SetActive(!isActive);
+                skillUI.SetActive(!isActive);
+                int sign = 1;
+                if(isActive)
+                {
+                    sign *= -1;
+                }
+                Vector3 newPos = coinUI.GetComponent<RectTransform>().position - sign * Vector3.right * selectCharacter.GetComponent<RectTransform>().sizeDelta.x * 0.5f;
+                coinUI.UpdatePos(newPos);
+                newPos = treasureBoxCostUI.GetComponent<RectTransform>().position - sign * Vector3.right * selectCharacter.GetComponent<RectTransform>().sizeDelta.x * 0.5f;
+                treasureBoxCostUI.UpdatePos(newPos);
                 break;
             default:
                 break;

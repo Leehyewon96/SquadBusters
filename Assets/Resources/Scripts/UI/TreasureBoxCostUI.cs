@@ -9,4 +9,9 @@ public class TreasureBoxCostUI : UIBase
     {
         boxCostText.text = newCost.ToString();
     }
+
+    public void UpdatePos(Vector3 newPos)
+    {
+        gameObject.transform.position = newPos;
+    }
 }

@@ -9,4 +9,9 @@ public class CoinUI : UIBase
     {
         text.SetText(cnt.ToString());
     }
+
+    public void UpdatePos(Vector3 newPos)
+    {
+        gameObject.transform.position = newPos;
+    }
 }

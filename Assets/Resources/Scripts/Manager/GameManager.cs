@@ -16,9 +16,10 @@ public class GameManager : MonoBehaviour
     private PhotonView photonView = null;
     public GameObject attackCircle = null;
     public bool isConnect { get; set; } = false;
+    public bool endGame { get; set; } = false;
 
     public int treasureBoxCost { get; private set; } = 0;
-    private int playTime = 20;
+    private int playTime = 240;
 
     public string userName = "ÇÁ·ç´Ï";
 
@@ -81,7 +82,6 @@ public class GameManager : MonoBehaviour
 
         playTime = 0;
         
-
         var rankList = rankDic.OrderByDescending(r => r.Value).ToList();
         int order = 1;
         for (int i = 0; i < rankList.Count; ++i)
@@ -220,6 +220,7 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     public void StopGame()
     {
+        endGame = true;
         uiManager.OnStopGame();
     }
 

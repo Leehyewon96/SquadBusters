@@ -7,6 +7,9 @@ public class SelectCharacter : MonoBehaviour
     public CharacterButton char2 = null;
     public CharacterButton char3 = null;
 
+    public delegate void OnDisabled();
+    public OnDisabled onDisabled = null;
+
     private void Awake()
     {
         char1.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.ElPrimo + 1));
@@ -26,6 +29,10 @@ public class SelectCharacter : MonoBehaviour
     public void SelectChar(CharacterType newType, CharacterLevel newLevel)
     {
         GameManager.Instance.attackCircle.GetComponent<IAttackCircleUIInterface>().SelectCharacter(newType, newLevel);
-        SetActive(false);
+        if(onDisabled !=null)
+        {
+            onDisabled.Invoke();
+        }
+        //SetActive(false);
     }
 }

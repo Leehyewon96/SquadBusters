@@ -92,6 +92,10 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     protected virtual void Update()
     {
+        if(GameManager.Instance.endGame)
+        {
+            return;
+        }
         //attackCircle.MoveAttackCircle(transform.position);
         hpBar.UpdatePos(transform.position + new Vector3(0, characterController.height + 0.4f, 0));
 

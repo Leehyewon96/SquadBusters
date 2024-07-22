@@ -52,6 +52,11 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
     protected virtual void Update()
     {
+        if (GameManager.Instance.endGame)
+        {
+            return;
+        }
+
         if (!photonView.IsMine)
         {
             return;
@@ -217,7 +222,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
     public virtual void GainTreasureBox()
     {
-        GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter);
+        GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter, true);
     }
 
     protected virtual void Stun(float stunTime)
