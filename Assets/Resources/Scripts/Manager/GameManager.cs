@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     public string userName = "프루니";
 
     private List<PlayerAttackCircleSpawnPoint> playerSpawnPoints = new List<PlayerAttackCircleSpawnPoint>();
+    Dictionary<string, int> rankDic = new Dictionary<string, int>();
 
     public static GameManager Instance
     {
@@ -104,8 +105,8 @@ public class GameManager : MonoBehaviour
         {
             SpawnCharacter();
         }
-        
 
+        UpdateRank(userName, 0);
         SetTreasureBoxCost(treasureBoxCost);
     }
 
@@ -130,6 +131,55 @@ public class GameManager : MonoBehaviour
         attackCircle = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
         Camera.main.GetComponent<CameraFollow>().SetTarget(attackCircle.gameObject);
         PlayerAttackCircle circle = attackCircle.GetComponent<PlayerAttackCircle>();
+    }
+
+    public void UpdateRank(string name, int gemCnt)
+    {
+        photonView.RPC("RPCUpdateRank", RpcTarget.MasterClient, name, gemCnt);
+    }
+
+    [PunRPC]
+    public void RPCUpdateRank(string name, int gemCnt)
+    {
+        if(photonView.IsMine)
+        {
+            if(!rankDic.ContainsKey(name))
+            {
+                rankDic.Add(name, gemCnt);
+            }
+            else
+            {
+                rankDic[name] = gemCnt;
+            }
+
+            //정렬
+            var rank = rankDic.OrderByDescending(r => r.Value).ToList();
+
+            int order = 1;
+            for (int i = 0; i < rank.Count; ++i)
+            {
+                
+                if(i > 0 && rank[i].Value < rank[i - 1].Value)
+                {
+                    order++;
+                }
+
+                photonView.RPC("RPCUpdateRankUI", RpcTarget.AllBuffered, rank[i].Key, rank[i].Value.ToString(), order.ToString());
+            }
+            
+        }
+    }
+
+    [PunRPC]
+    public void RPCUpdateRankUI(string inName, string gemCnt, string rank)
+    {
+        StartCoroutine(CoUpdateRank(inName, gemCnt, rank));
+    }
+
+    private IEnumerator CoUpdateRank(string inName, string gemCnt, string rank)
+    {
+        yield return new WaitUntil(() => uiManager != null);
+        uiManager.rankUI.UpdateRank(inName, gemCnt, rank);
     }
 
     public void PauseGame()

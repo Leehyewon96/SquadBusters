@@ -1,0 +1,50 @@
+using System.Collections.Generic;
+using System.Linq;
+using TMPro;
+using UnityEngine;
+
+public class RankUI : MonoBehaviour
+{
+    [SerializeField] private TextMeshProUGUI myRank = null;
+    [SerializeField] private GameObject rankElemParent = null;
+
+    private List<RankElem> rankElems = new List<RankElem>();
+
+    private void Awake()
+    {
+        rankElems = GetComponentsInChildren<RankElem>(true).ToList();
+        rankElems.ForEach(e => e.SetActive(false));
+    }
+
+    public void UpdateMyRank(string rank)
+    {
+        myRank.SetText(rank);
+    }
+
+    public void UpdateRank(string inName, string gemCnt, string rank)
+    {
+        var elem = rankElems.Find(e => e.GetName().Equals(inName));
+        if (elem == null)
+        {
+            elem = rankElems.Find(e => !e.isAssigned);
+            if(elem == null)
+            {
+                elem = Instantiate(rankElems.FirstOrDefault(), rankElemParent.transform);
+                rankElems.Add(elem);
+            }
+
+            elem.SetIsAssigned(true);
+        }
+
+        elem.UpdateInfo(inName, gemCnt, rank);
+        rankElems = rankElems.OrderBy(e => e.GetRank()).ToList();
+        rankElems.ForEach((e) => e.SetActive(false));
+
+        for (int i = 0; i < rankElems.Count; ++i)
+        { 
+            rankElems[i].SetActive(true);
+            rankElems[i].gameObject.transform.SetSiblingIndex(i);
+           
+        }
+    }
+}

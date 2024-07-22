@@ -193,6 +193,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         if (photonView.IsMine)
         {
             attackCircleStat.SetGem(attackCircleStat.GetGem() + 1);
+            GameManager.Instance.UpdateRank(GameManager.Instance.userName, attackCircleStat.GetGem());
             photonView.RPC("UpdateGemCnt", RpcTarget.AllBuffered, attackCircleStat.GetGem());
         }
     }

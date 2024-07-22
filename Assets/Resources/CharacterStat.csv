@@ -3,7 +3,7 @@ number,name,maxHp,coin,gem,attackDamage
 1,Barbarian,1600,0,0,119
 2,Colt,900,0,0,50
 3,Mavis,1300,0,0,75
-4,Golem,6000,5,15,50
+4,Golem,600,5,15,50
 5,BabyDragon,5000,7,15,76
 6,SkeletonSoldier,300,2,0,20
 7,Boller,1200,4,1,23
