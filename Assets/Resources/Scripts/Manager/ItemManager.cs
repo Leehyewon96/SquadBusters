@@ -8,6 +8,7 @@ public enum ItemType
     Gem,
     Bomb,
     TreasureBox,
+    MoneyTree,
 
     End,
 }

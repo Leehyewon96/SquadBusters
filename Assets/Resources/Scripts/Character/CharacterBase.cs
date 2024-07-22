@@ -10,7 +10,7 @@ using UnityEngine.AI;
 public enum CharacterType
 {
     ElPrimo,
-    Babarian,
+    Greg,
 
     Eggy,
     Chilli,
@@ -240,7 +240,7 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         navMeshAgent.speed = inSpeed;
     }
 
-    protected GameObject GetTarget()
+    protected virtual GameObject GetTarget()
     {
         if (DetectedEnemies.Count > 0)
         {

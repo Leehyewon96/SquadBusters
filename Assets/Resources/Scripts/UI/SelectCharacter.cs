@@ -12,9 +12,9 @@ public class SelectCharacter : MonoBehaviour
 
     private void Awake()
     {
-        char1.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.ElPrimo + 1));
-        char2.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.ElPrimo + 1));
-        char3.SetCharacterType((CharacterType)Random.Range(0, (int)CharacterType.ElPrimo + 1));
+        char1.SetCharacterType(CharacterType.Greg);
+        char2.SetCharacterType(CharacterType.ElPrimo);
+        char3.SetCharacterType(CharacterType.ElPrimo);
 
         char1.GetComponent<Button>().onClick.AddListener(delegate { SelectChar(char1.characterType, CharacterLevel.Classic); });
         char2.GetComponent<Button>().onClick.AddListener(delegate { SelectChar(char2.characterType, CharacterLevel.Classic); });

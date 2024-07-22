@@ -2015,7 +2015,6 @@ GameObject:
   m_Component:
   - component: {fileID: 8074533487702648084}
   - component: {fileID: 8074533487695481550}
-  - component: {fileID: 6339411170209095157}
   - component: {fileID: 4371349516588012202}
   - component: {fileID: 1743247430763174416}
   - component: {fileID: 3632177553818650347}
@@ -2023,8 +2022,9 @@ GameObject:
   - component: {fileID: 4723754514551964884}
   - component: {fileID: 4494614935586621541}
   - component: {fileID: 8656903541185580607}
+  - component: {fileID: -6637250891692696672}
   m_Layer: 9
-  m_Name: BabarianClassic
+  m_Name: GregClassic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2068,21 +2068,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &6339411170209095157
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8074533487702751604}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c4d0f47b0de46de47b00f02df43a1e97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  characterType: 1
-  hpBarOrigin: {fileID: 2700314720743621606, guid: 4186091d41e6c554ab7336e563dc5c93, type: 3}
-  attackCircleOrigin: {fileID: 769835126204654549, guid: 0f5515bcf25c2ff4399c5062415d4f50, type: 3}
 --- !u!114 &4371349516588012202
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2108,8 +2093,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37e9e786d2ad40249a7026190837ab3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coin: 0
-  gem: 0
 --- !u!143 &3632177553818650347
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2214,6 +2197,21 @@ MonoBehaviour:
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
+--- !u!114 &-6637250891692696672
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8074533487702751604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57cc87755d702cd468ebf5d83737253a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterType: 1
+  hpBarOrigin: {fileID: 0}
+  attackCircleOrigin: {fileID: 0}
 --- !u!1 &8074533487702751606
 GameObject:
   m_ObjectHideFlags: 0

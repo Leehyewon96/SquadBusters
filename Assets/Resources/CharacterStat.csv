@@ -1,6 +1,6 @@
 number,name,maxHp,coin,gem,attackDamage
 0,ElPrimo,2800,0,0,90
-1,Barbarian,1600,0,0,119
+1,Greg,1600,0,0,119
 2,Colt,900,0,0,50
 3,Mavis,1300,0,0,75
 4,Golem,600,5,15,50

@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using static CharacterPlayer;
 
@@ -223,6 +222,28 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
     public virtual void GainTreasureBox()
     {
         GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter, true);
+    }
+
+    public bool ContainGreg()
+    {
+        if(owners.Count == 0)
+        {
+            return false;
+        }
+
+        var greg = owners.Find(o => o.GetCharacterType().Equals(CharacterType.Greg));
+        if (greg != null)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public void CutMoneyTree(MoneyTree tree)
+    {
+        var gregs = owners.FindAll(o => o.GetCharacterType().Equals(CharacterType.Greg));
+        gregs.ForEach(g => g.GetComponent<Greg>().CutMoneyTree(tree));
     }
 
     protected virtual void Stun(float stunTime)
