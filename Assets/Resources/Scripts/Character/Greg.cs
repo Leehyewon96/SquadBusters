@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class Greg : CharacterPlayer
 {
     public void CutMoneyTree(MoneyTree tree)

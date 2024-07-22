@@ -127,6 +127,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         {
             dirVec = target.transform.position - transform.position;
             angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
+            angle += Quaternion.FromToRotation(Vector3.forward, transform.forward).eulerAngles.y;
             dirVec = Vector3.up * angle;
             transform.DORotate(dirVec, 1f);
             if (characterController.enabled || characterState == CharacterState.Stun) //캐릭터 상태로 판단하도록 변경하기
