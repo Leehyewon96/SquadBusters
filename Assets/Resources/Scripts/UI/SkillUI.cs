@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SkillUI : MonoBehaviour
+public class SkillUI : UIBase
 {
     private Button button = null;
     private ItemType skillType;

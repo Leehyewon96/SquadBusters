@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class TreasureBoxCostUI : MonoBehaviour
+public class TreasureBoxCostUI : UIBase
 {
     [SerializeField] private TextMeshProUGUI boxCostText = null;
 

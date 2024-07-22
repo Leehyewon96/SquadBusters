@@ -3,14 +3,14 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class RankUI : MonoBehaviour
+public class RankUI : UIBase
 {
     [SerializeField] private TextMeshProUGUI myRank = null;
-    [SerializeField] private GameObject rankElemParent = null;
+    [SerializeField] protected GameObject rankElemParent = null;
 
-    private List<RankElem> rankElems = new List<RankElem>();
+    protected List<RankElem> rankElems = new List<RankElem>();
 
-    private void Awake()
+    protected virtual void Awake()
     {
         rankElems = GetComponentsInChildren<RankElem>(true).ToList();
         rankElems.ForEach(e => e.SetActive(false));
@@ -34,7 +34,7 @@ public class RankUI : MonoBehaviour
         myRank.SetText($"{rank}{postFix}");
     }
 
-    public void UpdateRank(string inName, string gemCnt, string rank)
+    public virtual void UpdateRank(string inName, string gemCnt, string rank)
     {
         var elem = rankElems.Find(e => e.GetName().Equals(inName));
         if (elem == null)

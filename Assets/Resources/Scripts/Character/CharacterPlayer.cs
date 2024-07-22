@@ -140,7 +140,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             {
                 photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)EffectType.ChargeSlashPurple, transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
                 targetObj.TakeDamage(characterStat.GetAttackDamage());
-                Debug.Log($"[{gameObject.name}]이 {characterStat.GetAttackDamage()}만큼 {target.name}을 공격");
 
                 if (targetObj.isDead)
                 {

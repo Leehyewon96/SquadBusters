@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public bool isConnect { get; set; } = false;
 
     public int treasureBoxCost { get; private set; } = 0;
-    private int playTime = 240;
+    private int playTime = 20;
 
     public string userName = "ÇÁ·ç´Ï";
 
@@ -78,6 +78,22 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSecondsRealtime(1f);
             playTime -= 1;
         }
+
+        playTime = 0;
+        
+
+        var rankList = rankDic.OrderByDescending(r => r.Value).ToList();
+        int order = 1;
+        for (int i = 0; i < rankList.Count; ++i)
+        {
+            if(i > 0 && rankList[i].Value < rankList[i - 1].Value)
+            {
+                order++;
+            }
+            photonView.RPC("RPCUpdateEndingUI", RpcTarget.AllBuffered, rankList[i].Key, rankList[i].Value.ToString(), order.ToString());
+        }
+
+        photonView.RPC("StopGame", RpcTarget.AllBuffered);
     }
 
     [PunRPC]
@@ -201,9 +217,17 @@ public class GameManager : MonoBehaviour
 
     }
 
+    [PunRPC]
     public void StopGame()
     {
+        uiManager.OnStopGame();
+    }
 
+    [PunRPC]
+    public void RPCUpdateEndingUI(string inName, string gemCnt, string rank)
+    {
+        Debug.Log("RPCUpdateEndingUI");
+        uiManager.endingUI.UpdateRank(inName, gemCnt, rank);
     }
 
     public void SetTreasureBoxCost(int newCost)

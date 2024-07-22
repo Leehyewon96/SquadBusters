@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class FastMoveUI : MonoBehaviour
+public class FastMoveUI : UIBase
 {
     [SerializeField] private Button button = null;
     private EventTrigger eventTrigger = null;

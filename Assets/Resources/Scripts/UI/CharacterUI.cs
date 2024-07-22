@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterUI : MonoBehaviour
+public class CharacterUI : UIBase
 {
     protected Image hpBar = null;
 
