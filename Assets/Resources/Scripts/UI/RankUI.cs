@@ -40,11 +40,11 @@ public class RankUI : MonoBehaviour
         rankElems = rankElems.OrderBy(e => e.GetRank()).ToList();
         rankElems.ForEach((e) => e.SetActive(false));
 
-        for (int i = 0; i < rankElems.Count; ++i)
+        int lastIdx = rankElems.Count > 3 ? 3 : rankElems.Count;
+        for (int i = 0; i < lastIdx; ++i)
         { 
             rankElems[i].SetActive(true);
             rankElems[i].gameObject.transform.SetSiblingIndex(i);
-           
         }
     }
 }

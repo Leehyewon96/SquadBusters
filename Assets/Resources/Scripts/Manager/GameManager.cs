@@ -180,6 +180,10 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitUntil(() => uiManager != null);
         uiManager.rankUI.UpdateRank(inName, gemCnt, rank);
+        if(inName == userName)
+        {
+            uiManager.rankUI.UpdateMyRank(rank);
+        }
     }
 
     public void PauseGame()
