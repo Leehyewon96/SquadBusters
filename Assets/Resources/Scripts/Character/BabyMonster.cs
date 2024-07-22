@@ -7,6 +7,8 @@ public class BabyMonster : CharacterNonPlayer
 {
     protected int attackCount = 0;
     protected WaitForSecondsRealtime attackReadyTime = new WaitForSecondsRealtime(5f);
+    protected WaitForSecondsRealtime commonAttackReadyTime = new WaitForSecondsRealtime(1f);
+    protected float skillTerm = 5f;
     protected float attackDistance = 10f;
     protected float attackIntervalAngle = 45f;
     protected float stunTime = 3.233f;
@@ -37,24 +39,30 @@ public class BabyMonster : CharacterNonPlayer
             dirVec = Vector3.up * angle;
         }
 
-        transform.DORotate(dirVec, 1f).OnComplete(() =>
+        transform.DORotate(dirVec, 2f).OnComplete(() =>
         {
             //파이어볼 공격
             if (attackCount < 3)
             {
                 attackCount++;
                 characterState = CharacterState.Idle;
-                ShotFireBall(transform.forward);
+                StartCoroutine(CoShotFireBall());
             }
             else
             {
                 attackCount = 0;
-                StartCoroutine(CoShotFireBall());
+                StartCoroutine(CoTripleShotFireBall());
             }
         });
     }
 
     protected virtual IEnumerator CoShotFireBall()
+    {
+        yield return commonAttackReadyTime;
+        ShotFireBall(transform.forward);
+    }
+
+    protected virtual IEnumerator CoTripleShotFireBall()
     {
         //파이어볼 3갈래 길 미리보기 효과 출력
         Vector3[] dirVecs = new Vector3[3];
@@ -76,7 +84,7 @@ public class BabyMonster : CharacterNonPlayer
             ShotFireBall(dir);
         }
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(skillTerm);
         characterState = CharacterState.Idle;
     }
 
