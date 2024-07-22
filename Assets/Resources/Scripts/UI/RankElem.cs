@@ -15,7 +15,20 @@ public class RankElem : MonoBehaviour
     {
         nameText.SetText(name);
         gemCntText.SetText(gemCnt);
-        rankText.SetText($"{rank}st");
+        string postFix = "th";
+        if (rank == "1")
+        {
+            postFix = "st";
+        }
+        else if (rank == "2")
+        {
+            postFix = "nd";
+        }
+        else if (rank == "3")
+        {
+            postFix = "rd";
+        }
+        rankText.SetText($"{rank}{postFix}");
     }
 
     public void SetActive(bool isActive)

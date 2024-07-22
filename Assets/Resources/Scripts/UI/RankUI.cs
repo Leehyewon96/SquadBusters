@@ -18,7 +18,20 @@ public class RankUI : MonoBehaviour
 
     public void UpdateMyRank(string rank)
     {
-        myRank.SetText(rank);
+        string postFix = "th";
+        if (rank == "1")
+        {
+            postFix = "st";
+        }
+        else if (rank == "2")
+        {
+            postFix = "nd";
+        }
+        else if (rank == "3")
+        {
+            postFix = "rd";
+        }
+        myRank.SetText($"{rank}{postFix}");
     }
 
     public void UpdateRank(string inName, string gemCnt, string rank)
