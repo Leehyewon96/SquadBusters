@@ -240,10 +240,27 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         return false;
     }
 
-    public void CutMoneyTree(MoneyTree tree)
+    public void OnDetectedMoneyTree(MoneyTree tree)
     {
         var gregs = owners.FindAll(o => o.GetCharacterType().Equals(CharacterType.Greg));
-        gregs.ForEach(g => g.GetComponent<Greg>().CutMoneyTree(tree));
+        if(gregs.Count == 0)
+        {
+            return;
+        }
+
+        gregs.ForEach(g => g.GetComponent<Greg>().OnDetectedMoneyTree(tree));
+    }
+
+    public void OnUnDetectedMoneyTree(MoneyTree tree)
+    {
+        var gregs = owners.FindAll(o => o.GetCharacterType().Equals(CharacterType.Greg));
+        if (gregs.Count == 0)
+        {
+            return;
+        }
+
+        gregs.ForEach(g => g.GetComponent<Greg>().OnUnDetectedMoneyTree(tree));
+
     }
 
     protected virtual void Stun(float stunTime)

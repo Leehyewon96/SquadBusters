@@ -4,5 +4,6 @@ public interface IAttackCircleItemInterface
     public int GetCoin();
     public void SetCoin(int newCoin);
     public bool ContainGreg();
-    public void CutMoneyTree(MoneyTree tree);
+    public void OnDetectedMoneyTree(MoneyTree tree);
+    public void OnUnDetectedMoneyTree(MoneyTree tree);
 }

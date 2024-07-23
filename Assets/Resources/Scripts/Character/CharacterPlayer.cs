@@ -61,7 +61,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             StopAllCoroutines();
             //ResetPath();
             isAttacking = false;
-            DetectedEnemies.Clear();
+            //DetectedEnemies.Clear();
             animator.SetBool(AnimLocalize.contactEnemy, false);
 
             Move();
@@ -137,41 +137,28 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             }
             yield return attackTerm;
 
-            if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
+            if(AttackTarget(target))
             {
-                photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)EffectType.ChargeSlashPurple, transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
-                targetObj.TakeDamage(characterStat.GetAttackDamage());
-
-                if (targetObj.isDead)
-                {
-                    OnTargetDead(target);
-                    yield break;
-                }
+                yield break;
             }
         }
     }
 
-    protected IEnumerator CoRotate(GameObject target)
+    protected virtual bool AttackTarget(GameObject target)
     {
-        Vector3 dirVec = target.transform.position - transform.position;
-        dirVec.Normalize();
-        float RotSpeed = 10f;
-        RaycastHit hit;
-        while (true)
+        if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
         {
-            if (Physics.Raycast(transform.position, transform.forward.normalized, out hit))
+            photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)EffectType.ChargeSlashPurple, transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
+            targetObj.TakeDamage(characterStat.GetAttackDamage());
+
+            if (targetObj.isDead)
             {
-                if(hit.transform.gameObject == target)
-                {
-                    break;
-                }
+                OnTargetDead(target);
+                return true;
             }
-
-            yield return new WaitForFixedUpdate();
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dirVec), RotSpeed * Time.deltaTime);
-
-            dirVec = target.transform.position - transform.position;
         }
+
+        return false;
     }
 
     [PunRPC]

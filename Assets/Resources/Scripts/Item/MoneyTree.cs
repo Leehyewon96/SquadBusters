@@ -1,11 +1,13 @@
 using UnityEngine;
 using Photon.Pun;
+using System;
 
 public class MoneyTree : Item
 {
     private float hp = 300f; 
     private int coin = 5;
     private int gem = 2;
+    public bool isDead { get; private set; } = false;
 
     protected override void Awake()
     {
@@ -21,6 +23,7 @@ public class MoneyTree : Item
         if(hp <= 0)
         {
             hp = 0;
+            isDead = true;
             SetDead();
         }
     }
@@ -51,7 +54,20 @@ public class MoneyTree : Item
         {
             if (circleItemInterface.ContainGreg())
             {
-                circleItemInterface.CutMoneyTree(this);
+                Debug.Log($"[{gameObject.name}] 그렉 발견");
+                circleItemInterface.OnDetectedMoneyTree(this);
+            }
+        }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.TryGetComponent<IAttackCircleItemInterface>(out IAttackCircleItemInterface circleItemInterface))
+        {
+            if (circleItemInterface.ContainGreg())
+            {
+                Debug.Log($"[{gameObject.name}] 그렉 나감");
+                circleItemInterface.OnUnDetectedMoneyTree(this);
             }
         }
     }

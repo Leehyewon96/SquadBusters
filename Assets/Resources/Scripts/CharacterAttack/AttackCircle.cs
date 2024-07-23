@@ -141,7 +141,6 @@ public class AttackCircle : MonoBehaviour
                 return;
             }
             onUnDetectEnemy.Invoke(character);
-
         }
     }
 }
