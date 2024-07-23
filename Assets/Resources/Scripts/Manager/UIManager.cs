@@ -1,5 +1,4 @@
 using UnityEngine;
-using static SelectCharacter;
 
 public enum UIType
 {
@@ -17,6 +16,7 @@ public class UIManager : MonoBehaviour
     [HideInInspector] public SkillUI skillUI = null;
     [HideInInspector] public RankUI rankUI = null;
     [HideInInspector] public EndingUI endingUI = null;
+    [HideInInspector] public NoticeUI noticeUI = null;
 
     private void Awake()
     {
@@ -28,6 +28,7 @@ public class UIManager : MonoBehaviour
         skillUI = GetComponentInChildren<SkillUI>(true);
         rankUI = GetComponentInChildren<RankUI>(true);
         endingUI = GetComponentInChildren<EndingUI>(true);
+        noticeUI = GetComponentInChildren<NoticeUI>(true);
 
         selectCharacter.onDisabled += delegate { ShowUI(UIType.SelectCharacter, false); };
     }

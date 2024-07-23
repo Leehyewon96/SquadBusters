@@ -87,6 +87,7 @@ MonoBehaviour:
   - StopGame
   - RPCUpdateEndingUI
   - RPCSetEffect
+  - RPCSetActiveNotice
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

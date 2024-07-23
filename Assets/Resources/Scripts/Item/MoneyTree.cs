@@ -1,6 +1,8 @@
 using UnityEngine;
 using Photon.Pun;
 using System;
+using System.Collections;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 
 public class MoneyTree : Item
 {
@@ -8,6 +10,9 @@ public class MoneyTree : Item
     private int coin = 5;
     private int gem = 2;
     public bool isDead { get; private set; } = false;
+
+    public delegate void OnUndetectedPlayerAttackCircle();
+    public OnUndetectedPlayerAttackCircle onUndetectedPlayerAttack = null;
 
     protected override void Awake()
     {
@@ -52,11 +57,7 @@ public class MoneyTree : Item
 
         if (other.gameObject.TryGetComponent<IAttackCircleItemInterface>(out IAttackCircleItemInterface circleItemInterface))
         {
-            if (circleItemInterface.ContainGreg())
-            {
-                Debug.Log($"[{gameObject.name}] 그렉 발견");
-                circleItemInterface.OnDetectedMoneyTree(this);
-            }
+            circleItemInterface.OnDetectedMoneyTree(this);
         }
     }
 
@@ -64,11 +65,12 @@ public class MoneyTree : Item
     {
         if (other.gameObject.TryGetComponent<IAttackCircleItemInterface>(out IAttackCircleItemInterface circleItemInterface))
         {
-            if (circleItemInterface.ContainGreg())
+            if(onUndetectedPlayerAttack != null)
             {
-                Debug.Log($"[{gameObject.name}] 그렉 나감");
-                circleItemInterface.OnUnDetectedMoneyTree(this);
+                onUndetectedPlayerAttack.Invoke();
+                onUndetectedPlayerAttack = null;
             }
+            circleItemInterface.OnUnDetectedMoneyTree(this);
         }
     }
 }

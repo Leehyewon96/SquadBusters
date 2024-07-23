@@ -224,27 +224,20 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter, true);
     }
 
-    public bool ContainGreg()
-    {
-        if(owners.Count == 0)
-        {
-            return false;
-        }
-
-        var greg = owners.Find(o => o.GetCharacterType().Equals(CharacterType.Greg));
-        if (greg != null)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     public void OnDetectedMoneyTree(MoneyTree tree)
     {
         var gregs = owners.FindAll(o => o.GetCharacterType().Equals(CharacterType.Greg));
         if(gregs.Count == 0)
         {
+            //Æ÷Åæºä ¼ÒÀ¯ °Ë»ç
+            if(photonView.IsMine)
+            {
+                //Vector3 pos = Camera.main.WorldToScreenPoint(tree.gameObject.transform.position + Vector3.up);
+                NoticeElem noticeElem = GameManager.Instance.uiManager.noticeUI.ShowAcitveNotice(NoticeType.MoneyTree, true, tree.gameObject);
+                tree.onUndetectedPlayerAttack -= delegate { noticeElem.SetActive(false); };
+                tree.onUndetectedPlayerAttack += delegate { noticeElem.SetActive(false); };
+            }
+            
             return;
         }
 
