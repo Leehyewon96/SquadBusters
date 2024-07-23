@@ -7,6 +7,9 @@ public class Item : MonoBehaviour
     protected PhotonView photonView = null;
     protected ItemType type = ItemType.Coin;
 
+    public delegate void OnUndetectedPlayerAttackCircle();
+    public OnUndetectedPlayerAttackCircle onUndetectedPlayerAttack = null;
+
     protected bool isPicked = false;
 
     protected virtual void Awake()

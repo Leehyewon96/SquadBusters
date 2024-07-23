@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Greg : CharacterPlayer
 {
-    public void OnDetectedMoneyTree(MoneyTree tree)
+    public void OnDetectedMoneyTree(Item tree)
     {
         if(!DetectedEnemies.Contains(tree.gameObject))
         {
@@ -15,7 +15,7 @@ public class Greg : CharacterPlayer
         }
     }
 
-    public void OnUnDetectedMoneyTree(MoneyTree tree)
+    public void OnUnDetectedMoneyTree(Item tree)
     {
         if (DetectedEnemies.Contains(tree.gameObject))
         {

@@ -7,11 +7,6 @@ public class NoticeElem : UIBase
     private Vector3 pos = Vector3.zero;
     private GameObject target = null;
 
-    private void Awake()
-    {
-        type = NoticeType.MoneyTree;
-    }
-
     public void Update()
     {
         if(target == null)

@@ -18,9 +18,9 @@ public class TreasureBoxItem : Item
 
         if (other.gameObject.TryGetComponent<IAttackCircleItemInterface>(out IAttackCircleItemInterface attackCircleItemInterface))
         {
-            //테스트를 위하여 코인 제한 없앰
             if (attackCircleItemInterface.GetCoin() < GameManager.Instance.treasureBoxCost)
             {
+                attackCircleItemInterface.OnDetectedItem(NoticeType.TreasureBox, this);
                 return;
             }
             photonView.RPC("SetIsPicked", RpcTarget.AllBuffered, true);
@@ -28,6 +28,19 @@ public class TreasureBoxItem : Item
             attackCircleItemInterface.SetCoin(attackCircleItemInterface.GetCoin() - GameManager.Instance.treasureBoxCost);
             GameManager.Instance.SetTreasureBoxCost(GameManager.Instance.treasureBoxCost + 2);
             SetActive(false);
+        }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.TryGetComponent<IAttackCircleItemInterface>(out IAttackCircleItemInterface circleItemInterface))
+        {
+            if (onUndetectedPlayerAttack != null)
+            {
+                onUndetectedPlayerAttack.Invoke();
+                onUndetectedPlayerAttack = null;
+            }
+            circleItemInterface.OnUnDetectedItem(this);
         }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 public enum NoticeType
 {
     MoneyTree,
-
+    TreasureBox,
 
     End,
 }

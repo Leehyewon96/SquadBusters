@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using static CharacterPlayer;
 
@@ -224,18 +225,14 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter, true);
     }
 
-    public void OnDetectedMoneyTree(MoneyTree tree)
+    public void OnDetectedItem(NoticeType type, Item tree)
     {
         var gregs = owners.FindAll(o => o.GetCharacterType().Equals(CharacterType.Greg));
         if(gregs.Count == 0)
         {
-            //Æ÷Åæºä ¼ÒÀ¯ °Ë»ç
             if(photonView.IsMine)
             {
-                //Vector3 pos = Camera.main.WorldToScreenPoint(tree.gameObject.transform.position + Vector3.up);
-                NoticeElem noticeElem = GameManager.Instance.uiManager.noticeUI.ShowAcitveNotice(NoticeType.MoneyTree, true, tree.gameObject);
-                tree.onUndetectedPlayerAttack -= delegate { noticeElem.SetActive(false); };
-                tree.onUndetectedPlayerAttack += delegate { noticeElem.SetActive(false); };
+                ShowNotice(type, tree);
             }
             
             return;
@@ -244,7 +241,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         gregs.ForEach(g => g.GetComponent<Greg>().OnDetectedMoneyTree(tree));
     }
 
-    public void OnUnDetectedMoneyTree(MoneyTree tree)
+    public void OnUnDetectedItem(Item tree)
     {
         var gregs = owners.FindAll(o => o.GetCharacterType().Equals(CharacterType.Greg));
         if (gregs.Count == 0)
@@ -266,6 +263,13 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         movement3D.UpdateMoveSpeed(0.5f);
         yield return new WaitForSeconds(stunTime);
         movement3D.UpdateMoveSpeed(15f);
+    }
+
+    private void ShowNotice(NoticeType type, Item item)
+    {
+        NoticeElem noticeElem = GameManager.Instance.uiManager.noticeUI.ShowAcitveNotice(type, true, item.gameObject);
+        item.onUndetectedPlayerAttack -= delegate { noticeElem.SetActive(false); };
+        item.onUndetectedPlayerAttack += delegate { noticeElem.SetActive(false); };
     }
 
     #region IAttackCircleUIInterface

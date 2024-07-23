@@ -1,8 +1,5 @@
-using UnityEngine;
 using Photon.Pun;
-using System;
-using System.Collections;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
+using UnityEngine;
 
 public class MoneyTree : Item
 {
@@ -11,8 +8,7 @@ public class MoneyTree : Item
     private int gem = 2;
     public bool isDead { get; private set; } = false;
 
-    public delegate void OnUndetectedPlayerAttackCircle();
-    public OnUndetectedPlayerAttackCircle onUndetectedPlayerAttack = null;
+    
 
     protected override void Awake()
     {
@@ -57,7 +53,7 @@ public class MoneyTree : Item
 
         if (other.gameObject.TryGetComponent<IAttackCircleItemInterface>(out IAttackCircleItemInterface circleItemInterface))
         {
-            circleItemInterface.OnDetectedMoneyTree(this);
+            circleItemInterface.OnDetectedItem(NoticeType.MoneyTree, this);
         }
     }
 
@@ -70,7 +66,7 @@ public class MoneyTree : Item
                 onUndetectedPlayerAttack.Invoke();
                 onUndetectedPlayerAttack = null;
             }
-            circleItemInterface.OnUnDetectedMoneyTree(this);
+            circleItemInterface.OnUnDetectedItem(this);
         }
     }
 }
