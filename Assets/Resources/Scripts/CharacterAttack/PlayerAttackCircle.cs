@@ -266,7 +266,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         movement3D.UpdateMoveSpeed(15f);
     }
 
-    private void ShowNotice(NoticeType type, Item item)
+    public void ShowNotice(NoticeType type, Item item)
     {
         NoticeElem noticeElem = GameManager.Instance.uiManager.noticeUI.ShowAcitveNotice(type, true, item.gameObject);
         item.onUndetectedPlayerAttack -= delegate { noticeElem.SetActive(false); };

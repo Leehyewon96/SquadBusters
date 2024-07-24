@@ -20,7 +20,7 @@ public class TreasureBoxItem : Item
         {
             if (attackCircleItemInterface.GetCoin() < GameManager.Instance.treasureBoxCost)
             {
-                attackCircleItemInterface.OnDetectedItem(NoticeType.TreasureBox, this);
+                attackCircleItemInterface.ShowNotice(NoticeType.TreasureBox, this);
                 return;
             }
             photonView.RPC("SetIsPicked", RpcTarget.AllBuffered, true);
