@@ -74,6 +74,7 @@ public class Item : MonoBehaviour
             photonView.RPC("SetIsPicked", RpcTarget.AllBuffered, true);
             transform.DOMove(other.gameObject.transform.position + Vector3.up * 1.2f, 0.25f).OnComplete(() =>
             {
+                Debug.Log($"[{gameObject.name}] {type.ToString()} {other.gameObject.name}");
                 attackCircleItemInterface.TakeItem(type);
 
                 SetActive(false);

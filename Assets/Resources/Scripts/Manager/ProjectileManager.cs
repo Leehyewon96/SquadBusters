@@ -7,6 +7,7 @@ public enum ProjectileType
     FireBullet,
     Bomb,
     Bullet,
+    Cannon,
 
     End
 }

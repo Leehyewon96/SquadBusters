@@ -1,0 +1,119 @@
+using DG.Tweening;
+using System.Collections;
+using UnityEngine;
+using Photon.Pun;
+using System.Collections.Generic;
+
+public class Cannon : Projectile
+{
+    private float shotDistance = 8f
+;    private float lifeTime = 60.0f;
+    private float hp = 3500f;
+    private List<GameObject> hosts = new List<GameObject>();
+    private bool isAttacking = false;
+    [SerializeField] private GameObject shotPoint = null;
+    [SerializeField] private ParticleSystem effect = null;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        projectileType = ProjectileType.Cannon;
+        SetDamage(145f);
+    }
+
+    private void OnEnable()
+    {
+        if(photonView.IsMine)
+        {
+            StartCoroutine(CoDisable());
+        }
+    }
+
+    private IEnumerator CoDisable()
+    {
+        yield return new WaitForSeconds(lifeTime);
+        SetActive(false);
+    }
+
+    public void SetHost(GameObject newHost)
+    {
+        if (!hosts.Contains(newHost))
+        {
+            hosts.Add(newHost);
+        }
+    }
+
+    public void Attack(GameObject target)
+    {
+        if (hosts.Contains(target))
+        {
+            return;
+        }
+        isAttacking = true;
+
+        Vector3 dirVec = target.transform.position - transform.position;
+        float angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
+        angle += Quaternion.FromToRotation(Vector3.forward, transform.forward).eulerAngles.y;
+        dirVec = Vector3.up * angle;
+        transform.DORotate(dirVec, 0.5f).OnComplete(() =>
+        {
+            StartCoroutine(CoAttack(target));
+        });
+    }
+
+    private IEnumerator CoAttack(GameObject target)
+    {
+        while(target.activeSelf)
+        {
+            Vector3 dirVec = target.transform.position - transform.position;
+            float angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
+            angle += Quaternion.FromToRotation(Vector3.forward, transform.forward).eulerAngles.y;
+            dirVec = Vector3.up * angle;
+            transform.DORotate(dirVec, 0.5f);
+
+            Projectile projectile = GameManager.Instance.projectileManager.GetProjectile(shotPoint.transform.position, ProjectileType.Bullet);
+            projectile.SetDamage(damage);
+            projectile.SetDirection(transform.forward);
+            projectile.Shot(transform.position + transform.forward.normalized * shotDistance);
+            photonView.RPC("RPCShotEffect", RpcTarget.AllBuffered);
+
+            yield return new WaitForSeconds(0.5f);
+        }
+        isAttacking = false;
+    }
+
+    [PunRPC]
+    public void RPCShotEffect()
+    {
+        effect.Play();
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
+        if (isAttacking)
+        {
+            return;
+        }
+
+        if(other.gameObject.TryGetComponent<ICharacterPlayerItemInterface>(out ICharacterPlayerItemInterface playerItemInterface))
+        {
+            Attack(other.gameObject);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
+        StopAllCoroutines();
+        isAttacking = false;
+    }
+}

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private PhotonView photonView = null;
+    protected PhotonView photonView = null;
     protected ProjectileType projectileType;
     protected float damage = 0;
 

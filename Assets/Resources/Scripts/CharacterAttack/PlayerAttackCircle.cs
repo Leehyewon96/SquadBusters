@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
 using static CharacterPlayer;
 
@@ -103,10 +102,10 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
                 player.AddTakeItemActions(takeCoin);
                 OnTakeItem takeGem = GainGem;
                 player.AddTakeItemActions(takeGem);
-                //OnTakeItem takeTreasureBox = GainTreasureBox;
-                //player.AddTakeItemActions(takeTreasureBox);
                 OnTakeItem takeBomb = GainBomb;
                 player.AddTakeItemActions(takeBomb);
+                OnTakeItem takeCannon = GainCannon;
+                player.AddTakeItemActions(takeCannon);
 
                 player.updateCoin = SetCoin;
                 player.totalCoin = GetCoin;
@@ -204,6 +203,14 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         GameManager.Instance.uiManager.skillUI.SetInteractable(true);
     }
 
+    public void GainCannon()
+    {
+        Debug.Log("GainCannon");
+        GameManager.Instance.uiManager.skillUI.UpdateSkillType(ItemType.Cannon);
+        GameManager.Instance.uiManager.skillUI.SetInteractable(true);
+        Debug.Log("End GainCannon");
+    }
+
     public int GetCoin()
     {
         return attackCircleStat.GetCoin();
@@ -285,9 +292,27 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
     public void DoItemSkill(ItemType itemType)
     {
-        Projectile projectile = GameManager.Instance.projectileManager.GetProjectile(transform.position, ProjectileType.Bomb);
-        Bomb bomb = projectile.gameObject.GetComponent<Bomb>();
-        bomb.Explode(2f);
+        Projectile projectile = null;
+        switch (itemType)
+        {
+            case ItemType.Bomb:
+                projectile = GameManager.Instance.projectileManager.GetProjectile(transform.position, ProjectileType.Bomb);
+                Bomb bomb = projectile.gameObject.GetComponent<Bomb>();
+                bomb.Explode(2f);
+                break;
+            case ItemType.Cannon:
+                projectile = GameManager.Instance.projectileManager.GetProjectile(transform.position, ProjectileType.Cannon);
+                Cannon cannon = projectile.gameObject.GetComponent<Cannon>();
+                if(owners.Count > 0)
+                {
+                    owners.ForEach(o => cannon.SetHost(o.gameObject));
+                }
+                break;
+            default:
+                break;
+        }
+
+        
     }
     #endregion
 

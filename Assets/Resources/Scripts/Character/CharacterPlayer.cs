@@ -207,6 +207,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     public virtual void TakeItem(ItemType itemType)
     {
+        Debug.Log($"[{gameObject.name}] itemType : {itemType.ToString()}");
         photonView.RPC("RPCTakeItem", RpcTarget.AllBuffered, (int)itemType);
     }
 
@@ -215,6 +216,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     {
         if (photonView.IsMine)
         {
+            Debug.Log($" RPCTakeItem [{gameObject.name}] itemType : {itemType.ToString()}");
             takeItemActions[itemType].DynamicInvoke();
         }
     }

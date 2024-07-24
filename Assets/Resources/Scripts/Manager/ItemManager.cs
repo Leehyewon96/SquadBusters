@@ -7,9 +7,10 @@ public enum ItemType
     Coin,
     Gem,
     Bomb,
+    Cannon,
     TreasureBox,
     MoneyTree,
-
+   
     End,
 }
 
