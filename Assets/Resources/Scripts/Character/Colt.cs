@@ -1,11 +1,22 @@
 using DG.Tweening;
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class Colt : CharacterPlayer
 {
     [SerializeField] private GameObject gunPoint = null;
     private float shotDistance = 10f;
+
+    protected override void Update()
+    {
+        base.Update();
+        SetDestination(destinationPos);
+        if (Vector3.Distance(transform.position, navMeshAgent.destination) <= navMeshAgent.stoppingDistance)
+        {
+            ResetPath();
+        }
+    }
 
     protected override void MoveToEnemy()
     {
