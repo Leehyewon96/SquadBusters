@@ -296,7 +296,7 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         float angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
         angle += Quaternion.FromToRotation(Vector3.forward, transform.forward).eulerAngles.y;
         dirVec = Vector3.up * angle;
-        transform.DORotate(dirVec, 1f).OnComplete(action);
+        transform.DORotate(dirVec, 0.5f).OnComplete(action);
     }
 
     public virtual void OnUnDetectEnemy(CharacterBase target)

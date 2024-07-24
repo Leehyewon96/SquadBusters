@@ -23,6 +23,11 @@ public class Projectile : MonoBehaviour
         damage = inDamage;  
     }
 
+    public virtual void SetDirection(Vector3 dir)
+    {
+        gameObject.transform.rotation = Quaternion.LookRotation(dir);
+    }
+
     public virtual void Shot(Vector3 destination)
     {
         transform.DOMove(destination, 1f).OnComplete(() =>
