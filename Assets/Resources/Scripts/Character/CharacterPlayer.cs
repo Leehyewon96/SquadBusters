@@ -70,7 +70,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         else
         {
             animator.SetFloat(AnimLocalize.moveSpeed, 0);
-            
             MoveToEnemy();
         }
     }
@@ -81,6 +80,36 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         float z = Input.GetAxis("Vertical");
 
         movement3D.Move(x, z);
+    }
+
+    protected override void MoveToEnemy()
+    {
+        animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
+
+        GameObject target = GetTarget();
+        if (target == gameObject)
+        {
+            StopAllCoroutines();
+            animator.SetBool(AnimLocalize.contactEnemy, false);
+            isAttacking = false;
+            navMeshAgent.enabled = true;
+            SetDestination(destinationPos);
+            return;
+        }
+
+        if (isAttacking)
+        {
+            return;
+        }
+
+        SetDestination(target.transform.position);
+
+        if (Vector3.Distance(transform.position, target.transform.position) <= navMeshAgent.stoppingDistance)
+        {
+            ResetPath();
+            animator.SetFloat(AnimLocalize.moveSpeed, 0);
+            Attack(target);
+        }
     }
 
     public void PlayAnim()
@@ -94,6 +123,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
         {
             characterController.enabled = true;
+            ResetPath();
             navMeshAgent.enabled = false;
             return true;
         }

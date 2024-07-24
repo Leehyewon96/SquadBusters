@@ -73,7 +73,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         {
             if(owner.gameObject.activeSelf)
             {
-                owner.SetDestination(moveObj.transform.position);
+                //owner.SetDestination(moveObj.transform.position);
+                owner.SetDestinationPos(moveObj.transform.position);
             }            
         }
     }

@@ -67,6 +67,7 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
     [SerializeField] public GameObject attackCircleOrigin = null;
 
     protected PhotonView photonView = null;
+    protected Vector3 destinationPos;
 
     public delegate void DeadAction(CharacterBase characterBase);
     public DeadAction deadAction = null;
@@ -214,13 +215,22 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         }
     }
 
+    public virtual void SetDestinationPos(Vector3 destination)
+    {
+        destinationPos = destination;
+    }
+
     public virtual void SetDestination(Vector3 destination)
     {
         if(navMeshAgent == null || !navMeshAgent.enabled)
         {
             return;
         }
+
         navMeshAgent.SetDestination(destination);
+        navMeshAgent.isStopped = false;
+        navMeshAgent.updatePosition = true;
+        navMeshAgent.updateRotation = true;
     }
 
     public virtual void ResetPath()
@@ -230,7 +240,10 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
             return;
         }
         navMeshAgent.ResetPath();
+        navMeshAgent.isStopped = true;
         navMeshAgent.velocity = Vector3.zero;
+        navMeshAgent.updatePosition = false;
+        navMeshAgent.updateRotation = false;
     }
 
     public virtual void SetSpeed(float inSpeed)

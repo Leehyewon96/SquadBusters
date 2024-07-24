@@ -41,17 +41,19 @@ public class BabyMonster : CharacterNonPlayer
 
         transform.DORotate(dirVec, 2f).OnComplete(() =>
         {
-            //파이어볼 공격
-            if (attackCount < 3)
+            if(gameObject.activeSelf)
             {
-                attackCount++;
-                characterState = CharacterState.Idle;
-                StartCoroutine(CoShotFireBall());
-            }
-            else
-            {
-                attackCount = 0;
-                StartCoroutine(CoTripleShotFireBall());
+                if (attackCount < 3)
+                {
+                    attackCount++;
+                    characterState = CharacterState.Idle;
+                    StartCoroutine(CoShotFireBall());
+                }
+                else
+                {
+                    attackCount = 0;
+                    StartCoroutine(CoTripleShotFireBall());
+                }
             }
         });
     }
