@@ -31,7 +31,10 @@ public class Golem : CharacterNonPlayer
 
         transform.DORotate(dirVec, 1f).OnComplete(() =>
         {
-            StartCoroutine(CoAttack(target));
+            if(gameObject.activeSelf)
+            {
+                StartCoroutine(CoAttack(target));
+            }
         });
 
     }

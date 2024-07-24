@@ -10,14 +10,11 @@ public class Item : MonoBehaviour
     public delegate void OnUndetectedPlayerAttackCircle();
     public OnUndetectedPlayerAttackCircle onUndetectedPlayerAttack = null;
 
-    protected Collider collider = null;
-
     protected bool isPicked = false;
 
     protected virtual void Awake()
     {
         photonView = GetComponent<PhotonView>();
-        collider = GetComponent<Collider>();    
     }
 
     public virtual void SetActive(bool isActive)
@@ -29,7 +26,7 @@ public class Item : MonoBehaviour
     public virtual void RPCSetActive(bool isActive)
     {
         isPicked = !isActive;
-        collider.enabled = isActive;
+        GetComponent<Collider>().enabled = isActive;
         gameObject.SetActive(isActive);
     }
 
@@ -62,6 +59,11 @@ public class Item : MonoBehaviour
 
     protected virtual void OnTriggerEnter(Collider other)
     {
+        if(!photonView.IsMine)
+        {
+            return;
+        }
+
         if (isPicked)
         {
             return;
@@ -69,7 +71,6 @@ public class Item : MonoBehaviour
 
         if (other.gameObject.TryGetComponent<ICharacterPlayerItemInterface>(out ICharacterPlayerItemInterface attackCircleItemInterface))
         {
-            collider.enabled = false;
             photonView.RPC("SetIsPicked", RpcTarget.AllBuffered, true);
             transform.DOMove(other.gameObject.transform.position + Vector3.up * 1.2f, 0.25f).OnComplete(() =>
             {
