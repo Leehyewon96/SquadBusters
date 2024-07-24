@@ -11,6 +11,8 @@ public enum CharacterType
 {
     ElPrimo,
     Greg,
+    Colt,
+    PlayerEnd,
 
     Eggy,
     Chilli,
@@ -286,6 +288,15 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
     protected virtual void Attack(GameObject target)
     {
         navMeshAgent.enabled = false;
+    }
+
+    protected virtual void ForwardToEnemy(GameObject target, TweenCallback action = null)
+    {
+        Vector3 dirVec = target.transform.position - transform.position;
+        float angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
+        angle += Quaternion.FromToRotation(Vector3.forward, transform.forward).eulerAngles.y;
+        dirVec = Vector3.up * angle;
+        transform.DORotate(dirVec, 1f).OnComplete(action);
     }
 
     public virtual void OnUnDetectEnemy(CharacterBase target)

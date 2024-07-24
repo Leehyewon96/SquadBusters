@@ -780,7 +780,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82727002a0581e5448a74f6044b0f4e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterType: 6
+  characterType: 8
   hpBarOrigin: {fileID: 0}
   attackCircleOrigin: {fileID: 0}
 --- !u!114 &5076228924023001655

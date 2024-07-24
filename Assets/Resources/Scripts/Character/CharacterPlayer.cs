@@ -112,24 +112,18 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected virtual IEnumerator CoAttack(GameObject target)
     {
-        Vector3 dirVec = target.transform.position - transform.position;
-        float angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
-        angle += Quaternion.FromToRotation(Vector3.forward, transform.forward).eulerAngles.y;
-        dirVec = Vector3.up * angle;
-        transform.DORotate(dirVec, 1f).OnComplete(() =>
+        TweenCallback callBack = null;
+        callBack = () =>
         {
             animator.SetBool(AnimLocalize.contactEnemy, true);
             AnimationClip clip = animatorController.animationClips.ToList().Find(anim => anim.name.Equals(AnimLocalize.attack));
             attackTerm = new WaitForSecondsRealtime(clip.length);
-        });
+        };
+        ForwardToEnemy(target, callBack);
 
         while (true)
         {
-            dirVec = target.transform.position - transform.position;
-            angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
-            angle += Quaternion.FromToRotation(Vector3.forward, transform.forward).eulerAngles.y;
-            dirVec = Vector3.up * angle;
-            transform.DORotate(dirVec, 1f);
+            ForwardToEnemy(target);
             if (characterController.enabled || characterState == CharacterState.Stun) //캐릭터 상태로 판단하도록 변경하기
             {
                 isAttacking = false;

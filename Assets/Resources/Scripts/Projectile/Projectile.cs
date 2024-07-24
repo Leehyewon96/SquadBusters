@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
 
@@ -5,6 +6,7 @@ public class Projectile : MonoBehaviour
 {
     private PhotonView photonView = null;
     protected ProjectileType projectileType;
+    protected float damage = 0;
 
     protected virtual void Awake()
     {
@@ -14,6 +16,22 @@ public class Projectile : MonoBehaviour
     public ProjectileType GetProjectileType()
     {
         return projectileType; 
+    }
+
+    public virtual void SetDamage(float inDamage)
+    {
+        damage = inDamage;  
+    }
+
+    public virtual void Shot(Vector3 destination)
+    {
+        transform.DOMove(destination, 1f).OnComplete(() =>
+        {
+            if (gameObject.activeSelf)
+            {
+                SetActive(false);
+            }
+        });
     }
 
     public void SetActive(bool isActive)

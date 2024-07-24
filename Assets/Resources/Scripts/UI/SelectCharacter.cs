@@ -14,7 +14,7 @@ public class SelectCharacter : MonoBehaviour
     {
         char1.SetCharacterType(CharacterType.Greg);
         char2.SetCharacterType(CharacterType.ElPrimo);
-        char3.SetCharacterType(CharacterType.ElPrimo);
+        char3.SetCharacterType(CharacterType.Colt);
 
         char1.GetComponent<Button>().onClick.AddListener(delegate { SelectChar(char1.characterType, CharacterLevel.Classic); });
         char2.GetComponent<Button>().onClick.AddListener(delegate { SelectChar(char2.characterType, CharacterLevel.Classic); });

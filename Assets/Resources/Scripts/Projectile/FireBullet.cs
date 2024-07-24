@@ -1,5 +1,4 @@
 using DG.Tweening;
-using Photon.Pun;
 using UnityEngine;
 
 public class FireBullet : Projectile
@@ -16,14 +15,6 @@ public class FireBullet : Projectile
     public void SetStunTime(float newTime)
     {
         stunTime = newTime;
-    }
-
-    public void Shot(Vector3 destination)
-    {
-        transform.DOMove(destination, shotTime).OnComplete(() =>
-        {
-            SetActive(false);
-        });
     }
 
     private void OnTriggerEnter(Collider other)

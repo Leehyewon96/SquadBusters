@@ -1,4 +1,6 @@
+using DG.Tweening;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class CharacterNonPlayer : CharacterBase
@@ -40,10 +42,17 @@ public class CharacterNonPlayer : CharacterBase
 
     protected virtual IEnumerator CoAttack(GameObject target)
     {
-        animator.SetBool(AnimLocalize.contactEnemy, true);
-        transform.LookAt(target.transform.position);
+        TweenCallback callBack = null;
+        callBack = () =>
+        {
+            animator.SetBool(AnimLocalize.contactEnemy, true);
+            AnimationClip clip = animatorController.animationClips.ToList().Find(anim => anim.name.Equals(AnimLocalize.attack));
+            attackTerm = new WaitForSecondsRealtime(clip.length);
+        };
+        ForwardToEnemy(target, callBack);
         while (true)
         {
+            ForwardToEnemy(target);
             yield return attackTerm;
             if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
             {
