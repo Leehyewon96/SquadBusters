@@ -13,8 +13,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
     protected Movement3D movement3D = null;
     protected CharacterController characterController = null;
 
-    [SerializeField] protected ParticleSystem circleEffect = null;
-    protected ParticleSystem.MainModule mainCircleEffect;
+    [SerializeField] protected ParticleSystem blueCircleEffect = null;
+    [SerializeField] protected ParticleSystem redCircleEffect = null;
 
     [SerializeField] protected TextMeshProUGUI userName = null;
     [SerializeField] protected TextMeshProUGUI gemCnt = null;
@@ -26,11 +26,11 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         movement3D = moveObj.AddComponent<Movement3D>();
         characterController = moveObj.AddComponent<CharacterController>();
         type = circleType.Player;
-        mainCircleEffect = circleEffect.main;
         attackCircleStat.SetCoin(0);
         attackCircleStat.SetGem(0);
 
-        circleEffect.gameObject.SetActive(false);
+        redCircleEffect.gameObject.SetActive(false);
+        blueCircleEffect.gameObject.SetActive(false);
     }
 
     protected override void Start()
@@ -175,14 +175,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
     protected virtual void SetCircleColor(bool isMoving)
     {
-        if (isMoving)
-        {
-            mainCircleEffect.startColor = Color.blue;
-        }
-        else
-        {
-            mainCircleEffect.startColor = Color.red;
-        }
+        redCircleEffect.gameObject.SetActive(!isMoving);
+        blueCircleEffect.gameObject.SetActive(isMoving);
     }
 
     public void GainCoin()
@@ -285,7 +279,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
         if (photonView.IsMine)
         {
-            circleEffect.gameObject.SetActive(true);
+            redCircleEffect.gameObject.SetActive(true);
         }
     }
 
