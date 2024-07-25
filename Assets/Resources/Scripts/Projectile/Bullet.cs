@@ -13,6 +13,7 @@ public class Bullet : Projectile
         if (other.gameObject.TryGetComponent<ICharacterProjectileInterface>(out ICharacterProjectileInterface player))
         {
             player.TakeDamage(damage);
+            SetActive(false);
         }
     }
 }

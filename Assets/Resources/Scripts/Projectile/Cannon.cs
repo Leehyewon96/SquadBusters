@@ -51,25 +51,28 @@ public class Cannon : Projectile
         }
         isAttacking = true;
 
+
+        TweenCallback callback = () =>
+        {
+            StartCoroutine(CoAttack(target));
+        };
+        ForwardToEnemy(target, callback);
+    }
+
+    protected virtual void ForwardToEnemy(GameObject target, TweenCallback action = null)
+    {
         Vector3 dirVec = target.transform.position - transform.position;
         float angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
         angle += Quaternion.FromToRotation(Vector3.forward, transform.forward).eulerAngles.y;
         dirVec = Vector3.up * angle;
-        transform.DORotate(dirVec, 0.5f).OnComplete(() =>
-        {
-            StartCoroutine(CoAttack(target));
-        });
+        transform.DORotate(dirVec, 0.5f).OnComplete(action);
     }
 
     private IEnumerator CoAttack(GameObject target)
     {
         while(target.activeSelf)
         {
-            Vector3 dirVec = target.transform.position - transform.position;
-            float angle = Quaternion.FromToRotation(transform.forward, dirVec).eulerAngles.y;
-            angle += Quaternion.FromToRotation(Vector3.forward, transform.forward).eulerAngles.y;
-            dirVec = Vector3.up * angle;
-            transform.DORotate(dirVec, 0.5f);
+            ForwardToEnemy(target);
 
             Projectile projectile = GameManager.Instance.projectileManager.GetProjectile(shotPoint.transform.position, ProjectileType.Bullet);
             projectile.SetDamage(damage);
@@ -113,7 +116,10 @@ public class Cannon : Projectile
             return;
         }
 
-        StopAllCoroutines();
-        isAttacking = false;
+        if (other.gameObject.TryGetComponent<ICharacterPlayerItemInterface>(out ICharacterPlayerItemInterface playerItemInterface))
+        {
+            StopAllCoroutines();
+            isAttacking = false;
+        }
     }
 }

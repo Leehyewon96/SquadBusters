@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,6 +34,7 @@ public class ProjectileManager : MonoBehaviour
             projectiles.Add(projectile);
         }
 
+        DOTween.Kill(projectile.gameObject.transform);
         projectile.transform.position = pos;
         projectile.SetActive(true);
 
