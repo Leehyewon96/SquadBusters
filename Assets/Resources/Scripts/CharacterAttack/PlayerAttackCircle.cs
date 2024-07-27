@@ -324,7 +324,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
             case ItemType.Cannon:
                 projectile = GameManager.Instance.projectileManager.GetProjectile(transform.position, ProjectileType.Cannon);
                 Cannon cannon = projectile.gameObject.GetComponent<Cannon>();
-                if(owners.Count > 0)
+                StartCoroutine(CoDisableCannon(cannon.lifeTime, cannon));
+                if (owners.Count > 0)
                 {
                     owners.ForEach(o => cannon.SetHost(o.gameObject));
                 }
@@ -332,8 +333,19 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
             default:
                 break;
         }
+    }
 
-        
+    private IEnumerator CoDisableCannon(float lifeTime, Cannon cannon)
+    {
+        yield return new WaitForSeconds(lifeTime);
+        cannon.SetActive(false);
+        photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)EffectType.StonesHit, transform.position, transform.forward);
+    }
+
+    [PunRPC]
+    public void RPCEffect(int effectType, Vector3 pos, Vector3 rot)
+    {
+        GameManager.Instance.effectManager.Play((EffectType)effectType, pos, rot);
     }
     #endregion
 

@@ -6,8 +6,8 @@ using System.Collections.Generic;
 
 public class Cannon : Projectile
 {
-    private float shotDistance = 8f
-;    private float lifeTime = 60.0f;
+    private float shotDistance = 8f;    
+    public float lifeTime { get; private set; } = 10.0f;
     private float hp = 3500f;
     private List<GameObject> hosts = new List<GameObject>();
     private bool isAttacking = false;
@@ -19,20 +19,6 @@ public class Cannon : Projectile
         base.Awake();
         projectileType = ProjectileType.Cannon;
         SetDamage(145f);
-    }
-
-    private void OnEnable()
-    {
-        if(photonView.IsMine)
-        {
-            StartCoroutine(CoDisable());
-        }
-    }
-
-    private IEnumerator CoDisable()
-    {
-        yield return new WaitForSeconds(lifeTime);
-        SetActive(false);
     }
 
     public void SetHost(GameObject newHost)
