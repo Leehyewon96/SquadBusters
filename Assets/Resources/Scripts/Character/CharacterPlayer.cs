@@ -18,6 +18,8 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     public delegate int TotalCoin();
     public TotalCoin totalCoin;
 
+    protected EffectType attackEffectType;
+
     protected virtual void OnEnable()
     {
         if(photonView.IsMine)
@@ -27,7 +29,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             GameManager.Instance.uiManager.fastMoveUI.onMoveCommon -= () => movement3D.UpdateMoveSpeed(7.5f);
             GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += () => movement3D.UpdateMoveSpeed(7.5f);
             GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position, transform.forward);
-            
         }
     }
 
@@ -172,7 +173,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     {
         if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
         {
-            photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)EffectType.ChargeSlashPurple, transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
+            photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)attackEffectType, transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
             targetObj.TakeDamage(characterStat.GetAttackDamage());
 
             if (targetObj.isDead)

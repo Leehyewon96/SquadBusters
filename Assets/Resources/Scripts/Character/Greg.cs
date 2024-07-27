@@ -1,8 +1,15 @@
 using Photon.Pun;
+using System;
 using UnityEngine;
 
 public class Greg : CharacterPlayer
 {
+    protected override void Awake()
+    {
+        base.Awake();
+        attackEffectType = EffectType.StoneSlash;
+    }
+
     public void OnDetectedMoneyTree(Item tree)
     {
         if(!DetectedEnemies.Contains(tree.gameObject))
@@ -41,7 +48,7 @@ public class Greg : CharacterPlayer
     {
         if (target.TryGetComponent<MoneyTree>(out MoneyTree tree))
         {
-            photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)EffectType.ChargeSlashPurple, transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
+            photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)attackEffectType, transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
             tree.TakeDamage(characterStat.GetAttackDamage());
 
             if (tree.isDead)

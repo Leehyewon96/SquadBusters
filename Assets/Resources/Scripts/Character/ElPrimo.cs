@@ -24,6 +24,7 @@ public class ElPrimo : CharacterPlayer
         body = GetComponent<Rigidbody>();
         flyingElbowDamage = 100f;
         characterLevel = CharacterLevel.Classic;
+        attackEffectType = EffectType.ChargeSlashPurple;
     }
 
     private void FlyingElbowAttack(GameObject target)
