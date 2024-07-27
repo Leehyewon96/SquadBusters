@@ -77,7 +77,7 @@ public class Cannon : Projectile
             Projectile projectile = GameManager.Instance.projectileManager.GetProjectile(shotPoint.transform.position, ProjectileType.Bullet);
             projectile.SetDamage(damage);
             projectile.SetDirection(transform.forward);
-            projectile.Shot(transform.position + transform.forward.normalized * shotDistance);
+            projectile.Shot(transform.position + transform.forward.normalized * shotDistance, 1f);
             photonView.RPC("RPCShotEffect", RpcTarget.AllBuffered);
 
             yield return new WaitForSeconds(0.5f);

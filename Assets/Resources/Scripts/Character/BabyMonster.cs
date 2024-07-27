@@ -7,7 +7,7 @@ public class BabyMonster : CharacterNonPlayer
 {
     protected int attackCount = 0;
     protected WaitForSecondsRealtime attackReadyTime = new WaitForSecondsRealtime(5f);
-    protected WaitForSecondsRealtime commonAttackReadyTime = new WaitForSecondsRealtime(1f);
+    protected WaitForSecondsRealtime commonAttackReadyTime = new WaitForSecondsRealtime(2f);
     protected float skillTerm = 5f;
     protected float attackDistance = 10f;
     protected float attackIntervalAngle = 45f;
@@ -47,7 +47,7 @@ public class BabyMonster : CharacterNonPlayer
                 {
                     attackCount++;
                     characterState = CharacterState.Idle;
-                    StartCoroutine(CoShotFireBall());
+                    ShotFireBall(transform.forward);
                 }
                 else
                 {
@@ -56,12 +56,6 @@ public class BabyMonster : CharacterNonPlayer
                 }
             }
         });
-    }
-
-    protected virtual IEnumerator CoShotFireBall()
-    {
-        yield return commonAttackReadyTime;
-        ShotFireBall(transform.forward);
     }
 
     protected virtual IEnumerator CoTripleShotFireBall()
@@ -93,16 +87,16 @@ public class BabyMonster : CharacterNonPlayer
     protected virtual void ShotFireBall(Vector3 dirVec)
     {
         animator.SetTrigger(AnimLocalize.attack);
-        Projectile projectile = GameManager.Instance.projectileManager.GetProjectile(transform.position + transform.forward.normalized * 0.5f + Vector3.up * 2.5f, ProjectileType.FireBullet);
+        Projectile projectile = GameManager.Instance.projectileManager.GetProjectile(transform.position + transform.forward.normalized * 0.5f + Vector3.up * 3.5f, ProjectileType.FireBullet);
         FireBullet bullet = projectile.gameObject.GetComponent<FireBullet>();
         bullet.transform.rotation = Quaternion.LookRotation(dirVec);
         bullet.SetStunTime(stunTime);
-        bullet.Shot(transform.position + dirVec.normalized * attackDistance);
+        bullet.Shot(transform.position + dirVec.normalized * attackDistance, 3f);
     }
 
     [PunRPC]
     public void RPCEffect(Vector3 dirVec)
     {
-        GameManager.Instance.effectManager.Play(EffectType.LaserAOE, transform.position + dirVec.normalized * 5f + Vector3.up * 0.4f, dirVec);
+        GameManager.Instance.effectManager.Play(EffectType.LaserAOE, transform.position + dirVec.normalized * 5f + Vector3.up * 1.5f, dirVec);
     }
 }

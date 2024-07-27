@@ -58,7 +58,7 @@ public class Colt : CharacterPlayer
             Projectile projectile = GameManager.Instance.projectileManager.GetProjectile(gunPoint.transform.position, ProjectileType.Bullet);
             projectile.SetDirection(transform.forward.normalized);
             projectile.SetDamage(characterStat.GetAttackDamage());
-            projectile.Shot(transform.position + transform.forward.normalized * shotDistance);
+            projectile.Shot(transform.position + transform.forward.normalized * shotDistance, 1f);
             
             cnt--;
             yield return new WaitForSeconds(0.6f);

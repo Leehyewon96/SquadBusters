@@ -4116,6 +4116,9 @@ MonoBehaviour:
   - Type: 4
     SynchronizeType: 1
     Name: ContactEnemy
+  - Type: 9
+    SynchronizeType: 1
+    Name: KnockBack
   m_SynchronizeLayers:
   - SynchronizeType: 0
     LayerIndex: 0
@@ -4147,8 +4150,8 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
+  m_Speed: 15
+  m_Acceleration: 10
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 2

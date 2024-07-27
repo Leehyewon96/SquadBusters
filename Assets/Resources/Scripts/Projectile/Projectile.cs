@@ -28,9 +28,9 @@ public class Projectile : MonoBehaviour
         gameObject.transform.rotation = Quaternion.LookRotation(dir);
     }
 
-    public virtual void Shot(Vector3 destination)
+    public virtual void Shot(Vector3 destination, float shotTime)
     {
-        transform.DOMove(destination, 1f).OnComplete(() =>
+        transform.DOMove(destination, shotTime).OnComplete(() =>
         {
             if (gameObject.activeSelf)
             {
