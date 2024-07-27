@@ -42,4 +42,9 @@ public class HpBar : MonoBehaviour
     {
         transform.position = newPos;
     }
+
+    public void InitColor(Color newColor)
+    {
+        imgFill.color = newColor;
+    }
 }

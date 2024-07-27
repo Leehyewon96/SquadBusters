@@ -1,7 +1,6 @@
 using DG.Tweening;
 using System.Collections;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class Colt : CharacterPlayer
 {
@@ -41,7 +40,10 @@ public class Colt : CharacterPlayer
         isAttacking = true;
         TweenCallback callback = () =>
         {
-            StartCoroutine(CoAttack(target));
+            if(gameObject.activeSelf)
+            {
+                StartCoroutine(CoAttack(target));
+            }
         };
         ForwardToEnemy(target, callback);
     }

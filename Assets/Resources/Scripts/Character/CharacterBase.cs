@@ -111,6 +111,10 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         InitCharacterStat();
         hpBar.SetMaxHp(characterStat.GetMaxHp());
         hpBar.UpdateCurrentHp(characterStat.GetCurrentHp());
+        if(!photonView.IsMine)
+        {
+            hpBar.InitColor(Color.red);
+        }
 
         characterStat.onCurrentHpChanged -= hpBar.UpdateCurrentHp;
         characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
