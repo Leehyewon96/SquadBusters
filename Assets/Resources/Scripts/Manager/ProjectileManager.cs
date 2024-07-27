@@ -9,6 +9,7 @@ public enum ProjectileType
     Bomb,
     Bullet,
     Cannon,
+    Stone,
 
     End
 }

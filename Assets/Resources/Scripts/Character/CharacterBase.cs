@@ -16,6 +16,7 @@ public enum CharacterType
     Kiwi,
     BabyDragon,
     Golem,
+    Boller,
 
     End,
 }

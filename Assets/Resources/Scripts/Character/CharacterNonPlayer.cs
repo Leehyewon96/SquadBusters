@@ -36,7 +36,6 @@ public class CharacterNonPlayer : CharacterBase
     protected override void Attack(GameObject target)
     {
         base.Attack(target);
-        characterLevel = CharacterLevel.NPC;
         StartCoroutine(CoAttack(target));
     }
 
