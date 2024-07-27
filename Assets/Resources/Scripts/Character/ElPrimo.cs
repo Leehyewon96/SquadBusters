@@ -77,7 +77,7 @@ public class ElPrimo : CharacterPlayer
 
     protected override void MoveToEnemy()
     {
-        animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
+        //animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
 
         GameObject target = GetTarget();
         if (target == gameObject)

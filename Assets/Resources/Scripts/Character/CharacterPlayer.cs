@@ -66,11 +66,11 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             animator.SetBool(AnimLocalize.contactEnemy, false);
 
             Move();
-            animator.SetFloat(AnimLocalize.moveSpeed, characterController.velocity.magnitude);
+            //animator.SetFloat(AnimLocalize.moveSpeed, characterController.velocity.magnitude);
         }
         else
         {
-            animator.SetFloat(AnimLocalize.moveSpeed, 0);
+            //animator.SetFloat(AnimLocalize.moveSpeed, 0);
             MoveToEnemy();
         }
     }
@@ -85,7 +85,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected override void MoveToEnemy()
     {
-        animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
+        //animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
 
         GameObject target = GetTarget();
         if (target == gameObject)
@@ -113,11 +113,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         }
     }
 
-    public void PlayAnim()
-    {
-        animator.SetFloat(AnimLocalize.moveSpeed, characterController.velocity.magnitude);
-    }
-
     protected virtual bool CheckInput()
     {
         //모바일에서 터치로 변경
@@ -126,11 +121,13 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             characterController.enabled = true;
             ResetPath();
             navMeshAgent.enabled = false;
+            animator.SetFloat(AnimLocalize.moveSpeed, characterController.velocity.magnitude);
             return true;
         }
 
         characterController.enabled = false;
         navMeshAgent.enabled = true;
+        animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
         return false;
     }
 
@@ -247,8 +244,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         return 0;
     }
 
-    [PunRPC]
-    public override void RPCGetAOE(float inDamage, Vector3 fromPos, float distance)
+    public override void GetAOE(float inDamage, Vector3 fromPos, float distance)
     {
         if (photonView.IsMine && Camera.main.TryGetComponent<CameraFollow>(out CameraFollow cam))
         {
@@ -258,8 +254,22 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             }
         }
 
-        base.RPCGetAOE(inDamage, fromPos, distance);
+        base.GetAOE(inDamage, fromPos, distance);
     }
 
-    
+    //[PunRPC]
+    //public override void RPCGetAOE(float inDamage, Vector3 fromPos, float distance)
+    //{
+    //    if (photonView.IsMine && Camera.main.TryGetComponent<CameraFollow>(out CameraFollow cam))
+    //    {
+    //        if (cam.onCameraShake != null)
+    //        {
+    //            cam.onCameraShake.Invoke(0.65f);
+    //        }
+    //    }
+
+    //    base.RPCGetAOE(inDamage, fromPos, distance);
+    //}
+
+
 }
