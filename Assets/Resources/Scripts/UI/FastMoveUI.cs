@@ -43,4 +43,10 @@ public class FastMoveUI : UIBase
             onMoveCommon.Invoke();
         }
     }
+
+    public void SetInteractable(bool isInteractable)
+    {
+        button.interactable = isInteractable;
+        eventTrigger.enabled = isInteractable;
+    }
 }

@@ -261,7 +261,12 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
     public virtual void Stun(float duration, string animName)
     {
-        if(isStunned)
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+
+        if (isStunned)
         {
             return;
         }
@@ -275,10 +280,12 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         owners.ForEach(o => o.SetCharacterState(CharacterState.Stun));
         owners.ForEach(o => o.PlayStunAnimation());
         movement3D.UpdateMoveSpeed(commonSpeed * 0.1f);
+        GameManager.Instance.uiManager.fastMoveUI.SetInteractable(false);
         yield return new WaitForSeconds(duration);
         owners.ForEach(o => o.SetCharacterState(CharacterState.Idle));
         movement3D.UpdateMoveSpeed(commonSpeed);
         isStunned = false;
+        GameManager.Instance.uiManager.fastMoveUI.SetInteractable(true);
     }
 
     public void ShowNotice(NoticeType type, Item item)
