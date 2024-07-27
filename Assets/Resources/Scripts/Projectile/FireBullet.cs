@@ -19,9 +19,9 @@ public class FireBullet : Projectile
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.TryGetComponent<ICharacterProjectileInterface>(out ICharacterProjectileInterface player))
+        if(other.gameObject.TryGetComponent<IPlayerAttackCircleProjectileInterface>(out IPlayerAttackCircleProjectileInterface attackCircle))
         {
-            player.Stun(stunTime, AnimLocalize.knockBack);
+            attackCircle.Stun(stunTime, AnimLocalize.knockBack);
         }
     }
 }

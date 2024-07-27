@@ -72,9 +72,6 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
     public delegate void DeadAction(CharacterBase characterBase);
     public DeadAction deadAction = null;
 
-    public delegate void OnStun(float duration);
-    public OnStun onStun;
-
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
@@ -391,10 +388,6 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     public virtual void Stun(float duration, string animName)
     {
-        if (onStun != null)
-        {
-            onStun.Invoke(duration);
-        }
         StartCoroutine(CoStun(duration, animName));
     }
 

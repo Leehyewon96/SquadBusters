@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using static CharacterPlayer;
 
-public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttackCircleItemInterface
+public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttackCircleItemInterface, IPlayerAttackCircleProjectileInterface
 {
     protected GameObject moveObj = null;
     protected Movement3D movement3D = null;
@@ -17,6 +17,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
     [SerializeField] protected TextMeshProUGUI userName = null;
     [SerializeField] protected TextMeshProUGUI gemCnt = null;
+
+    private bool isStunned = false;
 
     protected override void Awake()
     {
@@ -109,7 +111,6 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
                 player.updateCoin = SetCoin;
                 player.totalCoin = GetCoin;
-                player.onStun = Stun;
             }
 
             if(!isMerged)
@@ -257,16 +258,24 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
     }
 
-    protected virtual void Stun(float stunTime)
+    public virtual void Stun(float duration, string animName)
     {
-        StartCoroutine(CoStun(stunTime));
+        if(isStunned)
+        {
+            return;
+        }
+
+        isStunned = true;
+        owners.ForEach(o => o.Stun(duration, animName));
+        StartCoroutine(CoStun(duration, animName));
     }
 
-    protected IEnumerator CoStun(float stunTime)
+    protected IEnumerator CoStun(float duration, string animName)
     {
         movement3D.UpdateMoveSpeed(0.5f);
-        yield return new WaitForSeconds(stunTime);
+        yield return new WaitForSeconds(duration);
         movement3D.UpdateMoveSpeed(15f);
+        isStunned = false;
     }
 
     public void ShowNotice(NoticeType type, Item item)
