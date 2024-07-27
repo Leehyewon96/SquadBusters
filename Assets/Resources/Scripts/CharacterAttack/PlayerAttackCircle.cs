@@ -144,8 +144,10 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
             //ch.Merged();
             ch.SetDead();
         }
-        SpawnCharacter(transform.position, type, nextLevel, false);
         
+        CharacterBase character = SpawnCharacter(transform.position, type, nextLevel, false);
+        NoticeElem notice = GameManager.Instance.uiManager.noticeUI.ShowAcitveNotice(NoticeType.Fusion, true, character.gameObject);
+        notice.Disable(2f);
 
         owners.LastOrDefault().transform.position = pos;
     }

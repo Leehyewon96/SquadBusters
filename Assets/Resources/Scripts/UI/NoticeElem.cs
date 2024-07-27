@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class NoticeElem : UIBase
@@ -28,7 +29,18 @@ public class NoticeElem : UIBase
 
     public void SetPos()
     {
-        pos = Camera.main.WorldToScreenPoint(target.transform.position + Vector3.up * 2.5f);
+        pos = Camera.main.WorldToScreenPoint(target.transform.position + Vector3.up * 3f);
         GetComponent<RectTransform>().position = pos;
+    }
+
+    public void Disable(float delay)
+    {
+        StartCoroutine(CoDisable(delay));
+    }
+
+    private IEnumerator CoDisable(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        gameObject.SetActive(false);
     }
 }

@@ -5,6 +5,7 @@ public enum NoticeType
 {
     MoneyTree,
     TreasureBox,
+    Fusion,
 
     End,
 }
