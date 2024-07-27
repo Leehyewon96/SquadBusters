@@ -10,6 +10,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 {
     protected GameObject moveObj = null;
     protected Movement3D movement3D = null;
+    protected float commonSpeed = 7.5f;
     protected CharacterController characterController = null;
 
     [SerializeField] protected ParticleSystem blueCircleEffect = null;
@@ -40,10 +41,10 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
         if(photonView.IsMine)
         {
-            GameManager.Instance.uiManager.fastMoveUI.onMoveFast -= () => movement3D.UpdateMoveSpeed(15f);
-            GameManager.Instance.uiManager.fastMoveUI.onMoveFast += () => movement3D.UpdateMoveSpeed(15f);
-            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon -= () => movement3D.UpdateMoveSpeed(7.5f);
-            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += () => movement3D.UpdateMoveSpeed(7.5f);
+            GameManager.Instance.uiManager.fastMoveUI.onMoveFast -= () => movement3D.UpdateMoveSpeed(commonSpeed * 2f);
+            GameManager.Instance.uiManager.fastMoveUI.onMoveFast += () => movement3D.UpdateMoveSpeed(commonSpeed * 2f);
+            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon -= () => movement3D.UpdateMoveSpeed(commonSpeed);
+            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += () => movement3D.UpdateMoveSpeed(commonSpeed);
             GameManager.Instance.uiManager.skillUI.doSkill += DoItemSkill;
 
             photonView.RPC("SetUserName", RpcTarget.AllBuffered, GameManager.Instance.userName);
@@ -265,16 +266,18 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
             return;
         }
 
-        isStunned = true;
-        owners.ForEach(o => o.Stun(duration, animName));
         StartCoroutine(CoStun(duration, animName));
     }
 
     protected IEnumerator CoStun(float duration, string animName)
     {
-        movement3D.UpdateMoveSpeed(0.5f);
+        isStunned = true;
+        owners.ForEach(o => o.SetCharacterState(CharacterState.Stun));
+        owners.ForEach(o => o.PlayStunAnimation());
+        movement3D.UpdateMoveSpeed(commonSpeed * 0.1f);
         yield return new WaitForSeconds(duration);
-        movement3D.UpdateMoveSpeed(15f);
+        owners.ForEach(o => o.SetCharacterState(CharacterState.Idle));
+        movement3D.UpdateMoveSpeed(commonSpeed);
         isStunned = false;
     }
 

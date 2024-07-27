@@ -141,13 +141,15 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         photonView.RPC("RPCSetCharacterState", RpcTarget.AllBuffered, newState);
     }
 
+    public virtual void PlayStunAnimation()
+    {
+        animator.SetTrigger(AnimLocalize.knockBack);
+    }
+
     [PunRPC]
     public virtual void RPCSetCharacterState(CharacterState newState)
     {
-        if(photonView.IsMine)
-        {
-            characterState = newState;
-        }
+        characterState = newState;
     }
 
     public virtual CharacterType GetCharacterType()
@@ -386,16 +388,4 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         return characterLevel;
     }
 
-    public virtual void Stun(float duration, string animName)
-    {
-        StartCoroutine(CoStun(duration, animName));
-    }
-
-    private IEnumerator CoStun(float duration, string animName)
-    {
-        SetCharacterState(CharacterState.Stun);
-        animator.SetTrigger(animName);
-        yield return new WaitForSeconds(duration);
-        SetCharacterState(CharacterState.Idle);
-    }
 }

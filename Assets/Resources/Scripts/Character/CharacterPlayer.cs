@@ -261,4 +261,5 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         base.RPCGetAOE(inDamage, fromPos, distance);
     }
 
+    
 }
