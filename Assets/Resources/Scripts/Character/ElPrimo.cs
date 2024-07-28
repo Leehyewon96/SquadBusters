@@ -108,7 +108,7 @@ public class ElPrimo : CharacterPlayer
         if (Vector3.Distance(transform.position, target.transform.position) <= navMeshAgent.stoppingDistance)
         {
             ResetPath();
-            animator.SetFloat(AnimLocalize.moveSpeed, 0);
+            //animator.SetFloat(AnimLocalize.moveSpeed, 0);
             Attack(target);
         }
     }

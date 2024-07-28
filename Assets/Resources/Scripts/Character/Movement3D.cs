@@ -4,7 +4,7 @@ public class Movement3D : MonoBehaviour
 {
     [HideInInspector] public CharacterController characterController = null;
 
-    protected float moveSpeed = 7.5f;
+    public float moveSpeed { get; private set; } = 7.5f;
     protected Vector3 moveDirection = Vector3.zero;
 
     private void Start()

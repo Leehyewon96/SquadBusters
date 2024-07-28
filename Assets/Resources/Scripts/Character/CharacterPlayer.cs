@@ -121,7 +121,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             characterController.enabled = true;
             ResetPath();
             navMeshAgent.enabled = false;
-            animator.SetFloat(AnimLocalize.moveSpeed, characterController.velocity.magnitude);
+            animator.SetFloat(AnimLocalize.moveSpeed, movement3D.moveSpeed);
             return true;
         }
 
