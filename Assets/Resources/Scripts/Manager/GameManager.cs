@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public UIManager uiManager = null;
     [HideInInspector] public ProjectileManager projectileManager = null;
     [HideInInspector] public AOEManager aoeManager = null;
+    [HideInInspector] public SoundManager soundManager = null;
     private PhotonView photonView = null;
     public GameObject attackCircle = null;
     public bool isConnect { get; set; } = false;
@@ -55,6 +56,8 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         photonView = gameObject.GetComponent<PhotonView>();
+        soundManager = FindObjectOfType<SoundManager>();
+        soundManager.Play(SoundEffectType.LobbyBG);
         StartCoroutine(CoInitGame());
     }
 
@@ -109,6 +112,9 @@ public class GameManager : MonoBehaviour
 
     public void InitGame()
     {
+        soundManager.Stop(SoundEffectType.LobbyBG);
+        soundManager.Play(SoundEffectType.InGameBG);
+
         //hpBarManager = FindObjectOfType<HpBarManager>();
         //attackCircleManager = FindObjectOfType<AttackCircleManager>();
         itemManager = FindObjectOfType<ItemManager>();
@@ -117,7 +123,7 @@ public class GameManager : MonoBehaviour
         projectileManager = FindObjectOfType<ProjectileManager>();
         aoeManager = FindObjectOfType<AOEManager>();
 
-        if(PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient)
         {
             SpawnCharacter();
         }
@@ -221,6 +227,8 @@ public class GameManager : MonoBehaviour
     public void StopGame()
     {
         endGame = true;
+        soundManager.Stop(SoundEffectType.InGameBG);
+        soundManager.Play(SoundEffectType.EndingBG);
         uiManager.OnStopGame();
     }
 

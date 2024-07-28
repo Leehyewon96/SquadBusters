@@ -59,7 +59,8 @@ public class Colt : CharacterPlayer
             projectile.SetDirection(transform.forward.normalized);
             projectile.SetDamage(characterStat.GetAttackDamage());
             projectile.Shot(transform.position + transform.forward.normalized * shotDistance, 1f);
-            
+            GameManager.Instance.soundManager.Play(SoundEffectType.Shot);
+
             cnt--;
             yield return new WaitForSeconds(0.6f);
         }

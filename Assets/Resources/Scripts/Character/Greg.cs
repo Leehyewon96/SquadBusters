@@ -50,6 +50,7 @@ public class Greg : CharacterPlayer
         {
             photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)attackEffectType, transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
             tree.TakeDamage(characterStat.GetAttackDamage());
+            GameManager.Instance.soundManager.Play(SoundEffectType.Slash);
 
             if (tree.isDead)
             {

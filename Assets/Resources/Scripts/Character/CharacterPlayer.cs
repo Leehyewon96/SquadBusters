@@ -48,6 +48,10 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
         if (characterState == CharacterState.Stun)
         {
+            Debug.Log("CharacterState.Stun");
+            GameManager.Instance.soundManager.Stop(SoundEffectType.Walk);
+            GameManager.Instance.soundManager.Stop(SoundEffectType.Shot);
+            GameManager.Instance.soundManager.Play(SoundEffectType.Stun);
             StopAllCoroutines();
             //ResetPath();
             isAttacking = false;
@@ -118,6 +122,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         //모바일에서 터치로 변경
         if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
         {
+            GameManager.Instance.soundManager.Play(SoundEffectType.Walk);
             characterController.enabled = true;
             ResetPath();
             navMeshAgent.enabled = false;
@@ -125,6 +130,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             return true;
         }
 
+        GameManager.Instance.soundManager.Stop(SoundEffectType.Walk);
         characterController.enabled = false;
         navMeshAgent.enabled = true;
         animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
@@ -171,6 +177,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
         {
             photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)attackEffectType, transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
+            
             targetObj.TakeDamage(characterStat.GetAttackDamage());
 
             if (targetObj.isDead)
@@ -191,6 +198,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected virtual void OnTargetDead(GameObject target)
     {
+        GameManager.Instance.soundManager.Play(SoundEffectType.Kill);
         DetectedEnemies.Remove(target);
         animator.SetBool(AnimLocalize.contactEnemy, false);
         isAttacking = false;
@@ -255,5 +263,11 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         }
 
         base.GetAOE(inDamage, fromPos, distance);
+    }
+
+    public override void SetDead()
+    {
+        base.SetDead();
+        GameManager.Instance.soundManager.Play(SoundEffectType.Die);
     }
 }

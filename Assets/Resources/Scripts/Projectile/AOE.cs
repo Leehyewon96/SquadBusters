@@ -23,6 +23,7 @@ public class AOE : MonoBehaviour
 
     private void OnEnable()
     {
+        GameManager.Instance.soundManager.Play(SoundEffectType.Explose);
         SetEnable(true);
         StartCoroutine(CoSetActive(false));
         StartCoroutine(CoSetEnable(false));

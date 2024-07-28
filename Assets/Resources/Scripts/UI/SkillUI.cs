@@ -51,6 +51,7 @@ public class SkillUI : UIBase
         {
             doSkill.Invoke(skillType);
         }
+        GameManager.Instance.soundManager.Play(SoundEffectType.UseItem);
         bombIcon.gameObject.SetActive(false);
         cannonIcon.gameObject.SetActive(false);
         SetInteractable(false);

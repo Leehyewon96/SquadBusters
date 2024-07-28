@@ -61,6 +61,7 @@ public class ElPrimo : CharacterPlayer
         
         transform.DOPath(jumpPath, jumpTime, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
         {
+            GameManager.Instance.soundManager.Play(SoundEffectType.Explose);
             photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)EffectType.PortalRed, transform.position, Vector3.up * (-1f));
         });
 
@@ -111,6 +112,12 @@ public class ElPrimo : CharacterPlayer
             //animator.SetFloat(AnimLocalize.moveSpeed, 0);
             Attack(target);
         }
+    }
+
+    protected override bool AttackTarget(GameObject target)
+    {
+        GameManager.Instance.soundManager.Play(SoundEffectType.Punch);
+        return base.AttackTarget(target);
     }
 
     protected override void OnTargetDead(GameObject target)

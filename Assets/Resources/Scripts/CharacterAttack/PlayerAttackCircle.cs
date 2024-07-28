@@ -186,6 +186,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
     {
         if(photonView.IsMine)
         {
+            GameManager.Instance.soundManager.Play(SoundEffectType.GainItem);
             attackCircleStat.SetCoin(attackCircleStat.GetCoin() + 1);
             GameManager.Instance.uiManager.coinUI.SetCoin(attackCircleStat.GetCoin());
         }
@@ -195,6 +196,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
     {
         if (photonView.IsMine)
         {
+            GameManager.Instance.soundManager.Play(SoundEffectType.GainItem);
             attackCircleStat.SetGem(attackCircleStat.GetGem() + 1);
             GameManager.Instance.UpdateRank(GameManager.Instance.userName, attackCircleStat.GetGem());
             photonView.RPC("UpdateGemCnt", RpcTarget.AllBuffered, attackCircleStat.GetGem());
@@ -203,16 +205,16 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
     public void GainBomb()
     {
+        GameManager.Instance.soundManager.Play(SoundEffectType.GainItem);
         GameManager.Instance.uiManager.skillUI.UpdateSkillType(ItemType.Bomb);
         GameManager.Instance.uiManager.skillUI.SetInteractable(true);
     }
 
     public void GainCannon()
     {
-        Debug.Log("GainCannon");
+        GameManager.Instance.soundManager.Play(SoundEffectType.GainItem);
         GameManager.Instance.uiManager.skillUI.UpdateSkillType(ItemType.Cannon);
         GameManager.Instance.uiManager.skillUI.SetInteractable(true);
-        Debug.Log("End GainCannon");
     }
 
     public int GetCoin()
@@ -228,6 +230,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
     public virtual void GainTreasureBox()
     {
+        GameManager.Instance.soundManager.Play(SoundEffectType.GainItem);
         GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter, true);
     }
 
