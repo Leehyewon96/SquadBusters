@@ -89,7 +89,7 @@ public class Cannon : Projectile
             return;
         }
 
-        if(other.gameObject.TryGetComponent<ICharacterPlayerItemInterface>(out ICharacterPlayerItemInterface playerItemInterface))
+        if(other.gameObject.TryGetComponent<ICharacterProjectileInterface>(out ICharacterProjectileInterface charItemInterface))
         {
             Attack(other.gameObject);
         }
@@ -102,7 +102,7 @@ public class Cannon : Projectile
             return;
         }
 
-        if (other.gameObject.TryGetComponent<ICharacterPlayerItemInterface>(out ICharacterPlayerItemInterface playerItemInterface))
+        if (other.gameObject.TryGetComponent<ICharacterProjectileInterface>(out ICharacterProjectileInterface charItemInterface))
         {
             StopAllCoroutines();
             isAttacking = false;
