@@ -354,40 +354,51 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     public virtual void GetAOE(float inDamage, Vector3 fromPos, float distance)
     {
-        SetCharacterState(CharacterState.Stun);
-        //characterState = CharacterState.Stun;
+        //SetCharacterState(CharacterState.Stun);
+        ////characterState = CharacterState.Stun;
+        //fromPos.y = transform.position.y;
+        ////Debug.Log($"[{gameObject.name}] transform.position.y : {transform.position.y}");
+        //Vector3 dir = transform.position - fromPos;
+        //Vector3 startPos = transform.position;
+        //Vector3 endPoint = startPos + dir.normalized * distance;
+        //Vector3 midPoint = startPos + (endPoint - transform.position) * 0.5f;
+        //midPoint.y += 2f;
+        //endPoint.y = fromPos.y;
+        ////Debug.Log($"[{gameObject.name}] endPoint.y : {endPoint.y}");
+        //Vector3[] paths = { startPos, midPoint, endPoint };
+        //transform.DOPath(paths, 0.5f, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
+        //{
+        //    TakeDamage(inDamage);
+        //    //characterState = CharacterState.Idle;
+        //    SetCharacterState(CharacterState.Idle);
+        //    //Debug.Log($"[{gameObject.name}] y : {transform.position.y}");
+        //});
+        photonView.RPC("RPCGetAOE", RpcTarget.AllBuffered, inDamage, fromPos, distance);
+    }
+
+    [PunRPC]
+    public virtual void RPCGetAOE(float inDamage, Vector3 fromPos, float distance)
+    {
+        //SetCharacterState(CharacterState.Stun);
+        characterState = CharacterState.Stun;
         fromPos.y = transform.position.y;
-        Debug.Log($"[{gameObject.name}] transform.position.y : {transform.position.y}");
+        //Debug.Log($"[{gameObject.name}] transform.position.y : {transform.position.y}");
         Vector3 dir = transform.position - fromPos;
         Vector3 startPos = transform.position;
         Vector3 endPoint = startPos + dir.normalized * distance;
         Vector3 midPoint = startPos + (endPoint - transform.position) * 0.5f;
         midPoint.y += 2f;
         endPoint.y = fromPos.y;
-        Debug.Log($"[{gameObject.name}] endPoint.y : {endPoint.y}");
+        //Debug.Log($"[{gameObject.name}] endPoint.y : {endPoint.y}");
         Vector3[] paths = { startPos, midPoint, endPoint };
         transform.DOPath(paths, 0.5f, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
         {
             TakeDamage(inDamage);
-            //characterState = CharacterState.Idle;
-            SetCharacterState(CharacterState.Idle);
-            Debug.Log($"[{gameObject.name}] y : {transform.position.y}");
+            characterState = CharacterState.Idle;
+            //SetCharacterState(CharacterState.Idle);
+            //Debug.Log($"[{gameObject.name}] y : {transform.position.y}");
         });
-        //photonView.RPC("RPCGetAOE", RpcTarget.AllBuffered, inDamage, fromPos, distance);
     }
-
-    //[PunRPC]
-    //public virtual void RPCGetAOE(float inDamage, Vector3 fromPos, float distance)
-    //{
-    //    characterState = CharacterState.Stun;
-
-    //    transform.DOPath(paths, 0.5f, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
-    //    {
-    //        TakeDamage(inDamage);
-    //        characterState = CharacterState.Idle;
-    //        Debug.Log($"[{gameObject.name}] y : {transform.position.y}");
-    //    });
-    //}
 
     public virtual CharacterLevel GetCharacterLevel()
     {
