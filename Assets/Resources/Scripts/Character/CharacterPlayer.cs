@@ -48,7 +48,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
         if (characterState == CharacterState.Stun)
         {
-            Debug.Log("CharacterState.Stun");
             GameManager.Instance.soundManager.Stop(SoundEffectType.Walk);
             GameManager.Instance.soundManager.Stop(SoundEffectType.Shot);
             GameManager.Instance.soundManager.Play(SoundEffectType.Stun);
@@ -252,17 +251,19 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         return 0;
     }
 
-    public override void GetAOE(float inDamage, Vector3 fromPos, float distance)
+
+    [PunRPC]
+    public override void RPCGetAOE(float inDamage, Vector3 fromPos, float distance)
     {
         if (photonView.IsMine && Camera.main.TryGetComponent<CameraFollow>(out CameraFollow cam))
         {
             if (cam.onCameraShake != null)
             {
-                cam.onCameraShake.Invoke(0.65f);
+                cam.onCameraShake.Invoke(0.5f);
             }
         }
 
-        base.GetAOE(inDamage, fromPos, distance);
+        base.RPCGetAOE(inDamage, fromPos, distance);
     }
 
     public override void SetDead()
