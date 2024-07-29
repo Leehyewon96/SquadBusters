@@ -44,7 +44,7 @@ public class Golem : CharacterNonPlayer
         animator.SetBool(AnimLocalize.contactEnemy, true);
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(AnimLocalize.attack));
         yield return new WaitForSeconds(0.6f);
-        AOE aoe = GameManager.Instance.aoeManager.GetAOE(transform.position + transform.forward.normalized * 2f, AOEType.Yellow);
+        AOE aoe = GameManager.Instance.aoeManager.GetAOE(transform.position + transform.forward.normalized * 2f, AOEType.Yellow, 1f);
         animator.SetBool(AnimLocalize.contactEnemy, false);
 
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(AnimLocalize.idle));

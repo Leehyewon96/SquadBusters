@@ -16,7 +16,7 @@ public class AOEManager : MonoBehaviour
 {
     private List<AOE> aoes = new List<AOE>();
 
-    public AOE GetAOE(Vector3 pos, AOEType aoeType)
+    public AOE GetAOE(Vector3 pos, AOEType aoeType, float radius)
     {
         AOE aoe = null;
         if (aoes.Count > 0)
@@ -34,6 +34,7 @@ public class AOEManager : MonoBehaviour
         }
 
         aoe.gameObject.transform.position = pos;
+        aoe.transform.localScale = Vector3.one * radius;
         aoe.SetActive(true);
 
         return aoe;

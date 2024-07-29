@@ -35,6 +35,7 @@ public class Stone : Projectile
     public virtual void Shot(Vector3 startPos, Vector3 destination, float shotTime)
     {
         //포물선 낙하 구현
+        destination.y = 2.1f;
         Vector3 midPos = startPos + (destination - startPos) * 0.5f;
         midPos.y = startPos.y + 1f;
         Vector3[] path = { startPos, midPos, destination };
@@ -44,6 +45,7 @@ public class Stone : Projectile
             if (gameObject.activeSelf)
             {
                 isThrowed = false;
+                GameManager.Instance.aoeManager.GetAOE(transform.position, AOEType.Yellow, 0.5f);
                 SetActive(false);
             }
         });
