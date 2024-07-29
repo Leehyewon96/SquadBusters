@@ -12,6 +12,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
     protected Movement3D movement3D = null;
     protected float commonSpeed = 7.5f;
     protected CharacterController characterController = null;
+    Vector3 pos;
 
     [SerializeField] protected ParticleSystem blueCircleEffect = null;
     [SerializeField] protected ParticleSystem redCircleEffect = null;
@@ -51,7 +52,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
             photonView.RPC("UpdateGemCnt", RpcTarget.AllBuffered, attackCircleStat.GetGem());
         }
     }
-
+    
     protected virtual void Update()
     {
         if (GameManager.Instance.endGame)
@@ -66,17 +67,21 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
         SetCircleColor(CheckInput());
 
+        pos = moveObj.transform.position;
+        pos.y = 2.1f;
+
         if (CheckInput())
         {
             Move();
-            transform.position = moveObj.transform.position;
+            transform.position = pos;
         }
+
         foreach (var owner in owners)
         {
             if(owner.gameObject.activeSelf)
             {
                 //owner.SetDestination(moveObj.transform.position);
-                owner.SetDestinationPos(moveObj.transform.position);
+                owner.SetDestinationPos(pos);
             }            
         }
     }
@@ -317,14 +322,17 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
     public void DoItemSkill(ItemType itemType)
     {
         Projectile projectile = null;
+        Vector3 pos = transform.position;
         switch (itemType)
         {
             case ItemType.Bomb:
-                projectile = GameManager.Instance.projectileManager.GetProjectile(transform.position, ProjectileType.Bomb);
+                pos.y = 2.1f;
+                projectile = GameManager.Instance.projectileManager.GetProjectile(pos, ProjectileType.Bomb);
                 Bomb bomb = projectile.gameObject.GetComponent<Bomb>();
                 bomb.Explode(2f);
                 break;
             case ItemType.Cannon:
+                pos.y = 2.1f;
                 projectile = GameManager.Instance.projectileManager.GetProjectile(transform.position, ProjectileType.Cannon);
                 Cannon cannon = projectile.gameObject.GetComponent<Cannon>();
                 StartCoroutine(CoDisableCannon(cannon.lifeTime, cannon));

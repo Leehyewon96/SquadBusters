@@ -9,6 +9,15 @@ public class TreasureBoxItem : Item
         type = ItemType.TreasureBox;
     }
 
+    protected virtual void OnDisable()
+    {
+        if (onUndetectedPlayerAttack != null)
+        {
+            onUndetectedPlayerAttack.Invoke();
+            onUndetectedPlayerAttack = null;
+        }
+    }
+
     protected override void OnTriggerEnter(Collider other)
     {
         if (isPicked)

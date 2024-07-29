@@ -7,6 +7,7 @@ public class ItemSpawner : Spawner
     protected override void Awake()
     {
         base.Awake();
+        repeatInterval = 20f;
         SetPath($"Prefabs/Item/{itemType.ToString()}");
     }
 }

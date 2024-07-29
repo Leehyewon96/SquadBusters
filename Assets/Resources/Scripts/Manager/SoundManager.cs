@@ -17,6 +17,7 @@ public enum SoundEffectType
     Stun,
     Slash,
     Punch,
+    Run,
 
     End,
 }

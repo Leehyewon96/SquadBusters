@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    protected float repeatInterval = 5f;
+    protected float repeatInterval = 10f;
     protected string path = null;
     protected GameObject spawnObject = null;
     protected PhotonView photonView = null;

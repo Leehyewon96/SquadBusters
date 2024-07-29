@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     public bool endGame { get; set; } = false;
 
     public int treasureBoxCost { get; private set; } = 0;
-    private int playTime = 240;
+    private int playTime = 360;
 
     public string userName = "ÇÁ·ç´Ï";
 

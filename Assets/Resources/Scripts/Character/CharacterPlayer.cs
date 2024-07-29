@@ -121,7 +121,16 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         //모바일에서 터치로 변경
         if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
         {
-            GameManager.Instance.soundManager.Play(SoundEffectType.Walk);
+            if(movement3D.moveSpeed == 7.5f)
+            {
+                GameManager.Instance.soundManager.Stop(SoundEffectType.Run);
+                GameManager.Instance.soundManager.Play(SoundEffectType.Walk);
+            }
+            else
+            {
+                GameManager.Instance.soundManager.Stop(SoundEffectType.Walk);
+                GameManager.Instance.soundManager.Play(SoundEffectType.Run);
+            }
             characterController.enabled = true;
             ResetPath();
             navMeshAgent.enabled = false;

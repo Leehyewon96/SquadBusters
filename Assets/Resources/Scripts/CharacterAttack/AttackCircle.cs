@@ -92,9 +92,12 @@ public class AttackCircle : MonoBehaviour
 
     private void SetDead()
     {
-        GameManager.Instance.itemManager.ShowItem(attackCircleStat.GetCoin(), transform.position, ItemType.Coin);
-        GameManager.Instance.itemManager.ShowItem(attackCircleStat.GetGem(), transform.position, ItemType.Gem);
-
+        if(PhotonNetwork.IsMasterClient)
+        {
+            GameManager.Instance.itemManager.ShowItem(attackCircleStat.GetCoin(), transform.position, ItemType.Coin);
+            GameManager.Instance.itemManager.ShowItem(attackCircleStat.GetGem(), transform.position, ItemType.Gem);
+        }
+        
         UpdateIsUsed(false);
         SetActive(false);
 

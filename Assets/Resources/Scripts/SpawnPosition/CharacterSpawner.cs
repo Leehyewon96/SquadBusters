@@ -8,7 +8,8 @@ public class CharacterSpawner : Spawner
     protected override void Awake()
     {
         base.Awake();
-        if(characterType < CharacterType.Eggy)
+        repeatInterval = 10f;
+        if (characterType < CharacterType.Eggy)
         {
             SetPath($"Prefabs/Character/PlayerAttackCircle");
         }
