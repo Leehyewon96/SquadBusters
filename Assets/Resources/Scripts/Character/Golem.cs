@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class Golem : CharacterNonPlayer
 {
-    protected override void MoveToEnemy()
+    protected override void MoveToEnemy(GameObject target)
     {
         if (characterState == CharacterState.Attack)
         {
             return;
         }
 
-        GameObject target = GetTarget();
         if (target == gameObject)
         {
             return;

@@ -3,6 +3,7 @@ using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
 
 public enum CharacterType
 {
@@ -61,8 +62,9 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     protected List<GameObject> DetectedEnemies = new List<GameObject>();
     [SerializeField] protected CharacterType characterType = CharacterType.ElPrimo;
-    [SerializeField] protected GameObject hpBarOrigin = null;
-    [SerializeField] public GameObject attackCircleOrigin = null;
+    [SerializeField] protected GameObject hpBarOrigin;
+    [SerializeField] public GameObject attackCircleOrigin;
+    protected TrainingManager trainingManager;
 
     protected PhotonView photonView = null;
     protected Vector3 destinationPos;
@@ -80,6 +82,7 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         characterController = GetComponent<CharacterController>();
         hpBar = GetComponentInChildren<HpBar>();
         photonView = GetComponent<PhotonView>();
+        trainingManager = GetComponent<TrainingManager>();
         Init();
     }
 
@@ -108,6 +111,8 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
         characterStat.onCurrentHpChanged -= hpBar.UpdateCurrentHp;
         characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
+        characterStat.onCurrentHpZero -= delegate { trainingManager?.OnSquadWipedOut(); };
+        characterStat.onCurrentHpZero += delegate { trainingManager?.OnSquadWipedOut(); };
         characterStat.onCurrentHpZero -= SetDead;
         characterStat.onCurrentHpZero += SetDead;
 
@@ -168,6 +173,8 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         {
             if(photonView.IsMine)
             {
+                Debug.Log($"[사망] {gameObject.name}");
+                trainingManager.OnKillMonster();
                 if (deadAction != null)
                 {
                     deadAction.Invoke(this);
@@ -265,11 +272,49 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         return gameObject;
     }
 
-    protected virtual void MoveToEnemy()
+    public virtual void AIAction(int moveAction)
+    {
+        float x = 0;
+        float z = 0;
+
+        switch(moveAction)
+        {
+            case 0: // forward 이동
+                x = 0;
+                z = 1;
+                break;
+            case 1: // back 이동
+                x = 0;
+                z = -1;
+                break;
+            case 2: // right 이동
+                x = 1;
+                z = 0;
+                break;
+            case 3: // left 이동
+                x = -1;
+                z = 0;
+                break;
+            case 4: // attack
+                Attack(trainingManager.GetNearestEnemy());
+                return;
+
+            default:
+                break;
+        }
+        navMeshAgent.enabled = false;
+        Move(x, z);
+    }
+
+    protected virtual void Move(float x, float z)
+    {
+        movement3D.Move(x, z);
+    }
+
+    protected virtual void MoveToEnemy(GameObject target)
     {
         animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
 
-        GameObject target = GetTarget();
         if (target == gameObject)
         {
             StopAllCoroutines();
@@ -296,7 +341,13 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     protected virtual void Attack(GameObject target)
     {
+        if (target == null) return;
         navMeshAgent.enabled = false;
+    }
+
+    protected virtual void OnTargetDead(GameObject target)
+    {
+        trainingManager.OnEnemyKill();
     }
 
     protected virtual void ForwardToEnemy(GameObject target, TweenCallback action = null)

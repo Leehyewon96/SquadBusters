@@ -94,7 +94,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
     {
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.IsVisible = true;
-        roomOptions.MaxPlayers = 3;
+        roomOptions.MaxPlayers = 1;
 
         PhotonNetwork.CreateRoom(null, roomOptions);
     }
@@ -120,6 +120,11 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
         {
             lobbyLoadingText.SetText("게임 발견!");
+            //테스트
+            if (PhotonNetwork.IsMasterClient)
+            {
+                StartCoroutine(CoStartGame());
+            }
         }
         //lobbyLoadingUI.SetActive(true);
 

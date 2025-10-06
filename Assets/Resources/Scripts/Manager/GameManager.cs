@@ -20,12 +20,14 @@ public class GameManager : MonoBehaviour
     public bool endGame { get; set; } = false;
 
     public int treasureBoxCost { get; private set; } = 0;
-    private int playTime = 360;
+    private int playTime = 3600;
 
     public string userName = "ÇÁ·ç´Ï";
 
     private List<PlayerAttackCircleSpawnPoint> playerSpawnPoints = new List<PlayerAttackCircleSpawnPoint>();
     Dictionary<string, int> rankDic = new Dictionary<string, int>();
+
+    [HideInInspector] public List<GameObject> EnemiesInFullRange = new List<GameObject>();
 
     public static GameManager Instance
     {

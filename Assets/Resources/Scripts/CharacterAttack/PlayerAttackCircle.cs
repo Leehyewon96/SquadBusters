@@ -5,6 +5,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using static CharacterPlayer;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttackCircleItemInterface, IPlayerAttackCircleProjectileInterface
 {
@@ -75,15 +76,19 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
             Move();
             transform.position = pos;
         }
-
-        foreach (var owner in owners)
+        else
         {
-            if(owner.gameObject.activeSelf)
-            {
-                //owner.SetDestination(moveObj.transform.position);
-                owner.SetDestinationPos(pos);
-            }            
+            transform.position = owners.Count == 0 ? pos :  owners.FirstOrDefault().transform.position;
         }
+
+        //foreach (var owner in owners)
+        //{
+        //    if(owner.gameObject.activeSelf)
+        //    {
+        //        //owner.SetDestination(moveObj.transform.position);
+        //        owner.SetDestinationPos(pos);
+        //    }            
+        //}
     }
 
     [PunRPC]

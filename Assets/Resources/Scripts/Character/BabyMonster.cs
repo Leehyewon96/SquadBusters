@@ -13,7 +13,7 @@ public class BabyMonster : CharacterNonPlayer
     protected float attackIntervalAngle = 45f;
     protected float stunTime = 3.233f;
 
-    protected override void MoveToEnemy()
+    protected override void MoveToEnemy(GameObject target)
     {
         if (characterState == CharacterState.Attack)
         {
@@ -22,7 +22,6 @@ public class BabyMonster : CharacterNonPlayer
 
         characterState = CharacterState.Attack;
 
-        GameObject target = GetTarget();
         Vector3 dirVec = Vector3.zero;
         if (target == gameObject)
         {

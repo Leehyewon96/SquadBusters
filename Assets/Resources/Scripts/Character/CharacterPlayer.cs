@@ -68,30 +68,25 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             //DetectedEnemies.Clear();
             animator.SetBool(AnimLocalize.contactEnemy, false);
 
-            Move();
+            float x = Input.GetAxis("Horizontal");
+            float z = Input.GetAxis("Vertical");
+            Move(x, z);
             //animator.SetFloat(AnimLocalize.moveSpeed, characterController.velocity.magnitude);
         }
-        else
+        else // 플레이어 조작없으면 AI 동작
         {
             //animator.SetFloat(AnimLocalize.moveSpeed, 0);
-            MoveToEnemy();
+            //GameObject target = GetTarget();
+            //MoveToEnemy(target);
         }
     }
 
-    protected virtual void Move()
-    {
-        float x = Input.GetAxis("Horizontal");
-        float z = Input.GetAxis("Vertical");
-
-        movement3D.Move(x, z);
-    }
-
-    protected override void MoveToEnemy()
+    protected override void MoveToEnemy(GameObject target)
     {
         //animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
 
-        GameObject target = GetTarget();
-        if (target == gameObject)
+        
+        if (target == gameObject || target == null)
         {
             StopAllCoroutines();
             animator.SetBool(AnimLocalize.contactEnemy, false);
@@ -139,16 +134,18 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         }
 
         GameManager.Instance.soundManager.Stop(SoundEffectType.Walk);
-        characterController.enabled = false;
-        navMeshAgent.enabled = true;
+        //characterController.enabled = false;
+        //navMeshAgent.enabled = true;
         animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
         return false;
     }
 
     protected override void Attack(GameObject target)
     {
+        if (target == null) return;
         base.Attack(target);
-        StartCoroutine(CoAttack(target));
+        //StartCoroutine(CoAttack(target));
+        AttackTarget(target);
         isAttacking = true;
     }
 
@@ -182,6 +179,9 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected virtual bool AttackTarget(GameObject target)
     {
+        var distance = Vector3.Distance(gameObject.transform.position, target.transform.position);
+        if (distance > 12f) return false;
+
         if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
         {
             photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)attackEffectType, transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
@@ -204,8 +204,9 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         GameManager.Instance.effectManager.Play((EffectType)type, pos, rot);
     }
 
-    protected virtual void OnTargetDead(GameObject target)
+    protected override void OnTargetDead(GameObject target)
     {
+        base.OnTargetDead(target);
         GameManager.Instance.soundManager.Play(SoundEffectType.Kill);
         DetectedEnemies.Remove(target);
         animator.SetBool(AnimLocalize.contactEnemy, false);

@@ -76,11 +76,10 @@ public class ElPrimo : CharacterPlayer
         SetCharacterState(CharacterState.Idle);
     }
 
-    protected override void MoveToEnemy()
+    protected override void MoveToEnemy(GameObject target)
     {
         //animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
 
-        GameObject target = GetTarget();
         if (target == gameObject)
         {
             StopAllCoroutines();

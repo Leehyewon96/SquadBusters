@@ -30,7 +30,8 @@ public class CharacterNonPlayer : CharacterBase
             return;
         }
 
-        MoveToEnemy();
+        var target = GetTarget();
+        MoveToEnemy(target);
     }
 
     protected override void Attack(GameObject target)

@@ -45,7 +45,9 @@ public class Spawner : MonoBehaviour
             photonView.RPC("RPCEffect", RpcTarget.AllBuffered);
 
             GameObject obj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
-            
+
+            GameManager.Instance.EnemiesInFullRange.Add(obj);
+
             return spawnObject = obj;
         }
 

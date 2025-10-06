@@ -12,9 +12,8 @@ public class Boller : CharacterNonPlayer
         characterType = CharacterType.Boller;
     }
 
-    protected override void MoveToEnemy()
+    protected override void MoveToEnemy(GameObject target)
     {
-        GameObject target = GetTarget();
         if (target == gameObject)
         {
             return;

@@ -17,9 +17,8 @@ public class Colt : CharacterPlayer
         }
     }
 
-    protected override void MoveToEnemy()
+    protected override void MoveToEnemy(GameObject target)
     {
-        GameObject target = GetTarget();
         if(target == gameObject)
         {
             animator.SetBool(AnimLocalize.contactEnemy, false);
