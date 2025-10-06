@@ -70,3 +70,33 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Python 가상환경 및 캐시 파일 #
+/venv/
+/ml_env/
+/ml_final_env/
+/SquadBusters/
+__pycache__/
+*.pyc
+
+# ML-Agents 훈련 결과물 #
+/results/
+*.onnx
+
+# 기타 #
+.DS_Store
+Thumbs.db
+
+# Visual Studio / Rider 등 IDE 관련 파일 #
+*.csproj
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+
+# ML-Agents 자동 생성 타이머 로그
+**/[Aa]ssets/**/ML-Agents/Timers/
