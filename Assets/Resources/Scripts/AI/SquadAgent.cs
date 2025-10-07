@@ -1,8 +1,6 @@
-using Unity.Barracuda;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
-using UnityEditor.Search;
 using UnityEngine;
 
 public class SquadAgent : Agent
@@ -78,10 +76,5 @@ public class SquadAgent : Agent
     {
         int moveAction = actions.DiscreteActions[0];
         character.AIAction(moveAction);
-    }
-
-    public void SetNearestTarget()
-    {
-        character.SetDestinationPos(trainingManager.GetNearestEnemyPosition());
     }
 }

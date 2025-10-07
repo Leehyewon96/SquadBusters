@@ -65,6 +65,12 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             StopAllCoroutines();
             //ResetPath();
             isAttacking = false;
+            if (coroutineAttack != null)
+            {
+                StopCoroutine(coroutineAttack);
+                coroutineAttack = null;
+            }
+                
             //DetectedEnemies.Clear();
             animator.SetBool(AnimLocalize.contactEnemy, false);
 
@@ -111,6 +117,12 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         }
     }
 
+    public override void AIActionByJob(int moveAction)
+    {
+        if (CheckInput()) return;
+        base.AIActionByJob(moveAction);
+    }
+
     protected virtual bool CheckInput()
     {
         //모바일에서 터치로 변경
@@ -134,8 +146,8 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         }
 
         GameManager.Instance.soundManager.Stop(SoundEffectType.Walk);
-        //characterController.enabled = false;
-        //navMeshAgent.enabled = true;
+        characterController.enabled = false;
+        navMeshAgent.enabled = true;
         animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
         return false;
     }
@@ -144,12 +156,12 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     {
         if (target == null) return;
         base.Attack(target);
-        //StartCoroutine(CoAttack(target));
-        AttackTarget(target);
-        isAttacking = true;
+        
+        //AttackTarget(target);
+        //isAttacking = true;
     }
 
-    protected virtual IEnumerator CoAttack(GameObject target)
+    protected override IEnumerator CoAttack(GameObject target)
     {
         TweenCallback callBack = null;
         callBack = () =>
@@ -179,8 +191,14 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected virtual bool AttackTarget(GameObject target)
     {
+        isAttacking = true;
         var distance = Vector3.Distance(gameObject.transform.position, target.transform.position);
-        if (distance > 12f) return false;
+        if (distance > 12f)
+        {
+            isAttacking = false;
+            MoveToEnemy(target);
+            return false;
+        }
 
         if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
         {

@@ -39,9 +39,9 @@ public class Colt : CharacterPlayer
         isAttacking = true;
         TweenCallback callback = () =>
         {
-            if(gameObject.activeSelf)
+            if (gameObject.activeSelf)
             {
-                StartCoroutine(CoAttack(target));
+                coroutineAttack = StartCoroutine(CoAttack(target));
             }
         };
         ForwardToEnemy(target, callback);
@@ -66,5 +66,13 @@ public class Colt : CharacterPlayer
 
         animator.SetBool(AnimLocalize.contactEnemy, false);
         isAttacking = false;
+
+        if(target.TryGetComponent<CharacterBase>(out CharacterBase characterBase))
+        {
+            if (characterBase.isDead)
+            {
+                OnTargetDead(target);
+            }
+        }
     }
 }

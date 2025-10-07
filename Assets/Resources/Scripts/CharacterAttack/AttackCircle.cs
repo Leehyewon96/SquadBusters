@@ -34,6 +34,9 @@ public class AttackCircle : MonoBehaviour
 
     private string postFixLayer = "AttackCircle";
 
+    public List<CharacterBase> GetOwners => owners;
+    public List<GameObject> GetDetectedEnemies { get { return DetectedEnemies; } set { DetectedEnemies = value; } } 
+
     protected virtual void Awake()
     {
         sphereCollider = GetComponent<SphereCollider>();
@@ -132,6 +135,18 @@ public class AttackCircle : MonoBehaviour
                 return;
             }
             onDetectEnemy.Invoke(character);
+            if(!DetectedEnemies.Contains(character.gameObject))
+            {
+                DetectedEnemies.Add(character.gameObject);
+            }
+        }
+
+        if (other.gameObject.TryGetComponent<MoneyTree>(out MoneyTree moneyTree))
+        {
+            if (!DetectedEnemies.Contains(moneyTree.gameObject))
+            {
+                DetectedEnemies.Add(moneyTree.gameObject);
+            }
         }
     }
 
@@ -144,6 +159,18 @@ public class AttackCircle : MonoBehaviour
                 return;
             }
             onUnDetectEnemy.Invoke(character);
+            if (DetectedEnemies.Contains(character.gameObject))
+            {
+                DetectedEnemies.Remove(character.gameObject);
+            }
+        }
+
+        if (other.gameObject.TryGetComponent<MoneyTree>(out MoneyTree moneyTree))
+        {
+            if (DetectedEnemies.Contains(moneyTree.gameObject))
+            {
+                DetectedEnemies.Remove(moneyTree.gameObject);
+            }
         }
     }
 }

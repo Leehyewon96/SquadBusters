@@ -76,19 +76,15 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
             Move();
             transform.position = pos;
         }
-        else
-        {
-            transform.position = owners.Count == 0 ? pos :  owners.FirstOrDefault().transform.position;
-        }
 
-        //foreach (var owner in owners)
-        //{
-        //    if(owner.gameObject.activeSelf)
-        //    {
-        //        //owner.SetDestination(moveObj.transform.position);
-        //        owner.SetDestinationPos(pos);
-        //    }            
-        //}
+        foreach (var owner in owners)
+        {
+            if(owner.gameObject.activeSelf)
+            {
+                //owner.SetDestination(moveObj.transform.position);
+                owner.SetDestinationPos(pos);
+            }            
+        }
     }
 
     [PunRPC]

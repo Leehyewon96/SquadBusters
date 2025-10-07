@@ -7,15 +7,15 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    private static GameManager instance = null;
-    [HideInInspector] public ItemManager itemManager = null;
-    [HideInInspector] public EffectManager effectManager = null;
-    [HideInInspector] public UIManager uiManager = null;
-    [HideInInspector] public ProjectileManager projectileManager = null;
-    [HideInInspector] public AOEManager aoeManager = null;
-    [HideInInspector] public SoundManager soundManager = null;
-    private PhotonView photonView = null;
-    public GameObject attackCircle = null;
+    private static GameManager instance;
+    [HideInInspector] public ItemManager itemManager;
+    [HideInInspector] public EffectManager effectManager;
+    [HideInInspector] public UIManager uiManager;
+    [HideInInspector] public ProjectileManager projectileManager;
+    [HideInInspector] public AOEManager aoeManager;
+    [HideInInspector] public SoundManager soundManager;
+    private PhotonView photonView;
+    public GameObject attackCircle;
     public bool isConnect { get; set; } = false;
     public bool endGame { get; set; } = false;
 
@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     Dictionary<string, int> rankDic = new Dictionary<string, int>();
 
     [HideInInspector] public List<GameObject> EnemiesInFullRange = new List<GameObject>();
+    [HideInInspector] public const int MAX_UNITS = 10;
 
     public static GameManager Instance
     {

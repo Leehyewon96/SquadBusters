@@ -36,11 +36,11 @@ public class CharacterNonPlayer : CharacterBase
 
     protected override void Attack(GameObject target)
     {
+        if (target == null) return;
         base.Attack(target);
-        StartCoroutine(CoAttack(target));
     }
 
-    protected virtual IEnumerator CoAttack(GameObject target)
+    protected override IEnumerator CoAttack(GameObject target)
     {
         TweenCallback callBack = null;
         callBack = () =>

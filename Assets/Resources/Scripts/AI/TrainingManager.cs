@@ -1,10 +1,10 @@
 using System.Linq;
+using Unity.MLAgents;
 using UnityEngine;
 
 public class TrainingManager : MonoBehaviour
 {
-    [SerializeField] SquadAgent squadAgent;
-    [SerializeField] float reward = 0.1f;
+    [SerializeField] Agent agent;
 
     public Vector3 GetNearestEnemyPosition()
     {
@@ -23,23 +23,25 @@ public class TrainingManager : MonoBehaviour
 
     public GameObject GetNearestEnemy()
     {
-        return GameManager.Instance.EnemiesInFullRange.FirstOrDefault();
+        //return GameManager.Instance.EnemiesInFullRange.FirstOrDefault();
+        if(GameManager.Instance.attackCircle.TryGetComponent<AttackCircle>(out AttackCircle attackCircle))
+        {
+            attackCircle.GetDetectedEnemies = attackCircle.GetDetectedEnemies.OrderBy(e =>
+            Vector3.Distance(gameObject.transform.position, e.transform.position)).ToList();
+            return attackCircle.GetDetectedEnemies.FirstOrDefault();
+        }
+        return null;
     }
 
     public void OnEnemyKill()
     {
-        squadAgent.AddReward(reward);
+        agent.AddReward(RewardConstant.KillScore);
+        agent.EndEpisode();
     }
 
-    public void OnSquadWipedOut()
+    public void OnUnitDead()
     {
-        squadAgent.AddReward(-reward);
-        squadAgent.EndEpisode();
-    }
-
-    public void OnKillMonster()
-    {
-        squadAgent.AddReward(reward);
-        squadAgent.EndEpisode();
+        agent.AddReward(-RewardConstant.KillScore);
+        agent.EndEpisode();
     }
 }

@@ -80,7 +80,7 @@ public class ElPrimo : CharacterPlayer
     {
         //animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
 
-        if (target == gameObject)
+        if (target == gameObject || target == null)
         {
             StopAllCoroutines();
             animator.SetBool(AnimLocalize.contactEnemy, false);

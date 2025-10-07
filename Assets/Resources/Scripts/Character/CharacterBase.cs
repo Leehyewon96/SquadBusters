@@ -1,9 +1,9 @@
 using DG.Tweening;
 using Photon.Pun;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
 
 public enum CharacterType
 {
@@ -72,6 +72,8 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
     public delegate void DeadAction(CharacterBase characterBase);
     public DeadAction deadAction = null;
 
+    protected Coroutine coroutineAttack;
+
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
@@ -82,8 +84,17 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         characterController = GetComponent<CharacterController>();
         hpBar = GetComponentInChildren<HpBar>();
         photonView = GetComponent<PhotonView>();
-        trainingManager = GetComponent<TrainingManager>();
+        trainingManager = GameManager.Instance.attackCircle.GetComponent<TrainingManager>();
         Init();
+    }
+
+    protected virtual void OnDisable()
+    {
+        if(coroutineAttack != null)
+        {
+            StopCoroutine(coroutineAttack);
+            coroutineAttack = null;
+        }
     }
 
     protected virtual void Update()
@@ -111,8 +122,8 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
         characterStat.onCurrentHpChanged -= hpBar.UpdateCurrentHp;
         characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
-        characterStat.onCurrentHpZero -= delegate { trainingManager?.OnSquadWipedOut(); };
-        characterStat.onCurrentHpZero += delegate { trainingManager?.OnSquadWipedOut(); };
+        characterStat.onCurrentHpZero -= delegate { trainingManager?.OnUnitDead(); };
+        characterStat.onCurrentHpZero += delegate { trainingManager?.OnUnitDead(); };
         characterStat.onCurrentHpZero -= SetDead;
         characterStat.onCurrentHpZero += SetDead;
 
@@ -173,8 +184,6 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         {
             if(photonView.IsMine)
             {
-                Debug.Log($"[»ç¸Á] {gameObject.name}");
-                trainingManager.OnKillMonster();
                 if (deadAction != null)
                 {
                     deadAction.Invoke(this);
@@ -272,6 +281,33 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         return gameObject;
     }
 
+    public virtual void AIActionByJob(int moveAction)
+    {
+        if (trainingManager == null) return;
+        var target = trainingManager.GetNearestEnemy();
+        if (target == null && gameObject.activeSelf)
+        {
+            SetDestination(destinationPos);
+            return;
+        }
+
+        switch (characterType)
+        {
+            case CharacterType.ElPrimo:
+            case CharacterType.Colt:
+                if (target.TryGetComponent<CharacterBase>(out _) && !isAttacking)
+                    Attack(target);
+                break;
+            case CharacterType.Greg:
+                if(target.TryGetComponent<MoneyTree>(out _) && !isAttacking)
+                    Attack(target);
+                break;
+            default:
+                break;
+        }
+    }
+
+
     public virtual void AIAction(int moveAction)
     {
         float x = 0;
@@ -296,6 +332,7 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
                 z = 0;
                 break;
             case 4: // attack
+                if (trainingManager == null) return;
                 Attack(trainingManager.GetNearestEnemy());
                 return;
 
@@ -341,13 +378,33 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     protected virtual void Attack(GameObject target)
     {
-        if (target == null) return;
+        if (isAttacking) return;
+
         navMeshAgent.enabled = false;
+
+        if (coroutineAttack != null) return;
+        coroutineAttack = StartCoroutine(CoAttack(target));
+    }
+
+    protected virtual IEnumerator CoAttack(GameObject target) 
+    {
+        yield return null;
     }
 
     protected virtual void OnTargetDead(GameObject target)
     {
+        if (trainingManager == null) return;
         trainingManager.OnEnemyKill();
+
+        var enemies = GameManager.Instance.attackCircle.GetComponent<AttackCircle>().GetDetectedEnemies;
+        if(enemies.Contains(target))
+            GameManager.Instance.attackCircle.GetComponent<AttackCircle>().GetDetectedEnemies.Remove(target);
+
+        if(coroutineAttack != null)
+        {
+            StopCoroutine(coroutineAttack);
+            coroutineAttack = null;
+        }
     }
 
     protected virtual void ForwardToEnemy(GameObject target, TweenCallback action = null)
