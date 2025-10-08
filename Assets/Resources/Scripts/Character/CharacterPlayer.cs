@@ -192,13 +192,13 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     protected virtual bool AttackTarget(GameObject target)
     {
         isAttacking = true;
-        var distance = Vector3.Distance(gameObject.transform.position, target.transform.position);
-        if (distance > 12f)
-        {
-            isAttacking = false;
-            MoveToEnemy(target);
-            return false;
-        }
+        //var distance = Vector3.Distance(gameObject.transform.position, target.transform.position);
+        //if (distance > 12f)
+        //{
+        //    isAttacking = false;
+        //    MoveToEnemy(target);
+        //    return false;
+        //}
 
         if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
         {

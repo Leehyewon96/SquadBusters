@@ -247,7 +247,7 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     public virtual void ResetPath()
     {
-        if (navMeshAgent == null || !navMeshAgent.enabled)
+        if (navMeshAgent == null || !navMeshAgent.enabled || !gameObject.activeSelf)
         {
             return;
         }
@@ -285,7 +285,8 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
     {
         if (trainingManager == null) return;
         var target = trainingManager.GetNearestEnemy();
-        if (target == null && gameObject.activeSelf)
+        if (gameObject.activeSelf) return;
+        if (target == null)
         {
             SetDestination(destinationPos);
             return;
@@ -296,11 +297,13 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
             case CharacterType.ElPrimo:
             case CharacterType.Colt:
                 if (target.TryGetComponent<CharacterBase>(out _) && !isAttacking)
-                    Attack(target);
+                    MoveToEnemy(target);
+                    //Attack(target);
                 break;
             case CharacterType.Greg:
                 if(target.TryGetComponent<MoneyTree>(out _) && !isAttacking)
-                    Attack(target);
+                    MoveToEnemy(target);
+                    //Attack(target);
                 break;
             default:
                 break;
