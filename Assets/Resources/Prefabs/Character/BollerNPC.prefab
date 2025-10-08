@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3670796372836369369}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint13
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,7 +41,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6045206857677863723}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint11
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1677198709948598521}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint50
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -105,7 +105,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5939169923997105830}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint35
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -137,7 +137,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5845838414887157368}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint33
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +169,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6157094797539304730}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint30
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -201,7 +201,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5385827672357647589}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint49
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -233,7 +233,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7511391677607314578}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint22
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -265,7 +265,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9002613056753309526}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint52
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -297,7 +297,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7312316699103893022}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint31
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,7 +329,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4519481303887695661}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint38_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -360,7 +360,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4575550277399637621}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint24.004_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -400,7 +400,7 @@ GameObject:
   - component: {fileID: 3538114109485045883}
   - component: {fileID: 7997676041007539776}
   - component: {fileID: 4898589252386227074}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BollerNPC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -599,7 +599,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3568934802724248025}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint41
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -631,7 +631,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7585360235958747827}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint43
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -663,7 +663,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1277973970041547702}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint24.003_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -694,7 +694,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7499767293711737375}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint15
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -726,7 +726,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8512435377995837168}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint44
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -758,7 +758,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5885374230603068335}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint38
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -790,7 +790,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8603754664710962917}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint46
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -822,7 +822,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4831266674712617559}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint24
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -854,7 +854,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8169368203421916637}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint18
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -886,7 +886,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8049861933591633948}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -920,7 +920,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8148227387302439539}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint24.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -952,7 +952,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 307792634633299691}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint10_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -983,7 +983,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3760287982765388924}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint23.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1015,7 +1015,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5700768921178697395}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint23.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1047,7 +1047,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3780039842553689658}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint29
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1079,7 +1079,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6100281623220248638}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint26
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1111,7 +1111,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 246006267943519491}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint51
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1143,7 +1143,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7606783466858958457}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1175,7 +1175,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7914632370131952624}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint40
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1207,7 +1207,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3140341141683323077}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint12
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1239,7 +1239,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4181835239151390246}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint23.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1271,7 +1271,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3826570807662652235}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint23
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1303,7 +1303,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7971711382969846228}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint27
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1335,7 +1335,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9107213993972717069}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint37
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1367,7 +1367,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4644851700508055513}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint24_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1398,7 +1398,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6453239619253352627}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint47
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1430,7 +1430,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4069164360905690364}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint32
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1466,7 +1466,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3230935581253738138}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint20
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1500,7 +1500,7 @@ GameObject:
   - component: {fileID: 6944736595556349178}
   - component: {fileID: 3118575728516335305}
   - component: {fileID: 3150106107059462518}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: StonePos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1570,7 +1570,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5414492065340085612}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1604,7 +1604,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7769570860510987205}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint36
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1637,7 +1637,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3902659254948162237}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint24.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1669,7 +1669,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6997538908232795003}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint16_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1700,7 +1700,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1590672899598425394}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint42
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1732,7 +1732,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8893322974138376705}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint52_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1763,7 +1763,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1987485110965822535}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint21
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1799,7 +1799,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1680983588395173413}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint24.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1831,7 +1831,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2785461676890997686}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint10
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1863,7 +1863,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2785576726828912738}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint28
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1895,7 +1895,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2863208385971640467}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint44_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1926,7 +1926,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3750959825969927883}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1958,7 +1958,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4766184052408399510}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint16
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1990,7 +1990,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3132594045057992798}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2022,7 +2022,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5059839578585331516}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint41_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2053,7 +2053,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7524834540257374475}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint19
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2085,7 +2085,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7339178442451131213}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint39
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2117,7 +2117,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4169608142802069762}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint8_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2148,7 +2148,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3288971591882388673}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint25
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2180,7 +2180,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 987949592500938217}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2212,7 +2212,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8430433093929853424}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint11_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2243,7 +2243,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5820086917881572052}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2275,7 +2275,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9027241625957643611}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint9
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2308,7 +2308,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4570754393484866543}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint14
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2340,7 +2340,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4905380432521329317}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint24.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2372,7 +2372,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4464069272703040304}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint45
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2404,7 +2404,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4648455247481959092}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint24.001_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2435,7 +2435,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8441965637322762808}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint34
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2467,7 +2467,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 89796430506745060}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint48
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2499,7 +2499,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8628190652422867399}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint23.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2531,7 +2531,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8195043337250294308}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint35_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2562,7 +2562,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5284459297457539844}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint24.002_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2593,7 +2593,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7428305607697410118}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Armature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2625,7 +2625,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7055876980940140502}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint47_end
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2657,7 +2657,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7727277194626032757}
   - component: {fileID: 2710901505099123620}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Hugo
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2802,7 +2802,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3719444700220745161}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: hugo:joint6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2833,6 +2833,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1992404976406853848}
     m_Modifications:
+    - target: {fileID: 5728406523148559510, guid: 934285aa9cdebd84e9ff461298f5d332, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5728406523161302434, guid: 934285aa9cdebd84e9ff461298f5d332, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5728406523475922909, guid: 934285aa9cdebd84e9ff461298f5d332, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 5728406523510120656, guid: 934285aa9cdebd84e9ff461298f5d332, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2924,6 +2936,10 @@ PrefabInstance:
     - target: {fileID: 5728406523510120668, guid: 934285aa9cdebd84e9ff461298f5d332, type: 3}
       propertyPath: m_Name
       value: NPCHpBarCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 5728406523510120668, guid: 934285aa9cdebd84e9ff461298f5d332, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 934285aa9cdebd84e9ff461298f5d332, type: 3}
