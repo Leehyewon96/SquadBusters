@@ -1,5 +1,4 @@
-using System.Collections.Generic;
-using Unity.MLAgents;
+ï»¿using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
@@ -17,37 +16,63 @@ public class CircleAgent : Agent
 
     private float maxDistance = 10f;
 
-    private void Awake()
-    {
-        
-    }
-
     public override void CollectObservations(VectorSensor sensor)
     {
+        if (GameManager.Instance.attackCircle == null) return;
+        if (!GameManager.Instance.attackCircle.TryGetComponent<PlayerAttackCircle>(out PlayerAttackCircle attackCircle)) return;
+
+        // ìœ ë‹› ì •ë³´
         for (int i = 0; i < GameManager.MAX_UNITS; i++)
         {
-            if (GameManager.Instance.attackCircle == null) return;
-            if (!GameManager.Instance.attackCircle.TryGetComponent<PlayerAttackCircle>(out PlayerAttackCircle attackCircle)) return;
             var units = attackCircle.GetOwners;
 
             if (i < units.Count)
             {
                 var unit = units[i];
-                sensor.AddObservation(1f); // ½½·Ô È°¼ºÈ­ ¿©ºÎ
-                sensor.AddObservation((int)unit.GetCharacterType()); // À¯´Ö Á¾·ù
-                sensor.AddObservation((int)unit.GetCharacterLevel()); // À¯´Ö ·¹º§
+                sensor.AddObservation(1f); // ìŠ¬ë¡¯ í™œì„±í™” ì—¬ë¶€
+                sensor.AddObservation((int)unit.GetCharacterType()); // ìœ ë‹› ì¢…ë¥˜
+                sensor.AddObservation((int)unit.GetCharacterLevel()); // ìœ ë‹› ë ˆë²¨
 
                 if (unit.TryGetComponent<CharacterStat>(out CharacterStat characterStat))
                 {
-                    sensor.AddObservation(characterStat.GetCurrentHp() / characterStat.GetMaxHp()); //ÇöÀç Ã¼·Â (Á¤±ÔÈ­)
+                    sensor.AddObservation(characterStat.GetCurrentHp() / characterStat.GetMaxHp()); //í˜„ì¬ ì²´ë ¥ (ì •ê·œí™”)
                 }
             }
             else
             {
-                sensor.AddObservation(0f); // ½½·Ô È°¼ºÈ­ ¿©ºÎ
-                sensor.AddObservation(0f); // À¯´Ö Á¾·ù
-                sensor.AddObservation(0f); // À¯´Ö ·¹º§
-                sensor.AddObservation(0f); //ÇöÀç Ã¼·Â (Á¤±ÔÈ­)
+                sensor.AddObservation(0f); // ìŠ¬ë¡¯ í™œì„±í™” ì—¬ë¶€
+                sensor.AddObservation(0f); // ìœ ë‹› ì¢…ë¥˜
+                sensor.AddObservation(0f); // ìœ ë‹› ë ˆë²¨
+                sensor.AddObservation(0f); //í˜„ì¬ ì²´ë ¥ (ì •ê·œí™”)
+            }
+        }
+
+        //ì  ì •ë³´
+        for(int i = 0; i < GameManager.MAX_ENEMIES; i++)
+        {
+            var enemies = attackCircle.GetDetectedEnemies;
+
+            if (i < enemies.Count)
+            {
+                var enemy = enemies[i] != null ? enemies[i].GetComponent<CharacterBase>() : null;
+                if (enemy == null) return;
+
+                sensor.AddObservation(1f); // ìŠ¬ë¡¯ í™œì„±í™” ì—¬ë¶€
+                sensor.AddObservation(enemy.transform.position - gameObject.transform.position); // ì  ìºë¦­í„° ìƒëŒ€ìœ„ì¹˜
+                sensor.AddObservation((int)enemy.GetCharacterType()); // ì  ìºë¦­í„° ì¢…ë¥˜
+                sensor.AddObservation((int)enemy.GetCharacterLevel()); // ì  ìºë¦­í„° ë ˆë²¨
+
+                if (enemy.TryGetComponent<CharacterStat>(out CharacterStat characterStat))
+                {
+                    sensor.AddObservation(characterStat.GetCurrentHp() / characterStat.GetMaxHp()); //í˜„ì¬ ì²´ë ¥ (ì •ê·œí™”)
+                }
+            }
+            else
+            {
+                sensor.AddObservation(0f); // ìŠ¬ë¡¯ í™œì„±í™” ì—¬ë¶€
+                sensor.AddObservation(0f); // ì  ìºë¦­í„° ì¢…ë¥˜
+                sensor.AddObservation(0f); // ì  ìºë¦­í„° ë ˆë²¨
+                sensor.AddObservation(0f); //í˜„ì¬ ì²´ë ¥ (ì •ê·œí™”)
             }
         }
     }
