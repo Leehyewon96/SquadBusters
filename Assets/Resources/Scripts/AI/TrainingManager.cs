@@ -33,15 +33,27 @@ public class TrainingManager : MonoBehaviour
         return null;
     }
 
+    public GameObject GetWeakestEnemy()
+    {
+        if (GameManager.Instance.attackCircle.TryGetComponent<AttackCircle>(out AttackCircle attackCircle))
+        {
+            var enemies = attackCircle.GetDetectedEnemies.Where(e => e.TryGetComponent<CharacterStat>(out _))
+                .Select(e => e.GetComponent<CharacterStat>())
+                .OrderBy(e => e.GetCurrentHp()).ToList();
+            return attackCircle.GetDetectedEnemies.FirstOrDefault();
+        }
+        return null;
+    }
+
     public void OnEnemyKill()
     {
-        agent.AddReward(RewardConstant.KillScore);
+        agent.AddReward(RewardConstant.KillEnemyScore);
         agent.EndEpisode();
     }
 
     public void OnUnitDead()
     {
-        agent.AddReward(-RewardConstant.KillScore);
+        agent.AddReward(RewardConstant.DeadUnit);
         agent.EndEpisode();
     }
 }

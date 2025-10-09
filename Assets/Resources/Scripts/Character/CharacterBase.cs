@@ -234,12 +234,12 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     public virtual void SetDestination(Vector3 destination)
     {
-        if(navMeshAgent == null || !navMeshAgent.enabled)
+        if(navMeshAgent == null || !navMeshAgent.enabled || !navMeshAgent.isActiveAndEnabled)
         {
             return;
         }
 
-        navMeshAgent.SetDestination(destination);
+        navMeshAgent?.SetDestination(destination);
         navMeshAgent.isStopped = false;
         navMeshAgent.updatePosition = true;
         navMeshAgent.updateRotation = true;
@@ -281,11 +281,9 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         return gameObject;
     }
 
-    public virtual void AIActionByJob(int moveAction)
+    public virtual void AIActionByJob(GameObject target)
     {
-        if (trainingManager == null) return;
-        var target = trainingManager.GetNearestEnemy();
-        if (gameObject.activeSelf) return;
+        if (!gameObject.activeSelf) return;
         if (target == null)
         {
             SetDestination(destinationPos);

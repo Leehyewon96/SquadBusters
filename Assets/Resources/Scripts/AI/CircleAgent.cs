@@ -6,7 +6,10 @@ using UnityEngine;
 public static class RewardConstant
 {
     public const float CrashScore = -0.01f;
-    public const float KillScore = 0.1f;
+    public const float KillEnemyScore = 0.1f;
+    public const float DeadUnit = -0.1f;
+    public const float GetCoinScore = 0.01f;
+    public const float GetItemScore = 0.01f;
 }
 
 public class CircleAgent : Agent
@@ -98,11 +101,38 @@ public class CircleAgent : Agent
         if (!GameManager.Instance.attackCircle.TryGetComponent<PlayerAttackCircle>(out PlayerAttackCircle attackCircle)) return;
         var units = attackCircle.GetOwners;
 
-        int moveAction = actions.DiscreteActions[0];
+        int action = actions.DiscreteActions[0];
+        if (trainingManager == null) return;
+        GameObject target = null;
+        switch(action)
+        {
+            case 0:
+                target = trainingManager.GetNearestEnemy();
+                break;
+            case 1:
+                target = trainingManager.GetWeakestEnemy();
+                break;
+            default:
+                break;
+        }
+
         units.ForEach(e =>
         {
             if (e.TryGetComponent<CharacterBase>(out CharacterBase character))
-                character.AIActionByJob(moveAction);
+                character.AIActionByJob(target);
         });
+    }
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if(hit.gameObject.layer == LayerMask.NameToLayer("Item"))
+        {
+            AddReward(RewardConstant.GetItemScore);
+        }
+
+        if(hit.gameObject.layer == LayerMask.NameToLayer("Coin"))
+        {
+            AddReward(RewardConstant.GetCoinScore);
+        }
     }
 }

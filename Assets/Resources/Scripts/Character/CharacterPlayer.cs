@@ -117,10 +117,10 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         }
     }
 
-    public override void AIActionByJob(int moveAction)
+    public override void AIActionByJob(GameObject target)
     {
         if (CheckInput()) return;
-        base.AIActionByJob(moveAction);
+        base.AIActionByJob(target);
     }
 
     protected virtual bool CheckInput()

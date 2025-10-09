@@ -61,13 +61,19 @@ public class SquadAgent : Agent
         if (hit.gameObject.CompareTag("Wall"))
         {
             // 작은 음수 보상을 주어 벌점을 부여합니다.
-            AddReward(-0.01f);
+            AddReward(RewardConstant.CrashScore);
         }
 
         if (hit.gameObject.CompareTag("Coin"))
         {
             // 작은 음수 보상을 주어 벌점을 부여합니다.
-            AddReward(0.01f);
+            AddReward(RewardConstant.GetCoinScore);
+        }
+
+        if (hit.gameObject.CompareTag("Item"))
+        {
+            // 작은 음수 보상을 주어 벌점을 부여합니다.
+            AddReward(RewardConstant.GetItemScore);
         }
     }
 
