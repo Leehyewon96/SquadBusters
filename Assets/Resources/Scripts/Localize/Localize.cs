@@ -23,6 +23,6 @@ public class SceneLocalize
 {
     static public string startScene = "StartScene";
     static public string lobbyScene = "LobbyScene";
-    static public string gameScene = "GameScene";//TrainingGameScene
+    static public string gameScene = "TrainingGameScene"; //GameScene
 }
 

@@ -86,7 +86,7 @@ public class ElPrimo : CharacterPlayer
             animator.SetBool(AnimLocalize.contactEnemy, false);
             isAttacking = false;
             navMeshAgent.enabled = true;
-            SetDestination(destinationPos);
+            //SetDestination(destinationPos);
             return;
         }
 

@@ -30,7 +30,6 @@ public class Colt : CharacterPlayer
         {
             return;
         }
-
         Attack(target);
     }
 

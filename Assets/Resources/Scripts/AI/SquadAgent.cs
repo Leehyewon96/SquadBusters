@@ -6,73 +6,99 @@ using UnityEngine;
 public class SquadAgent : Agent
 {
     [SerializeField] string behaviourName;
-    [SerializeField] CharacterBase character;
-    [SerializeField] CharacterStat characterStat;
-    [SerializeField] TrainingManager trainingManager;
+    CharacterBase character;
+    CharacterStat characterStat;
+    TrainingManager trainingManager;
 
     private float maxDistance = 10f;
 
+    private void Awake()
+    {
+        character = GetComponent<CharacterBase>();
+        characterStat = GetComponent<CharacterStat>();
+        trainingManager = GetComponent<TrainingManager>();
+    }
+
     public override void CollectObservations(VectorSensor sensor)
     {
-        float[] rayDistances = new float[3];
-        Transform agentTransform = this.transform;
+        sensor.AddObservation(characterStat.GetCurrentHp() / characterStat.GetMaxHp()); // 체력
+        sensor.AddObservation(character.transform.position); // 위치
 
-        // 정면
-        if (Physics.Raycast(agentTransform.position, agentTransform.forward, out RaycastHit hit, maxDistance))
+        if (GameManager.Instance.attackCircle == null) return;
+        if (!GameManager.Instance.attackCircle.TryGetComponent<PlayerAttackCircle>(out PlayerAttackCircle attackCircle)) return;
+
+        //아군들의 정보 저장
+        for (int i = 0; i < GameManager.MAX_UNITS; i++)
         {
-            rayDistances[0] = hit.distance / maxDistance; // 0~1 사이 값으로 정규화
-        }
-        else
-        {
-            rayDistances[0] = 1.0f; // 아무것도 안 맞았으면 최대 거리
-        }
-        // 오른쪽
-        if (Physics.Raycast(agentTransform.position, agentTransform.right, out RaycastHit hitR, maxDistance))
-        {
-            rayDistances[1] = hitR.distance / maxDistance; // 0~1 사이 값으로 정규화
-        }
-        else
-        {
-            rayDistances[1] = 1.0f; // 아무것도 안 맞았으면 최대 거리
-        }
-        // 왼쪽
-        if (Physics.Raycast(agentTransform.position, -agentTransform.right, out RaycastHit hitL, maxDistance))
-        {
-            rayDistances[1] = hitL.distance / maxDistance; // 0~1 사이 값으로 정규화
-        }
-        else
-        {
-            rayDistances[1] = 1.0f; // 아무것도 안 맞았으면 최대 거리
+            var units = attackCircle.GetOwners;
+
+            if (i < units.Count)
+            {
+                var unit = units[i];
+                if (units[i] == gameObject) return;
+                sensor.AddObservation(1f); // 슬롯 활성화 여부
+                sensor.AddObservation((int)unit.GetCharacterType()); // 유닛 종류
+                sensor.AddObservation((int)unit.GetCharacterLevel()); // 유닛 레벨
+
+                if (unit.TryGetComponent<CharacterStat>(out CharacterStat characterStat))
+                {
+                    sensor.AddObservation(characterStat.GetCurrentHp() / characterStat.GetMaxHp()); //현재 체력 (정규화)
+                }
+            }
+            else
+            {
+                sensor.AddObservation(0f); // 슬롯 활성화 여부
+                sensor.AddObservation(0f); // 유닛 종류
+                sensor.AddObservation(0f); // 유닛 레벨
+                sensor.AddObservation(0f); //현재 체력 (정규화)
+            }
         }
 
-        // 측정된 거리 값들을 관측 정보에 추가
-        sensor.AddObservation(rayDistances[0]); // 정면
-        sensor.AddObservation(rayDistances[1]); // 오른쪽
-        sensor.AddObservation(rayDistances[2]); // 왼쪽
 
-        sensor.AddObservation(character.transform.position); // 캐릭터 위치
-        sensor.AddObservation(characterStat.GetCoin()); // 캐릭터가 보유한 코인
-        sensor.AddObservation(trainingManager.GetNearestEnemyPosition()); // 가장 가까운 적 위치
+        //감지된 적들의 정보 저장
+        for (int i = 0; i < GameManager.MAX_ENEMIES; i++)
+        {
+            var enemies = attackCircle.GetDetectedEnemies;
+
+            if (i < enemies.Count)
+            {
+                var enemy = enemies[i] != null ? enemies[i].GetComponent<CharacterBase>() : null;
+                if (enemy == null) return;
+
+                sensor.AddObservation(1f); // 슬롯 활성화 여부
+                sensor.AddObservation(enemy.transform.position - gameObject.transform.position); // 적 캐릭터 상대위치
+                sensor.AddObservation((int)enemy.GetCharacterType()); // 적 캐릭터 종류
+                sensor.AddObservation((int)enemy.GetCharacterLevel()); // 적 캐릭터 레벨
+
+                if (enemy.TryGetComponent<CharacterStat>(out CharacterStat characterStat))
+                {
+                    sensor.AddObservation(characterStat.GetCurrentHp() / characterStat.GetMaxHp()); //현재 체력 (정규화)
+                }
+            }
+            else
+            {
+                sensor.AddObservation(0f); // 슬롯 활성화 여부
+                sensor.AddObservation(0f); // 적 캐릭터 종류
+                sensor.AddObservation(0f); // 적 캐릭터 레벨
+                sensor.AddObservation(0f); //현재 체력 (정규화)
+            }
+        }
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        // 부딪힌 오브젝트의 태그가 "Wall"이라면 (벽의 태그를 Wall로 설정해야 함)
         if (hit.gameObject.CompareTag("Wall"))
         {
-            // 작은 음수 보상을 주어 벌점을 부여합니다.
             AddReward(RewardConstant.CrashScore);
         }
 
-        if (hit.gameObject.CompareTag("Coin"))
+        if (hit.gameObject.layer == LayerMask.NameToLayer("Coin"))
         {
-            // 작은 음수 보상을 주어 벌점을 부여합니다.
             AddReward(RewardConstant.GetCoinScore);
         }
 
-        if (hit.gameObject.CompareTag("Item"))
+        if (hit.gameObject.layer == LayerMask.NameToLayer("Item"))
         {
-            // 작은 음수 보상을 주어 벌점을 부여합니다.
             AddReward(RewardConstant.GetItemScore);
         }
     }
@@ -80,7 +106,33 @@ public class SquadAgent : Agent
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        int moveAction = actions.DiscreteActions[0];
-        character.AIAction(moveAction);
+        int action = actions.DiscreteActions[0];
+
+        GameObject target = null;
+        
+        switch (action)
+        {
+            case 0: // 가장 가까운 적 공격
+                target = trainingManager.GetNearestEnemy();
+                character.AIActionByJob(target);
+                break;
+            case 1: // 가장 체력 없는 적 공격
+                target = trainingManager.GetWeakestEnemy(); 
+                character.AIActionByJob(target);
+                break;
+            case 2: // 가장 가까운 아군에게 이동
+                target = trainingManager.GetNearestFriendly();
+                if(target != null)
+                    character.MoveToTarget(target);
+                break;
+            case 3: // 가장 체력 없는 아군에게 이동
+                target = trainingManager.GetWeakestFriendly();
+                if (target != null)
+                    character.MoveToTarget(target);
+                break;
+        }
+
+
+        
     }
 }

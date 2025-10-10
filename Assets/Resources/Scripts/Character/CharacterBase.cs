@@ -349,6 +349,33 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         movement3D.Move(x, z);
     }
 
+    public virtual void MoveToTarget(GameObject target)
+    {
+        animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
+
+        if (target == gameObject)
+        {
+            StopAllCoroutines();
+            animator.SetBool(AnimLocalize.contactEnemy, false);
+            isAttacking = false;
+            navMeshAgent.enabled = true;
+            return;
+        }
+
+        if (isAttacking)
+        {
+            return;
+        }
+
+        SetDestination(target.transform.position);
+
+        if (Vector3.Distance(transform.position, target.transform.position) <= navMeshAgent.stoppingDistance)
+        {
+            ResetPath();
+            animator.SetFloat(AnimLocalize.moveSpeed, 0);
+        }
+    }
+
     protected virtual void MoveToEnemy(GameObject target)
     {
         animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);

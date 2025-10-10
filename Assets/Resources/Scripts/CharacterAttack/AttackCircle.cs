@@ -20,6 +20,7 @@ public class AttackCircle : MonoBehaviour
     protected AttackCircleStat attackCircleStat = null;
 
     protected List<GameObject> DetectedEnemies = new List<GameObject>();
+    protected List<Item> DetectedItems = new List<Item>();
 
     public bool isUsed { get; private set; } = false;
     [HideInInspector] public circleType type = circleType.None;
@@ -35,7 +36,8 @@ public class AttackCircle : MonoBehaviour
     private string postFixLayer = "AttackCircle";
 
     public List<CharacterBase> GetOwners => owners;
-    public List<GameObject> GetDetectedEnemies { get { return DetectedEnemies; } set { DetectedEnemies = value; } } 
+    public List<GameObject> GetDetectedEnemies { get { return DetectedEnemies; } set { DetectedEnemies = value; } }
+    public List<Item> GetDetectedItems { get { return DetectedItems; } set { DetectedItems = value; } }
 
     protected virtual void Awake()
     {
@@ -148,6 +150,15 @@ public class AttackCircle : MonoBehaviour
                 DetectedEnemies.Add(moneyTree.gameObject);
             }
         }
+
+        //감지된 아이템 저장
+        if(other.gameObject.TryGetComponent<Item>(out Item item))
+        {
+            if (!DetectedItems.Contains(item))
+            {
+                DetectedItems.Add(item);
+            }
+        }
     }
 
     public virtual void OnTriggerExit(Collider other)
@@ -170,6 +181,15 @@ public class AttackCircle : MonoBehaviour
             if (DetectedEnemies.Contains(moneyTree.gameObject))
             {
                 DetectedEnemies.Remove(moneyTree.gameObject);
+            }
+        }
+
+        //감지된 아이템 정보
+        if (other.gameObject.TryGetComponent<Item>(out Item item))
+        {
+            if (DetectedItems.Contains(item))
+            {
+                DetectedItems.Remove(item);
             }
         }
     }

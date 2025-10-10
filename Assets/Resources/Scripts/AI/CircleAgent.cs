@@ -1,4 +1,6 @@
-﻿using Unity.MLAgents;
+﻿using JetBrains.Annotations;
+using System.Collections;
+using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using UnityEngine;
@@ -17,7 +19,14 @@ public class CircleAgent : Agent
     [SerializeField] string behaviourName;
     [SerializeField] TrainingManager trainingManager;
 
-    private float maxDistance = 10f;
+    StatsRecorder statsRecorder;
+
+    float maxDistance = 10f;
+
+    private void Awake()
+    {
+        statsRecorder = Academy.Instance.StatsRecorder;
+    }
 
     public override void CollectObservations(VectorSensor sensor)
     {
@@ -104,27 +113,60 @@ public class CircleAgent : Agent
         int action = actions.DiscreteActions[0];
         if (trainingManager == null) return;
         GameObject target = null;
-        switch(action)
+        Item item = null;
+
+        statsRecorder.Add("AI_Decision/Action_Choice", action);
+
+        switch (action)
         {
-            case 0:
+            case 0: // 가장 가까운 적 공격
                 target = trainingManager.GetNearestEnemy();
+                Attack();
                 break;
-            case 1:
+            case 1: // 가장 체력이 낮은 적 공격
                 target = trainingManager.GetWeakestEnemy();
+                Attack();
                 break;
+            //case 2: // 아이템 먹기
+            //    item = trainingManager.GetNearestItem(false);
+            //    if(item != null)
+            //        GetItem();
+            //    else
+            //        GameManager.Instance.attackCircle.GetComponent<CircleAgent>().UpdateActionState(false);
+            //    break;
+            //case 3: // 코인 먹기
+            //    item = trainingManager.GetNearestItem(true);
+            //    if (item != null)
+            //        GetItem();
+            //    else
+            //        GameManager.Instance.attackCircle.GetComponent<CircleAgent>().UpdateActionState(false);
+            //    break;
             default:
                 break;
         }
 
-        units.ForEach(e =>
+        void Attack()
         {
-            if (e.TryGetComponent<CharacterBase>(out CharacterBase character))
-                character.AIActionByJob(target);
-        });
+            units.ForEach(e =>
+            {
+                if (e.TryGetComponent<CharacterBase>(out CharacterBase character))
+                    character.AIActionByJob(target);
+            });
+        }
+        
+        //void GetItem()
+        //{
+        //    units.ForEach(e =>
+        //    {
+        //        if (e.TryGetComponent<CharacterBase>(out CharacterBase character))
+        //            character.MoveToTarget(item.gameObject);
+        //    });
+        //}
     }
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
+        //스쿼드 캐릭터베이스로 옮기기
         if(hit.gameObject.layer == LayerMask.NameToLayer("Item"))
         {
             AddReward(RewardConstant.GetItemScore);

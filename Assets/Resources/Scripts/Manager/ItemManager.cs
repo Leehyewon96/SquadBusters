@@ -11,6 +11,7 @@ public enum ItemType
     TreasureBox,
     MoneyTree,
    
+    All,
     End,
 }
 

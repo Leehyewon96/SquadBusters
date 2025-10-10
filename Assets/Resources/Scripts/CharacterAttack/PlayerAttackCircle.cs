@@ -9,17 +9,18 @@ using static UnityEngine.UI.GridLayoutGroup;
 
 public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttackCircleItemInterface, IPlayerAttackCircleProjectileInterface
 {
-    protected GameObject moveObj = null;
-    protected Movement3D movement3D = null;
+    protected GameObject moveObj;
+    protected Movement3D movement3D;
     protected float commonSpeed = 7.5f;
-    protected CharacterController characterController = null;
+    protected CharacterController characterController;
     Vector3 pos;
 
-    [SerializeField] protected ParticleSystem blueCircleEffect = null;
-    [SerializeField] protected ParticleSystem redCircleEffect = null;
+    [SerializeField] protected ParticleSystem blueCircleEffect;
+    [SerializeField] protected ParticleSystem redCircleEffect;
 
-    [SerializeField] protected TextMeshProUGUI userName = null;
-    [SerializeField] protected TextMeshProUGUI gemCnt = null;
+    [SerializeField] protected TextMeshProUGUI userName;
+    [SerializeField] protected TextMeshProUGUI gemCnt;
+    protected CircleAgent agent;
 
     private bool isStunned = false;
 
@@ -35,6 +36,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
         redCircleEffect.gameObject.SetActive(false);
         blueCircleEffect.gameObject.SetActive(false);
+
+        agent = GetComponent<CircleAgent>();
     }
 
     protected override void Start()
@@ -195,6 +198,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
             GameManager.Instance.soundManager.Play(SoundEffectType.GainItem);
             attackCircleStat.SetCoin(attackCircleStat.GetCoin() + 1);
             GameManager.Instance.uiManager.coinUI.SetCoin(attackCircleStat.GetCoin());
+
+            agent.AddReward(RewardConstant.GetCoinScore);
         }
     }
 
@@ -206,6 +211,8 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
             attackCircleStat.SetGem(attackCircleStat.GetGem() + 1);
             GameManager.Instance.UpdateRank(GameManager.Instance.userName, attackCircleStat.GetGem());
             photonView.RPC("UpdateGemCnt", RpcTarget.AllBuffered, attackCircleStat.GetGem());
+
+            agent.AddReward(RewardConstant.GetItemScore);
         }
     }
 
@@ -214,6 +221,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         GameManager.Instance.soundManager.Play(SoundEffectType.GainItem);
         GameManager.Instance.uiManager.skillUI.UpdateSkillType(ItemType.Bomb);
         GameManager.Instance.uiManager.skillUI.SetInteractable(true);
+        agent.AddReward(RewardConstant.GetItemScore);
     }
 
     public void GainCannon()
@@ -221,6 +229,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         GameManager.Instance.soundManager.Play(SoundEffectType.GainItem);
         GameManager.Instance.uiManager.skillUI.UpdateSkillType(ItemType.Cannon);
         GameManager.Instance.uiManager.skillUI.SetInteractable(true);
+        agent.AddReward(RewardConstant.GetItemScore);
     }
 
     public int GetCoin()
