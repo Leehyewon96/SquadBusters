@@ -14,17 +14,18 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
-        btnStart.onClick.AddListener(delegate { PhotonNetwork.JoinRandomRoom(); });
+        btnStart.onClick.AddListener(() => PhotonNetwork.JoinRandomRoom());
         loadingUI.SetActive(false);
         loadingText = loadingUI.GetComponentInChildren<TextMeshProUGUI>(true);
     }
 
     public void CreateRoom()
     {
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.IsVisible = true;
-        roomOptions.MaxPlayers = 2;
-
+        RoomOptions roomOptions = new RoomOptions
+        {
+            IsVisible = true,
+            MaxPlayers = 2
+        };
         PhotonNetwork.CreateRoom(null, roomOptions);
     }
 
@@ -43,15 +44,11 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
-        Debug.Log("방 입장 완료");
-        //SceneManager.LoadScene(SceneLocalize.gameScene);
-        //GameManager.Instance.isConnect = true;
-        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
-        {
-            loadingText.SetText("게임 발견!");
-        }
-        loadingUI.SetActive(true);
 
+        if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
+            loadingText.SetText("게임 발견!");
+
+        loadingUI.SetActive(true);
     }
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
@@ -60,9 +57,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         {
             loadingText.SetText("게임 발견!");
             if (PhotonNetwork.IsMasterClient)
-            {
                 StartCoroutine(CoStartGame());
-            }
         }
     }
 
@@ -71,7 +66,6 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         yield return new WaitForSecondsRealtime(2f);
         PhotonNetwork.LoadLevel(SceneLocalize.gameScene);
     }
-    
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {

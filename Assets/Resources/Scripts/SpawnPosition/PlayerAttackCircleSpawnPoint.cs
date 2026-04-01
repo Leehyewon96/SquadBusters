@@ -4,14 +4,10 @@ public class PlayerAttackCircleSpawnPoint : MonoBehaviour
 {
     private bool isAssigned = false;
 
-    public bool GetIsAssigned()
-    {
-        return isAssigned; 
-    }
+    public bool GetIsAssigned() => isAssigned;
 
-    public void SetIsAssigned(bool assinged)
+    public void SetIsAssigned(bool assigned)
     {
-        isAssigned = assinged;
+        isAssigned = assigned;
     }
-
 }

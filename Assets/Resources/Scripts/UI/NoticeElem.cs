@@ -5,32 +5,28 @@ public class NoticeElem : UIBase
 {
     [SerializeField] private NoticeType type;
 
-    private Vector3 pos = Vector3.zero;
     private GameObject target = null;
+    private RectTransform rectTransform;
+
+    private void Awake()
+    {
+        rectTransform = GetComponent<RectTransform>();
+    }
 
     public void Update()
     {
-        if(target == null)
-        {
-            return;
-        }
+        if (target == null) return;
         SetPos();
     }
 
-    public NoticeType GetNoticeType()
-    {
-        return type;
-    }
+    public NoticeType GetNoticeType() => type;
 
-    public void SetTarget(GameObject newTarget)
-    {
-        target = newTarget;
-    }
+    public void SetTarget(GameObject newTarget) => target = newTarget;
 
     public void SetPos()
     {
-        pos = Camera.main.WorldToScreenPoint(target.transform.position + Vector3.up * 3f);
-        GetComponent<RectTransform>().position = pos;
+        Vector3 pos = Camera.main.WorldToScreenPoint(target.transform.position + Vector3.up * 3f);
+        rectTransform.position = pos;
     }
 
     public void Disable(float delay)

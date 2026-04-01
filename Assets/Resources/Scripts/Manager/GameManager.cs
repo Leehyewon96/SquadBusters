@@ -22,24 +22,24 @@ public class GameManager : MonoBehaviour
     public int treasureBoxCost { get; private set; } = 0;
     private int playTime = 3600;
 
-    public string userName = "«¡∑Á¥œ";
+    public string userName = "ÌîÑÎ£®Îãà";
 
     private List<PlayerAttackCircleSpawnPoint> playerSpawnPoints = new List<PlayerAttackCircleSpawnPoint>();
-    Dictionary<string, int> rankDic = new Dictionary<string, int>();
+    private Dictionary<string, int> rankDic = new Dictionary<string, int>();
 
     [HideInInspector] public List<GameObject> EnemiesInFullRange = new List<GameObject>();
     [HideInInspector] public const int MAX_UNITS = 20;
     [HideInInspector] public const int MAX_ENEMIES = 20;
 
+    [Header("Í∞ïÌôîÌïôÏäµ ÏÑ§Ï†ï")]
+    [SerializeField] private bool isTrainingMode = false;
+    public static bool IsTrainingMode { get; private set; } = false;
+
     public static GameManager Instance
     {
         get
         {
-            if (instance == null)
-            {
-                return null;
-            }
-            
+            if (instance == null) return null;
             return instance;
         }
     }
@@ -53,97 +53,137 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            Destroy(instance);
+            Destroy(gameObject);
         }
+
+        IsTrainingMode = isTrainingMode;
     }
 
     public void Start()
     {
         photonView = gameObject.GetComponent<PhotonView>();
         soundManager = FindObjectOfType<SoundManager>();
-        soundManager.Play(SoundEffectType.LobbyBG);
+
+        if (!IsTrainingMode)
+            soundManager.Play(SoundEffectType.LobbyBG);
+
         StartCoroutine(CoInitGame());
     }
 
     private IEnumerator CoInitGame()
     {
+        if (IsTrainingMode)
+        {
+            InitGame();
+            yield break;
+        }
+
         yield return new WaitUntil(() => SceneManager.GetActiveScene().name.Equals(SceneLocalize.gameScene));
         InitGame();
-        if(PhotonNetwork.IsMasterClient)
-        {
+
+        if (PhotonNetwork.IsMasterClient)
             StartCoroutine(CoStartTimer());
-        }
-        
     }
 
     private IEnumerator CoStartTimer()
     {
-        while(playTime > 0)
+        while (playTime > 0)
         {
             string newTime = $"{playTime / 60} : {playTime % 60}";
 
-            GetComponent<PhotonView>().RPC("RPCUpdateTimer", RpcTarget.AllBuffered, newTime);
+            if (IsTrainingMode)
+                RPCUpdateTimer(newTime);
+            else
+                GetComponent<PhotonView>().RPC("RPCUpdateTimer", RpcTarget.AllBuffered, newTime);
+
             yield return new WaitForSecondsRealtime(1f);
             playTime -= 1;
         }
 
         playTime = 0;
-        
+
         var rankList = rankDic.OrderByDescending(r => r.Value).ToList();
         int order = 1;
         for (int i = 0; i < rankList.Count; ++i)
         {
-            if(i > 0 && rankList[i].Value < rankList[i - 1].Value)
-            {
+            if (i > 0 && rankList[i].Value < rankList[i - 1].Value)
                 order++;
-            }
-            photonView.RPC("RPCUpdateEndingUI", RpcTarget.AllBuffered, rankList[i].Key, rankList[i].Value.ToString(), order.ToString());
+
+            if (IsTrainingMode)
+                RPCUpdateEndingUI(rankList[i].Key, rankList[i].Value.ToString(), order.ToString());
+            else
+                photonView.RPC("RPCUpdateEndingUI", RpcTarget.AllBuffered, rankList[i].Key, rankList[i].Value.ToString(), order.ToString());
         }
 
-        photonView.RPC("StopGame", RpcTarget.AllBuffered);
+        if (IsTrainingMode)
+            StopGame();
+        else
+            photonView.RPC("StopGame", RpcTarget.AllBuffered);
     }
 
     [PunRPC]
     public void RPCUpdateTimer(string newTime)
     {
-        if(uiManager == null)
-        {
-            return;
-        }
-
+        if (uiManager == null) return;
         uiManager.timeUI.UpdateTime(newTime);
     }
 
     public void InitGame()
     {
-        soundManager.Stop(SoundEffectType.LobbyBG);
-        soundManager.Play(SoundEffectType.InGameBG);
+        if (!IsTrainingMode)
+        {
+            soundManager.Stop(SoundEffectType.LobbyBG);
+            soundManager.Play(SoundEffectType.InGameBG);
+        }
 
-        //hpBarManager = FindObjectOfType<HpBarManager>();
-        //attackCircleManager = FindObjectOfType<AttackCircleManager>();
         itemManager = FindObjectOfType<ItemManager>();
         effectManager = FindObjectOfType<EffectManager>();
         uiManager = FindObjectOfType<UIManager>();
         projectileManager = FindObjectOfType<ProjectileManager>();
         aoeManager = FindObjectOfType<AOEManager>();
 
-        if (PhotonNetwork.IsMasterClient)
-        {
+        if (IsTrainingMode)
+            SpawnCharacterTraining();
+        else if (PhotonNetwork.IsMasterClient)
             SpawnCharacter();
-        }
 
         UpdateRank(userName, 0);
         SetTreasureBoxCost(treasureBoxCost);
     }
 
-    //∞‘¿”Ω√¿€Ω√ √÷√ ∑Œ AttackCircle, Player Ω∫∆˘Ω√≈∞¥¬ «‘ºˆ
+    private void SpawnCharacterTraining()
+    {
+        playerSpawnPoints = FindObjectsOfType<PlayerAttackCircleSpawnPoint>().ToList();
+        PlayerAttackCircleSpawnPoint spawnPoint = playerSpawnPoints.FirstOrDefault();
+        if (spawnPoint == null)
+        {
+            Debug.LogError("[Training] SpawnPointÍ∞Ä ÏóÜÏäµÎãàÎã§. Ïî¨Ïóê PlayerAttackCircleSpawnPointÎ•º Î∞∞ÏπòÌï¥Ï£ºÏÑ∏Ïöî.");
+            return;
+        }
+
+        Vector3 pos = spawnPoint.gameObject.transform.position;
+        RPCSpawnCharacterTraining(pos);
+    }
+
+    private void RPCSpawnCharacterTraining(Vector3 pos)
+    {
+        string path = "Prefabs/Character/PlayerAttackCircle";
+        GameObject prefab = Resources.Load<GameObject>(path);
+        if (prefab == null)
+        {
+            Debug.LogError($"[Training] PrefabÏùÑ Ï∞æÏùÑ Ïàò ÏóÜÏäµÎãàÎã§: {path}");
+            return;
+        }
+        attackCircle = Instantiate(prefab, pos, Quaternion.identity);
+        Camera.main.GetComponent<CameraFollow>().SetTarget(attackCircle.gameObject);
+    }
+
     public void SpawnCharacter()
     {
         playerSpawnPoints = FindObjectsOfType<PlayerAttackCircleSpawnPoint>().ToList();
-
         foreach (var p in PhotonNetwork.PlayerList)
         {
-            PlayerAttackCircleSpawnPoint spawnPoint = playerSpawnPoints.Find(p => !p.GetIsAssigned());
+            PlayerAttackCircleSpawnPoint spawnPoint = playerSpawnPoints.Find(sp => !sp.GetIsAssigned());
             spawnPoint.SetIsAssigned(true);
             Vector3 pos = spawnPoint.gameObject.transform.position;
             photonView.RPC("RPCSpawnCharacter", p, pos);
@@ -153,46 +193,40 @@ public class GameManager : MonoBehaviour
     [PunRPC]
     public void RPCSpawnCharacter(Vector3 pos)
     {
-        string path = $"Prefabs/Character/PlayerAttackCircle";
+        string path = "Prefabs/Character/PlayerAttackCircle";
         attackCircle = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
         Camera.main.GetComponent<CameraFollow>().SetTarget(attackCircle.gameObject);
-        PlayerAttackCircle circle = attackCircle.GetComponent<PlayerAttackCircle>();
     }
 
     public void UpdateRank(string name, int gemCnt)
     {
+        if (IsTrainingMode)
+        {
+            RPCUpdateRank(name, gemCnt);
+            return;
+        }
         photonView.RPC("RPCUpdateRank", RpcTarget.MasterClient, name, gemCnt);
     }
 
     [PunRPC]
     public void RPCUpdateRank(string name, int gemCnt)
     {
-        if(photonView.IsMine)
+        bool canUpdate = IsTrainingMode || (photonView != null && photonView.IsMine);
+        if (!canUpdate) return;
+
+        rankDic[name] = gemCnt;
+
+        var rank = rankDic.OrderByDescending(r => r.Value).ToList();
+        int order = 1;
+        for (int i = 0; i < rank.Count; ++i)
         {
-            if(!rankDic.ContainsKey(name))
-            {
-                rankDic.Add(name, gemCnt);
-            }
+            if (i > 0 && rank[i].Value < rank[i - 1].Value)
+                order++;
+
+            if (IsTrainingMode)
+                RPCUpdateRankUI(rank[i].Key, rank[i].Value.ToString(), order.ToString());
             else
-            {
-                rankDic[name] = gemCnt;
-            }
-
-            //¡§∑ƒ
-            var rank = rankDic.OrderByDescending(r => r.Value).ToList();
-
-            int order = 1;
-            for (int i = 0; i < rank.Count; ++i)
-            {
-                
-                if(i > 0 && rank[i].Value < rank[i - 1].Value)
-                {
-                    order++;
-                }
-
                 photonView.RPC("RPCUpdateRankUI", RpcTarget.AllBuffered, rank[i].Key, rank[i].Value.ToString(), order.ToString());
-            }
-            
         }
     }
 
@@ -206,40 +240,25 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitUntil(() => uiManager != null);
         uiManager.rankUI.UpdateRank(inName, gemCnt, rank);
-        if(inName == userName)
-        {
+        if (inName == userName)
             uiManager.rankUI.UpdateMyRank(rank);
-        }
-    }
-
-    public void PauseGame()
-    {
-
-    }
-
-    public void ContinueGame()
-    {
-
-    }
-
-    public void RestartGame()
-    {
-
     }
 
     [PunRPC]
     public void StopGame()
     {
         endGame = true;
-        soundManager.Stop(SoundEffectType.InGameBG);
-        soundManager.Play(SoundEffectType.EndingBG);
+        if (!IsTrainingMode)
+        {
+            soundManager.Stop(SoundEffectType.InGameBG);
+            soundManager.Play(SoundEffectType.EndingBG);
+        }
         uiManager.OnStopGame();
     }
 
     [PunRPC]
     public void RPCUpdateEndingUI(string inName, string gemCnt, string rank)
     {
-        Debug.Log("RPCUpdateEndingUI");
         uiManager.endingUI.UpdateRank(inName, gemCnt, rank);
     }
 

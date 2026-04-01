@@ -13,15 +13,9 @@ public class Projectile : MonoBehaviour
         photonView = GetComponent<PhotonView>();
     }
 
-    public ProjectileType GetProjectileType()
-    {
-        return projectileType; 
-    }
+    public ProjectileType GetProjectileType() => projectileType;
 
-    public virtual void SetDamage(float inDamage)
-    {
-        damage = inDamage;  
-    }
+    public virtual void SetDamage(float inDamage) => damage = inDamage;
 
     public virtual void SetDirection(Vector3 dir)
     {
@@ -33,20 +27,20 @@ public class Projectile : MonoBehaviour
         transform.DOMove(destination, shotTime).OnComplete(() =>
         {
             if (gameObject.activeSelf)
-            {
                 SetActive(false);
-            }
         });
     }
 
     public void SetActive(bool isActive)
     {
+        if (GameManager.IsTrainingMode)
+        {
+            RPCSetActive(isActive);
+            return;
+        }
         photonView.RPC("RPCSetActive", RpcTarget.AllBuffered, isActive);
     }
 
     [PunRPC]
-    public void RPCSetActive(bool isActive)
-    {
-        gameObject.SetActive(isActive);
-    }
+    public void RPCSetActive(bool isActive) => gameObject.SetActive(isActive);
 }

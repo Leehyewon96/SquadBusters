@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -15,44 +14,16 @@ public class RankElem : MonoBehaviour
     {
         nameText.SetText(name);
         gemCntText.SetText(gemCnt);
-        string postFix = "th";
-        if (rank == "1")
-        {
-            postFix = "st";
-        }
-        else if (rank == "2")
-        {
-            postFix = "nd";
-        }
-        else if (rank == "3")
-        {
-            postFix = "rd";
-        }
-        rankText.SetText($"{rank}{postFix}");
+        rankText.SetText($"{rank}{RankUI.GetOrdinalSuffix(rank)}");
     }
 
-    public void SetActive(bool isActive)
-    {
-        gameObject.SetActive(isActive);
-    }
+    public void SetActive(bool isActive) => gameObject.SetActive(isActive);
 
-    public void SetIsAssigned(bool assigned)
-    {
-        isAssigned = assigned;
-    }
+    public void SetIsAssigned(bool assigned) => isAssigned = assigned;
 
-    public string GetName()
-    {
-        return nameText.text;
-    }
+    public string GetName() => nameText.text;
 
-    public int GetRank()
-    {
-        return int.Parse(rankText.text.First().ToString());
-    }
+    public int GetRank() => int.Parse(rankText.text.First().ToString());
 
-    public string GetGemCnt()
-    {
-        return gemCntText.text;
-    }
+    public string GetGemCnt() => gemCntText.text;
 }

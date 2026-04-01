@@ -9,31 +9,39 @@ public class CharacterSpawner : Spawner
     {
         base.Awake();
         repeatInterval = 10f;
+
         if (characterType < CharacterType.Eggy)
-        {
-            SetPath($"Prefabs/Character/PlayerAttackCircle");
-        }
+            SetPath("Prefabs/Character/PlayerAttackCircle");
         else
-        {
-            SetPath($"Prefabs/Character/NPCAttackCircle");
-        }
+            SetPath("Prefabs/Character/NPCAttackCircle");
     }
 
     protected override GameObject Spawn()
     {
-        if (spawnObject == null || !spawnObject.activeSelf)
-        {
+        if (spawnObject != null && spawnObject.activeSelf) return null;
+
+        if (!GameManager.IsTrainingMode)
             photonView.RPC("RPCEffect", RpcTarget.AllBuffered);
 
-            GameObject obj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
-
-            if (obj.TryGetComponent<NPCAttackCircle>(out NPCAttackCircle attackCircle))
+        GameObject obj;
+        if (GameManager.IsTrainingMode)
+        {
+            GameObject prefab = Resources.Load<GameObject>(path);
+            if (prefab == null)
             {
-                attackCircle.SpawnCharacter(transform.position, characterType);
+                Debug.LogError($"[Training] Character Prefab 없음: {path}");
+                return null;
             }
-            return spawnObject = obj;
+            obj = Instantiate(prefab, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            obj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
         }
 
-        return null;
+        if (obj.TryGetComponent<NPCAttackCircle>(out NPCAttackCircle attackCircle))
+            attackCircle.SpawnCharacter(transform.position, characterType);
+
+        return spawnObject = obj;
     }
 }

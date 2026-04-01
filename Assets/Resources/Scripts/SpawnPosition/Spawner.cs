@@ -16,16 +16,11 @@ public class Spawner : MonoBehaviour
 
     protected virtual void Start()
     {
-        if(PhotonNetwork.IsMasterClient)
-        {
+        if (GameManager.IsTrainingMode || PhotonNetwork.IsMasterClient)
             StartSpawn();
-        }
     }
 
-    protected virtual void SetPath(string inPath)
-    {
-        path = inPath;
-    }
+    protected virtual void SetPath(string inPath) => path = inPath;
 
     public virtual void StartSpawn()
     {
@@ -40,18 +35,29 @@ public class Spawner : MonoBehaviour
 
     protected virtual GameObject Spawn()
     {
-        if (spawnObject == null || !spawnObject.activeSelf)
-        {
+        if (spawnObject != null && spawnObject.activeSelf) return null;
+
+        if (!GameManager.IsTrainingMode)
             photonView.RPC("RPCEffect", RpcTarget.AllBuffered);
 
-            GameObject obj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
-
-            GameManager.Instance.EnemiesInFullRange.Add(obj);
-
-            return spawnObject = obj;
+        GameObject obj;
+        if (GameManager.IsTrainingMode)
+        {
+            GameObject prefab = Resources.Load<GameObject>(path);
+            if (prefab == null)
+            {
+                Debug.LogError($"[Training] Spawn Prefab 없음: {path}");
+                return null;
+            }
+            obj = Instantiate(prefab, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            obj = PhotonNetwork.Instantiate(path, transform.position, Quaternion.identity);
         }
 
-        return null;
+        GameManager.Instance.EnemiesInFullRange.Add(obj);
+        return spawnObject = obj;
     }
 
     [PunRPC]

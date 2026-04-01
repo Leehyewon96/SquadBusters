@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,8 +9,7 @@ public class SkillUI : UIBase
     [SerializeField] private Image bombIcon = null;
     [SerializeField] private Image cannonIcon = null;
 
-    public delegate void DoSkill(ItemType type);
-    public DoSkill doSkill = null;
+    public Action<ItemType> doSkill = null;
 
     private void Awake()
     {
@@ -29,7 +29,7 @@ public class SkillUI : UIBase
     {
         skillType = type;
 
-        //스킬 아이콘 업데이트 코드 추가 
+        //??? ?????? ??????? ??? ??? 
         switch(type)
         {
             case ItemType.Bomb:
@@ -47,10 +47,7 @@ public class SkillUI : UIBase
 
     public void OnButtonClick()
     {
-        if (doSkill != null)
-        {
-            doSkill.Invoke(skillType);
-        }
+        doSkill?.Invoke(skillType);
         GameManager.Instance.soundManager.Play(SoundEffectType.UseItem);
         bombIcon.gameObject.SetActive(false);
         cannonIcon.gameObject.SetActive(false);

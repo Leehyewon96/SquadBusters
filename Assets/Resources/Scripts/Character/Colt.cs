@@ -12,24 +12,19 @@ public class Colt : CharacterPlayer
         base.Update();
         SetDestination(destinationPos);
         if (Vector3.Distance(transform.position, navMeshAgent.destination) <= navMeshAgent.stoppingDistance)
-        {
             ResetPath();
-        }
     }
 
     protected override void MoveToEnemy(GameObject target)
     {
-        if(target == gameObject)
+        if (target == gameObject)
         {
             animator.SetBool(AnimLocalize.contactEnemy, false);
             isAttacking = false;
             return;
         }
 
-        if(isAttacking)
-        {
-            return;
-        }
+        if (isAttacking) return;
         Attack(target);
     }
 
@@ -39,9 +34,7 @@ public class Colt : CharacterPlayer
         TweenCallback callback = () =>
         {
             if (gameObject.activeSelf)
-            {
                 coroutineAttack = StartCoroutine(CoAttack(target));
-            }
         };
         ForwardToEnemy(target, callback);
     }
@@ -50,6 +43,7 @@ public class Colt : CharacterPlayer
     {
         int cnt = 4;
         animator.SetBool(AnimLocalize.contactEnemy, true);
+
         while (cnt > 0)
         {
             ForwardToEnemy(target);
@@ -66,12 +60,10 @@ public class Colt : CharacterPlayer
         animator.SetBool(AnimLocalize.contactEnemy, false);
         isAttacking = false;
 
-        if(target.TryGetComponent<CharacterBase>(out CharacterBase characterBase))
+        if (target.TryGetComponent<CharacterBase>(out CharacterBase characterBase))
         {
             if (characterBase.isDead)
-            {
                 OnTargetDead(target);
-            }
         }
     }
 }

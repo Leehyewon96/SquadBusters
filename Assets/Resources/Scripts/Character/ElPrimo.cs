@@ -3,7 +3,6 @@ using Photon.Pun;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class ElPrimo : CharacterPlayer
 {
@@ -14,7 +13,7 @@ public class ElPrimo : CharacterPlayer
 
     private bool isFlyingElbowAttackMode = false;
     public Rigidbody body;
-    float jumpForce = 100f;
+    private float jumpForce = 100f;
 
     protected float flyingElbowDamage = 0;
 
@@ -40,14 +39,13 @@ public class ElPrimo : CharacterPlayer
         StartCoroutine(CoFlyingElbowAttack(target));
     }
 
-    private IEnumerator CoFlyingElbowAttack(GameObject target) 
+    private IEnumerator CoFlyingElbowAttack(GameObject target)
     {
         transform.LookAt(target.transform.position);
         target.transform.LookAt(gameObject.transform.position);
-        if(target.TryGetComponent<CharacterBase>(out CharacterBase targetBase))
-        {
+
+        if (target.TryGetComponent<CharacterBase>(out CharacterBase targetBase))
             targetBase.SetCharacterState(CharacterState.Stun);
-        }
 
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(AnimLocalize.jump));
 
@@ -55,10 +53,10 @@ public class ElPrimo : CharacterPlayer
         float elbowTime = animatorController.animationClips.ToList().Find(a => a.name.Equals(AnimLocalize.elbow)).length;
 
         Vector3 startPos = transform.position;
-        Vector3 targetPos = target.transform.position - transform.forward.normalized * 0.5f; // 타겟지점에서 0.5만큼 거리 두기
+        Vector3 targetPos = target.transform.position - transform.forward.normalized * 0.5f;
         Vector3 midPos = startPos + ((targetPos - startPos) / 2f) + Vector3.up * 2f;
         Vector3[] jumpPath = { startPos, midPos, targetPos };
-        
+
         transform.DOPath(jumpPath, jumpTime, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
         {
             GameManager.Instance.soundManager.Play(SoundEffectType.Explose);
@@ -78,22 +76,16 @@ public class ElPrimo : CharacterPlayer
 
     protected override void MoveToEnemy(GameObject target)
     {
-        //animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
-
         if (target == gameObject || target == null)
         {
             StopAllCoroutines();
             animator.SetBool(AnimLocalize.contactEnemy, false);
             isAttacking = false;
             navMeshAgent.enabled = true;
-            //SetDestination(destinationPos);
             return;
         }
 
-        if (isAttacking)
-        {
-            return;
-        }
+        if (isAttacking) return;
 
         if (killCount >= FlyingElbowAttackValue)
         {
@@ -108,7 +100,6 @@ public class ElPrimo : CharacterPlayer
         if (Vector3.Distance(transform.position, target.transform.position) <= navMeshAgent.stoppingDistance)
         {
             ResetPath();
-            //animator.SetFloat(AnimLocalize.moveSpeed, 0);
             Attack(target);
         }
     }

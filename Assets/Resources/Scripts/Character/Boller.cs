@@ -14,27 +14,16 @@ public class Boller : CharacterNonPlayer
 
     protected override void MoveToEnemy(GameObject target)
     {
-        if (target == gameObject)
-        {
-            return;
-        }
-
-        if (isAttacking)
-        {
-            return;
-        }
+        if (target == gameObject) return;
+        if (isAttacking) return;
 
         isAttacking = true;
-
         Attack(target);
     }
 
     protected override void Attack(GameObject target)
     {
-        TweenCallback callback = () =>
-        {
-            StartCoroutine(CoAttack(target));
-        };
+        TweenCallback callback = () => StartCoroutine(CoAttack(target));
         ForwardToEnemy(target, callback);
     }
 

@@ -3,7 +3,6 @@ using UnityEngine;
 public enum UIType
 {
     SelectCharacter,
-
 }
 
 public class UIManager : MonoBehaviour
@@ -30,7 +29,7 @@ public class UIManager : MonoBehaviour
         endingUI = GetComponentInChildren<EndingUI>(true);
         noticeUI = GetComponentInChildren<NoticeUI>(true);
 
-        selectCharacter.onDisabled += delegate { ShowUI(UIType.SelectCharacter, false); };
+        selectCharacter.onDisabled += () => ShowUI(UIType.SelectCharacter, false);
     }
 
     public void ShowUI(UIType uiType, bool isActive)
@@ -38,24 +37,20 @@ public class UIManager : MonoBehaviour
         switch (uiType)
         {
             case UIType.SelectCharacter:
-                if(isActive == selectCharacter.gameObject.activeSelf)
-                {
-                    return;
-                }
+                if (isActive == selectCharacter.gameObject.activeSelf) return;
+
                 selectCharacter.SetActive(isActive);
                 fastMoveUI.SetActive(!isActive);
                 skillUI.SetActive(!isActive);
-                int sign = 1;
-                if(isActive)
-                {
-                    sign *= -1;
-                }
-                Vector3 newPos = coinUI.GetComponent<RectTransform>().position - sign * Vector3.right * selectCharacter.GetComponent<RectTransform>().sizeDelta.x * 0.5f;
-                coinUI.UpdatePos(newPos);
-                newPos = treasureBoxCostUI.GetComponent<RectTransform>().position - sign * Vector3.right * selectCharacter.GetComponent<RectTransform>().sizeDelta.x * 0.5f;
-                treasureBoxCostUI.UpdatePos(newPos);
-                break;
-            default:
+
+                int sign = isActive ? -1 : 1;
+                float halfWidth = selectCharacter.GetComponent<RectTransform>().sizeDelta.x * 0.5f;
+
+                Vector3 coinPos = coinUI.GetComponent<RectTransform>().position - sign * Vector3.right * halfWidth;
+                coinUI.UpdatePos(coinPos);
+
+                Vector3 boxPos = treasureBoxCostUI.GetComponent<RectTransform>().position - sign * Vector3.right * halfWidth;
+                treasureBoxCostUI.UpdatePos(boxPos);
                 break;
         }
     }

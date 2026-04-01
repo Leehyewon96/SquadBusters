@@ -8,6 +8,6 @@ public class ItemSpawner : Spawner
     {
         base.Awake();
         repeatInterval = 20f;
-        SetPath($"Prefabs/Item/{itemType.ToString()}");
+        SetPath($"Prefabs/Item/{itemType}");
     }
 }

@@ -16,22 +16,20 @@ public class RankUI : UIBase
         rankElems.ForEach(e => e.SetActive(false));
     }
 
+    public static string GetOrdinalSuffix(string rank)
+    {
+        switch (rank)
+        {
+            case "1": return "st";
+            case "2": return "nd";
+            case "3": return "rd";
+            default: return "th";
+        }
+    }
+
     public void UpdateMyRank(string rank)
     {
-        string postFix = "th";
-        if (rank == "1")
-        {
-            postFix = "st";
-        }
-        else if (rank == "2")
-        {
-            postFix = "nd";
-        }
-        else if (rank == "3")
-        {
-            postFix = "rd";
-        }
-        myRank.SetText($"{rank}{postFix}");
+        myRank.SetText($"{rank}{GetOrdinalSuffix(rank)}");
     }
 
     public virtual void UpdateRank(string inName, string gemCnt, string rank)
@@ -40,7 +38,7 @@ public class RankUI : UIBase
         if (elem == null)
         {
             elem = rankElems.Find(e => !e.isAssigned);
-            if(elem == null)
+            if (elem == null)
             {
                 elem = Instantiate(rankElems.FirstOrDefault(), rankElemParent.transform);
                 rankElems.Add(elem);
@@ -51,11 +49,11 @@ public class RankUI : UIBase
 
         elem.UpdateInfo(inName, gemCnt, rank);
         rankElems = rankElems.OrderBy(e => e.GetRank()).ToList();
-        rankElems.ForEach((e) => e.SetActive(false));
+        rankElems.ForEach(e => e.SetActive(false));
 
-        int lastIdx = rankElems.Count > 3 ? 3 : rankElems.Count;
+        int lastIdx = Mathf.Min(rankElems.Count, 3);
         for (int i = 0; i < lastIdx; ++i)
-        { 
+        {
             rankElems[i].SetActive(true);
             rankElems[i].gameObject.transform.SetSiblingIndex(i);
         }

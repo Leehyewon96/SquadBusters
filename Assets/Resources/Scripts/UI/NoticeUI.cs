@@ -21,7 +21,7 @@ public class NoticeUI : UIBase
         noticeElems.ForEach(e => e.SetActive(false));
     }
 
-    public NoticeElem ShowAcitveNotice(NoticeType type, bool isActive, GameObject target)
+    public NoticeElem ShowActiveNotice(NoticeType type, bool isActive, GameObject target)
     {
         NoticeElem noticeElem = noticeElems.Find(e => !e.gameObject.activeSelf && e.GetNoticeType() == type);
         if(noticeElem == null)

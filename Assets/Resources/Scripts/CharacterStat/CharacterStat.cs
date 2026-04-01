@@ -1,5 +1,5 @@
+using System;
 using UnityEngine;
-
 
 public class CharacterStat : MonoBehaviour
 {
@@ -10,27 +10,21 @@ public class CharacterStat : MonoBehaviour
     private int coin = 0;
     private int gem = 0;
 
-    public delegate void OnCurrentHpChanged(float newHp);
-    public delegate void OnCurrentHpZero();
-    public delegate void OnAttackRadiusChanged(float newAttackRadius);
-    public delegate void OnCharacterBeginAttack();
-
-    public event OnCurrentHpChanged onCurrentHpChanged;
-    public event OnCurrentHpZero onCurrentHpZero;
-    public event OnAttackRadiusChanged onAttackRadiusChanged;
-    public event OnCharacterBeginAttack onCharacterBeginAttack;
+    public event Action<float> onCurrentHpChanged;
+    public event Action onCurrentHpZero;
+    public event Action<float> onAttackRadiusChanged;
+    public event Action onCharacterBeginAttack;
 
     private void Awake()
     {
         currentHp = maxHp;
     }
 
-    public float GetCurrentHp() { return currentHp; }
-    public float GetMaxHp() { return maxHp; }
-    public float GetAttackDamage() { return attackDamage; }
-    public int GetCoin() { return coin; }
-    public int GetGem() { return gem; }
-    
+    public float GetCurrentHp() => currentHp;
+    public float GetMaxHp() => maxHp;
+    public float GetAttackDamage() => attackDamage;
+    public int GetCoin() => coin;
+    public int GetGem() => gem;
 
     public void Init(float inMaxHp, float inAttackDamage, int inCoin, int inGem)
     {
@@ -44,24 +38,16 @@ public class CharacterStat : MonoBehaviour
     public void ApplyDamage(float inDamage)
     {
         currentHp = Mathf.Clamp(currentHp - inDamage, 0, maxHp);
-
-        if(onCurrentHpChanged != null)
-        {
-            onCurrentHpChanged.Invoke(currentHp);
-        }
+        onCurrentHpChanged?.Invoke(currentHp);
     }
 
     public bool CheckDead()
     {
         if (currentHp <= 0)
         {
-            if (onCurrentHpZero != null)
-            {
-                onCurrentHpZero.Invoke();
-            }
+            onCurrentHpZero?.Invoke();
             return true;
         }
-
         return false;
     }
 }

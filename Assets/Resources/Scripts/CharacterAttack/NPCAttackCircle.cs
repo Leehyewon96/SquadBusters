@@ -6,7 +6,7 @@ public class NPCAttackCircle : AttackCircle
     protected override void Awake()
     {
         base.Awake();
-        type = circleType.NPC;
+        type = CircleType.NPC;
     }
 
     protected virtual void Update()
@@ -26,12 +26,7 @@ public class NPCAttackCircle : AttackCircle
 
     protected virtual void Move()
     {
-        if(owners.Count == 0)
-        {
-            return;
-        }
-
+        if (owners.Count == 0) return;
         transform.position = owners.FirstOrDefault().transform.position;
     }
-
 }

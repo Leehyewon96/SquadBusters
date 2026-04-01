@@ -1,34 +1,43 @@
 using DG.Tweening;
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-
-
 public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 {
-    public delegate void OnTakeItem();
-    private List<OnTakeItem> takeItemActions = new List<OnTakeItem>();
+    private List<Action> takeItemActions = new List<Action>();
 
-    public delegate void UpdateCoin(int newcoin);
-    public UpdateCoin updateCoin;
-
-    public delegate int TotalCoin();
-    public TotalCoin totalCoin;
+    public Action<int> updateCoin;
+    public Func<int> totalCoin;
 
     protected EffectType attackEffectType;
 
+    private Action cachedMoveFast;
+    private Action cachedMoveCommon;
+
     protected virtual void OnEnable()
     {
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
-            GameManager.Instance.uiManager.fastMoveUI.onMoveFast -= () => movement3D.UpdateMoveSpeed(15f);
-            GameManager.Instance.uiManager.fastMoveUI.onMoveFast += () => movement3D.UpdateMoveSpeed(15f);
-            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon -= () => movement3D.UpdateMoveSpeed(7.5f);
-            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += () => movement3D.UpdateMoveSpeed(7.5f);
+            cachedMoveFast = () => movement3D.UpdateMoveSpeed(15f);
+            cachedMoveCommon = () => movement3D.UpdateMoveSpeed(7.5f);
+
+            GameManager.Instance.uiManager.fastMoveUI.onMoveFast += cachedMoveFast;
+            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += cachedMoveCommon;
             GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position, transform.forward);
+        }
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        if (photonView.IsMine && GameManager.Instance != null)
+        {
+            GameManager.Instance.uiManager.fastMoveUI.onMoveFast -= cachedMoveFast;
+            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon -= cachedMoveCommon;
         }
     }
 
@@ -36,15 +45,8 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     {
         base.Update();
 
-        if (!photonView.IsMine)
-        {
-            return;
-        }
-
-        if (characterState == CharacterState.InVincible)
-        {
-            return;
-        }
+        if (!photonView.IsMine) return;
+        if (characterState == CharacterState.InVincible) return;
 
         if (characterState == CharacterState.Stun)
         {
@@ -52,7 +54,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             GameManager.Instance.soundManager.Stop(SoundEffectType.Shot);
             GameManager.Instance.soundManager.Play(SoundEffectType.Stun);
             StopAllCoroutines();
-            //ResetPath();
             isAttacking = false;
             DetectedEnemies.Clear();
             animator.SetBool(AnimLocalize.contactEnemy, false);
@@ -63,35 +64,23 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         if (CheckInput())
         {
             StopAllCoroutines();
-            //ResetPath();
             isAttacking = false;
             if (coroutineAttack != null)
             {
                 StopCoroutine(coroutineAttack);
                 coroutineAttack = null;
             }
-                
-            //DetectedEnemies.Clear();
+
             animator.SetBool(AnimLocalize.contactEnemy, false);
 
             float x = Input.GetAxis("Horizontal");
             float z = Input.GetAxis("Vertical");
             Move(x, z);
-            //animator.SetFloat(AnimLocalize.moveSpeed, characterController.velocity.magnitude);
-        }
-        else // 플레이어 조작없으면 AI 동작
-        {
-            //animator.SetFloat(AnimLocalize.moveSpeed, 0);
-            //GameObject target = GetTarget();
-            //MoveToEnemy(target);
         }
     }
 
     protected override void MoveToEnemy(GameObject target)
     {
-        //animator.SetFloat(AnimLocalize.moveSpeed, navMeshAgent.velocity.magnitude);
-
-        
         if (target == gameObject || target == null)
         {
             StopAllCoroutines();
@@ -102,10 +91,7 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             return;
         }
 
-        if (isAttacking)
-        {
-            return;
-        }
+        if (isAttacking) return;
 
         SetDestination(target.transform.position);
 
@@ -125,10 +111,9 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
 
     protected virtual bool CheckInput()
     {
-        //모바일에서 터치로 변경
-        if(Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
         {
-            if(movement3D.moveSpeed == 7.5f)
+            if (movement3D.moveSpeed == 7.5f)
             {
                 GameManager.Instance.soundManager.Stop(SoundEffectType.Run);
                 GameManager.Instance.soundManager.Play(SoundEffectType.Walk);
@@ -142,7 +127,6 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
             ResetPath();
             navMeshAgent.enabled = false;
             animator.SetFloat(AnimLocalize.moveSpeed, movement3D.moveSpeed);
-
             return true;
         }
 
@@ -157,15 +141,11 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     {
         if (target == null) return;
         base.Attack(target);
-        
-        //AttackTarget(target);
-        //isAttacking = true;
     }
 
     protected override IEnumerator CoAttack(GameObject target)
     {
-        TweenCallback callBack = null;
-        callBack = () =>
+        TweenCallback callBack = () =>
         {
             animator.SetBool(AnimLocalize.contactEnemy, true);
             AnimationClip clip = animatorController.animationClips.ToList().Find(anim => anim.name.Equals(AnimLocalize.attack));
@@ -176,35 +156,27 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         while (true)
         {
             ForwardToEnemy(target);
-            if (characterController.enabled || characterState == CharacterState.Stun) //캐릭터 상태로 판단하도록 변경하기
+            if (characterController.enabled || characterState == CharacterState.Stun)
             {
                 isAttacking = false;
                 yield break;
             }
             yield return attackTerm;
 
-            if(AttackTarget(target))
-            {
+            if (AttackTarget(target))
                 yield break;
-            }
         }
     }
 
     protected virtual bool AttackTarget(GameObject target)
     {
         isAttacking = true;
-        //var distance = Vector3.Distance(gameObject.transform.position, target.transform.position);
-        //if (distance > 12f)
-        //{
-        //    isAttacking = false;
-        //    MoveToEnemy(target);
-        //    return false;
-        //}
 
         if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
         {
-            photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)attackEffectType, transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
-            
+            photonView.RPC("RPCEffect", RpcTarget.AllBuffered, (int)attackEffectType,
+                transform.position + Vector3.up * 1.5f + transform.forward.normalized * 0.5f, transform.forward);
+
             targetObj.TakeDamage(characterStat.GetAttackDamage());
 
             if (targetObj.isDead)
@@ -232,16 +204,9 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
         isAttacking = false;
     }
 
-    protected IEnumerator CoInit()
-    {
-        yield return new WaitUntil(() => GameManager.Instance.effectManager != null);
-        GameManager.Instance.effectManager.Play(EffectType.StarAura, transform.position, transform.forward);
-        
-    }
-
     public virtual void TakeItem(ItemType itemType)
     {
-        Debug.Log($"[{gameObject.name}] itemType : {itemType.ToString()}");
+        Debug.Log($"[{gameObject.name}] itemType : {itemType}");
         photonView.RPC("RPCTakeItem", RpcTarget.AllBuffered, (int)itemType);
     }
 
@@ -250,47 +215,26 @@ public class CharacterPlayer : CharacterBase, ICharacterPlayerItemInterface
     {
         if (photonView.IsMine)
         {
-            Debug.Log($" RPCTakeItem [{gameObject.name}] itemType : {itemType.ToString()}");
-            takeItemActions[itemType].DynamicInvoke();
+            Debug.Log($"RPCTakeItem [{gameObject.name}] itemType : {itemType}");
+            takeItemActions[itemType].Invoke();
         }
     }
 
-    public virtual void AddTakeItemActions(OnTakeItem onTakeItem)
+    public virtual void AddTakeItemActions(Action onTakeItem)
     {
         if (!takeItemActions.Contains(onTakeItem))
-        {
             takeItemActions.Add(onTakeItem);
-        }
     }
 
-    public virtual void UpdateTotalCoin(int newCoin)
-    {
-        if (updateCoin != null)
-        {
-            updateCoin.Invoke(newCoin);
-        }
-    }
+    public virtual void UpdateTotalCoin(int newCoin) => updateCoin?.Invoke(newCoin);
 
-    public int GetTotalCoin()
-    {
-        if(totalCoin != null)
-        {
-            return totalCoin.Invoke();
-        }
-        return 0;
-    }
-
+    public int GetTotalCoin() => totalCoin?.Invoke() ?? 0;
 
     [PunRPC]
     public override void RPCGetAOE(float inDamage, Vector3 fromPos, float distance)
     {
         if (photonView.IsMine && Camera.main.TryGetComponent<CameraFollow>(out CameraFollow cam))
-        {
-            if (cam.onCameraShake != null)
-            {
-                cam.onCameraShake.Invoke(0.5f);
-            }
-        }
+            cam.onCameraShake?.Invoke(0.5f);
 
         base.RPCGetAOE(inDamage, fromPos, distance);
     }

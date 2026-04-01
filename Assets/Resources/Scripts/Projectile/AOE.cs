@@ -38,9 +38,7 @@ public class AOE : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.TryGetComponent<ICharacterProjectileInterface>(out ICharacterProjectileInterface player))
-        {
             player.GetAOE(damage, transform.position, 5f);
-        }
     }
 
     private IEnumerator CoSetEnable(bool isEnabled)
@@ -51,28 +49,29 @@ public class AOE : MonoBehaviour
 
     public void SetActive(bool isActive)
     {
+        if (GameManager.IsTrainingMode)
+        {
+            RPCSetActive(isActive);
+            return;
+        }
         photonView.RPC("RPCSetActive", RpcTarget.AllBuffered, isActive);
     }
 
     [PunRPC]
-    public void RPCSetActive(bool isActive)
-    {
-        gameObject.SetActive(isActive);
-    }
+    public void RPCSetActive(bool isActive) => gameObject.SetActive(isActive);
 
-    public AOEType GetAoeType()
-    {
-        return aoeType;
-    }
+    public AOEType GetAoeType() => aoeType;
 
     private void SetEnable(bool isEnabled)
     {
+        if (GameManager.IsTrainingMode)
+        {
+            RPCSetEnable(isEnabled);
+            return;
+        }
         photonView.RPC("RPCSetEnable", RpcTarget.AllBuffered, isEnabled);
     }
 
     [PunRPC]
-    public void RPCSetEnable(bool isEnabled)
-    {
-        capsuleCollider.enabled = isEnabled;
-    }
+    public void RPCSetEnable(bool isEnabled) => capsuleCollider.enabled = isEnabled;
 }

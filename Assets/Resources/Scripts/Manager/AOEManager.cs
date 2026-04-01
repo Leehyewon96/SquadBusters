@@ -11,23 +11,34 @@ public enum AOEType
     End,
 }
 
-
 public class AOEManager : MonoBehaviour
 {
     private List<AOE> aoes = new List<AOE>();
 
     public AOE GetAOE(Vector3 pos, AOEType aoeType, float radius)
     {
-        AOE aoe = null;
-        if (aoes.Count > 0)
-        {
-            aoe = aoes.Find(a => !a.gameObject.activeSelf && a.GetAoeType() == aoeType);
-        }
+        AOE aoe = aoes.Find(a => !a.gameObject.activeSelf && a.GetAoeType() == aoeType);
 
-        if(aoe == null)
+        if (aoe == null)
         {
-            string path = $"Prefabs/AOE/{aoeType.ToString()}";
-            GameObject newAoe = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
+            string path = $"Prefabs/AOE/{aoeType}";
+            GameObject newAoe;
+
+            if (GameManager.IsTrainingMode)
+            {
+                GameObject prefab = Resources.Load<GameObject>(path);
+                if (prefab == null)
+                {
+                    Debug.LogError($"[Training] AOE Prefab ¾øÀ½: {path}");
+                    return null;
+                }
+                newAoe = Instantiate(prefab, pos, Quaternion.identity);
+            }
+            else
+            {
+                newAoe = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
+            }
+
             aoe = newAoe.GetComponent<AOE>();
             aoe.gameObject.transform.SetParent(transform);
             aoes.Add(aoe);
@@ -39,5 +50,4 @@ public class AOEManager : MonoBehaviour
 
         return aoe;
     }
-
 }

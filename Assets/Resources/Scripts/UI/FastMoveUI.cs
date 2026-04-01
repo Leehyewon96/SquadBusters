@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -10,12 +11,9 @@ public class FastMoveUI : UIBase
     private float coolTime = 10f;
     private float curFilledTime = 0f;
     private float state = 1f;
-        
-    public delegate void OnMoveFast();
-    public OnMoveFast onMoveFast;
 
-    public delegate void OnMoveCommon();
-    public OnMoveCommon onMoveCommon;
+    public Action onMoveFast;
+    public Action onMoveCommon;
 
     private void Awake()
     {
@@ -38,30 +36,19 @@ public class FastMoveUI : UIBase
     private void Update()
     {
         if (curFilledTime <= 0)
-        {
-            if (onMoveCommon != null)
-            {
-                onMoveCommon.Invoke();
-            }
-        }
+            onMoveCommon?.Invoke();
     }
 
     public void MoveFast(BaseEventData e)
     {
         state = -1f;
-        if (onMoveFast != null)
-        {
-            onMoveFast.Invoke();
-        }
+        onMoveFast?.Invoke();
     }
 
     public void MoveCommon(BaseEventData e)
     {
         state = 1f;
-        if (onMoveCommon != null)
-        {
-            onMoveCommon.Invoke();
-        }
+        onMoveCommon?.Invoke();
     }
 
     public void SetInteractable(bool isInteractable)

@@ -22,7 +22,6 @@ public enum SoundEffectType
     End,
 }
 
-
 public class SoundManager : MonoBehaviour
 {
     private List<SoundEffect> audioSources = new List<SoundEffect>();
@@ -41,7 +40,7 @@ public class SoundManager : MonoBehaviour
     public void Play(SoundEffectType soundEffectType)
     {
         SoundEffect soundEffect = audioSources.Find(s => soundEffectType == s.GetSoundEffectType());
-        if(soundEffect == null)
+        if (soundEffect == null)
         {
             SoundEffect origin = audioSources.Find(s => soundEffectType == s.GetSoundEffectType());
             soundEffect = Instantiate(origin, transform);
@@ -49,33 +48,21 @@ public class SoundManager : MonoBehaviour
             audioSources.Add(soundEffect);
         }
 
-        if(soundEffect.GetSoundEffectType() != SoundEffectType.GainItem && soundEffect.IsPlaying())
-        {
+        if (soundEffect.GetSoundEffectType() != SoundEffectType.GainItem && soundEffect.IsPlaying())
             return;
-        }
 
         soundEffect.Play();
     }
 
     public void Stop(SoundEffectType soundEffectType)
     {
-        List<SoundEffect> soundEffects = audioSources.FindAll(s => s.IsPlaying() && soundEffectType == s.GetSoundEffectType());
-        if (soundEffects.Count == 0)
-        {
-            return;
-        }
-
+        var soundEffects = audioSources.FindAll(s => s.IsPlaying() && soundEffectType == s.GetSoundEffectType());
         soundEffects.ForEach(e => e.Stop());
     }
 
     public void AllStop()
     {
-        List<SoundEffect> soundEffects = audioSources.FindAll(s => s.IsPlaying() && SoundEffectType.InGameBG != s.GetSoundEffectType());
-        if (soundEffects.Count == 0)
-        {
-            return;
-        }
-
+        var soundEffects = audioSources.FindAll(s => s.IsPlaying() && SoundEffectType.InGameBG != s.GetSoundEffectType());
         soundEffects.ForEach(e => e.Stop());
     }
 

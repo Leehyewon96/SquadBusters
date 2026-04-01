@@ -11,19 +11,13 @@ public class TreasureBoxItem : Item
 
     protected virtual void OnDisable()
     {
-        if (onUndetectedPlayerAttack != null)
-        {
-            onUndetectedPlayerAttack.Invoke();
-            onUndetectedPlayerAttack = null;
-        }
+        onUndetectedPlayerAttack?.Invoke();
+        onUndetectedPlayerAttack = null;
     }
 
     protected override void OnTriggerEnter(Collider other)
     {
-        if (isPicked)
-        {
-            return;
-        }
+        if (isPicked) return;
 
         if (other.gameObject.TryGetComponent<IAttackCircleItemInterface>(out IAttackCircleItemInterface attackCircleItemInterface))
         {
@@ -32,7 +26,12 @@ public class TreasureBoxItem : Item
                 attackCircleItemInterface.ShowNotice(NoticeType.TreasureBox, this);
                 return;
             }
-            photonView.RPC("SetIsPicked", RpcTarget.AllBuffered, true);
+
+            if (GameManager.IsTrainingMode)
+                isPicked = true;
+            else
+                photonView.RPC("SetIsPicked", RpcTarget.AllBuffered, true);
+
             attackCircleItemInterface.GainTreasureBox();
             attackCircleItemInterface.SetCoin(attackCircleItemInterface.GetCoin() - GameManager.Instance.treasureBoxCost);
             GameManager.Instance.SetTreasureBoxCost(GameManager.Instance.treasureBoxCost + 2);
@@ -44,11 +43,8 @@ public class TreasureBoxItem : Item
     {
         if (other.gameObject.TryGetComponent<IAttackCircleItemInterface>(out IAttackCircleItemInterface circleItemInterface))
         {
-            if (onUndetectedPlayerAttack != null)
-            {
-                onUndetectedPlayerAttack.Invoke();
-                onUndetectedPlayerAttack = null;
-            }
+            onUndetectedPlayerAttack?.Invoke();
+            onUndetectedPlayerAttack = null;
             circleItemInterface.OnUnDetectedItem(this);
         }
     }

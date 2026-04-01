@@ -20,16 +20,28 @@ public class ProjectileManager : MonoBehaviour
 
     public Projectile GetProjectile(Vector3 pos, ProjectileType type)
     {
-        Projectile projectile = null;
-        if(projectiles.Count > 0)
-        {
-            projectile = projectiles.Find(p => !p.gameObject.activeSelf && p.GetProjectileType() == type);
-        }
-        
+        Projectile projectile = projectiles.Find(p => !p.gameObject.activeSelf && p.GetProjectileType() == type);
+
         if (projectile == null)
         {
-            string path = $"Prefabs/Projectile/{type.ToString()}";
-            GameObject newBullet = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
+            string path = $"Prefabs/Projectile/{type}";
+            GameObject newBullet;
+
+            if (GameManager.IsTrainingMode)
+            {
+                GameObject prefab = Resources.Load<GameObject>(path);
+                if (prefab == null)
+                {
+                    Debug.LogError($"[Training] Projectile Prefab ¾øÀ½: {path}");
+                    return null;
+                }
+                newBullet = Instantiate(prefab, pos, Quaternion.identity);
+            }
+            else
+            {
+                newBullet = PhotonNetwork.Instantiate(path, pos, Quaternion.identity);
+            }
+
             projectile = newBullet.GetComponent<Projectile>();
             projectile.transform.SetParent(transform);
             projectiles.Add(projectile);

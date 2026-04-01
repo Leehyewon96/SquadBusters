@@ -255,6 +255,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 3246199044283937185}
+  enemySpawnPoints: []
+  enemyPrefabPaths: []
 --- !u!114 &-4255781007271473822
 MonoBehaviour:
   m_ObjectHideFlags: 0

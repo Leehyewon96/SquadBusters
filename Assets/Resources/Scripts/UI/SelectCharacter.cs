@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,8 +8,7 @@ public class SelectCharacter : MonoBehaviour
     public CharacterButton char2 = null;
     public CharacterButton char3 = null;
 
-    public delegate void OnDisabled();
-    public OnDisabled onDisabled = null;
+    public Action onDisabled = null;
 
     private void Awake()
     {
@@ -29,10 +29,6 @@ public class SelectCharacter : MonoBehaviour
     public void SelectChar(CharacterType newType, CharacterLevel newLevel)
     {
         GameManager.Instance.attackCircle.GetComponent<IAttackCircleUIInterface>().SelectCharacter(newType, newLevel);
-        if(onDisabled !=null)
-        {
-            onDisabled.Invoke();
-        }
-        //SetActive(false);
+        onDisabled?.Invoke();
     }
 }

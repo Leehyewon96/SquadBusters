@@ -1,11 +1,10 @@
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using static CharacterPlayer;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttackCircleItemInterface, IPlayerAttackCircleProjectileInterface
 {
@@ -13,7 +12,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
     protected Movement3D movement3D;
     protected float commonSpeed = 7.5f;
     protected CharacterController characterController;
-    Vector3 pos;
+    private Vector3 pos;
 
     [SerializeField] protected ParticleSystem blueCircleEffect;
     [SerializeField] protected ParticleSystem redCircleEffect;
@@ -30,7 +29,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         moveObj = new GameObject($"Move{gameObject.name}");
         movement3D = moveObj.AddComponent<Movement3D>();
         characterController = moveObj.AddComponent<CharacterController>();
-        type = circleType.Player;
+        type = CircleType.Player;
         attackCircleStat.SetCoin(0);
         attackCircleStat.SetGem(0);
 
@@ -40,34 +39,31 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         agent = GetComponent<CircleAgent>();
     }
 
+    private Action moveFastAction;
+    private Action moveCommonAction;
+
     protected override void Start()
     {
         moveObj.transform.position = transform.position;
 
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
-            GameManager.Instance.uiManager.fastMoveUI.onMoveFast -= () => movement3D.UpdateMoveSpeed(commonSpeed * 2f);
-            GameManager.Instance.uiManager.fastMoveUI.onMoveFast += () => movement3D.UpdateMoveSpeed(commonSpeed * 2f);
-            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon -= () => movement3D.UpdateMoveSpeed(commonSpeed);
-            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += () => movement3D.UpdateMoveSpeed(commonSpeed);
+            moveFastAction = () => movement3D.UpdateMoveSpeed(commonSpeed * 2f);
+            moveCommonAction = () => movement3D.UpdateMoveSpeed(commonSpeed);
+
+            GameManager.Instance.uiManager.fastMoveUI.onMoveFast += moveFastAction;
+            GameManager.Instance.uiManager.fastMoveUI.onMoveCommon += moveCommonAction;
             GameManager.Instance.uiManager.skillUI.doSkill += DoItemSkill;
 
             photonView.RPC("SetUserName", RpcTarget.AllBuffered, GameManager.Instance.userName);
             photonView.RPC("UpdateGemCnt", RpcTarget.AllBuffered, attackCircleStat.GetGem());
         }
     }
-    
+
     protected virtual void Update()
     {
-        if (GameManager.Instance.endGame)
-        {
-            return;
-        }
-
-        if (!photonView.IsMine)
-        {
-            return;
-        }
+        if (GameManager.Instance.endGame) return;
+        if (!photonView.IsMine) return;
 
         SetCircleColor(CheckInput());
 
@@ -82,99 +78,73 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
         foreach (var owner in owners)
         {
-            if(owner.gameObject.activeSelf)
-            {
-                //owner.SetDestination(moveObj.transform.position);
+            if (owner.gameObject.activeSelf)
                 owner.SetDestinationPos(pos);
-            }            
         }
     }
 
     [PunRPC]
-    public virtual void SetUserName(string username)
-    {
-        userName.SetText(username);
-    }
+    public virtual void SetUserName(string username) => userName.SetText(username);
 
     [PunRPC]
-    public virtual void UpdateGemCnt(int cnt)
-    {
-        gemCnt.SetText(cnt.ToString());
-    }
+    public virtual void UpdateGemCnt(int cnt) => gemCnt.SetText(cnt.ToString());
 
     public override void UpdateOwners(CharacterBase newOwner, bool isMerged)
     {
         base.UpdateOwners(newOwner, isMerged);
 
-        if (owners.LastOrDefault() == newOwner)
+        if (owners.LastOrDefault() != newOwner) return;
+
+        if (newOwner.gameObject.TryGetComponent<CharacterPlayer>(out CharacterPlayer player))
         {
-            if (newOwner.gameObject.TryGetComponent<CharacterPlayer>(out CharacterPlayer player))
-            {
-                OnTakeItem takeCoin = GainCoin;
-                player.AddTakeItemActions(takeCoin);
-                OnTakeItem takeGem = GainGem;
-                player.AddTakeItemActions(takeGem);
-                OnTakeItem takeBomb = GainBomb;
-                player.AddTakeItemActions(takeBomb);
-                OnTakeItem takeCannon = GainCannon;
-                player.AddTakeItemActions(takeCannon);
+            player.AddTakeItemActions(GainCoin);
+            player.AddTakeItemActions(GainGem);
+            player.AddTakeItemActions(GainBomb);
+            player.AddTakeItemActions(GainCannon);
 
-                player.updateCoin = SetCoin;
-                player.totalCoin = GetCoin;
-            }
-
-            if(!isMerged)
-            {
-                return;
-            }
-
-            //머지할 수 있는지 검사
-            if(newOwner.GetCharacterLevel() == CharacterLevel.End - 1)
-            {
-                return;
-            }
-            List<CharacterBase> chars = owners.FindAll(o => o.gameObject.activeSelf &&
-            o.GetCharacterType() == newOwner.GetCharacterType() &&
-            o.GetCharacterLevel() == newOwner.GetCharacterLevel()).ToList();
-            if (chars.Count < 3)
-            {
-                return;
-            }
-
-            StartCoroutine(CoMergeCharacter(chars, newOwner.transform.position));
+            player.updateCoin = SetCoin;
+            player.totalCoin = GetCoin;
         }
+
+        if (!isMerged) return;
+
+        if (newOwner.GetCharacterLevel() == CharacterLevel.End - 1) return;
+
+        List<CharacterBase> chars = owners.FindAll(o =>
+            o.gameObject.activeSelf &&
+            o.GetCharacterType() == newOwner.GetCharacterType() &&
+            o.GetCharacterLevel() == newOwner.GetCharacterLevel());
+
+        if (chars.Count < 3) return;
+
+        StartCoroutine(CoMergeCharacter(chars, newOwner.transform.position));
     }
 
-    private IEnumerator CoMergeCharacter(List<CharacterBase> chars, Vector3 pos)
+    private IEnumerator CoMergeCharacter(List<CharacterBase> chars, Vector3 mergePos)
     {
         yield return new WaitForSeconds(0.3f);
-        CharacterType type = chars.FirstOrDefault().GetCharacterType();
+        CharacterType charType = chars.FirstOrDefault().GetCharacterType();
         CharacterLevel nextLevel = chars.FirstOrDefault().GetCharacterLevel() + 1;
+
         foreach (var ch in chars)
-        {
-            //ch.Merged();
             ch.SetDead();
-        }
-        
-        CharacterBase character = SpawnCharacter(transform.position, type, nextLevel, false);
-        NoticeElem notice = GameManager.Instance.uiManager.noticeUI.ShowAcitveNotice(NoticeType.Fusion, true, character.gameObject);
+
+        CharacterBase character = SpawnCharacter(transform.position, charType, nextLevel, false);
+        NoticeElem notice = GameManager.Instance.uiManager.noticeUI.ShowActiveNotice(NoticeType.Fusion, true, character.gameObject);
         notice.Disable(2f);
 
-        owners.LastOrDefault().transform.position = pos;
+        owners.LastOrDefault().transform.position = mergePos;
     }
 
     protected virtual void Move()
     {
-        
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-
         movement3D.Move(x, z);
     }
 
     protected virtual bool CheckInput()
     {
-        //모바일에서 터치로 변경
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D))
         {
             characterController.enabled = true;
@@ -193,27 +163,23 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
     public void GainCoin()
     {
-        if(photonView.IsMine)
-        {
-            GameManager.Instance.soundManager.Play(SoundEffectType.GainItem);
-            attackCircleStat.SetCoin(attackCircleStat.GetCoin() + 1);
-            GameManager.Instance.uiManager.coinUI.SetCoin(attackCircleStat.GetCoin());
+        if (!photonView.IsMine) return;
 
-            agent.AddReward(RewardConstant.GetCoinScore);
-        }
+        GameManager.Instance.soundManager.Play(SoundEffectType.GainItem);
+        attackCircleStat.SetCoin(attackCircleStat.GetCoin() + 1);
+        GameManager.Instance.uiManager.coinUI.SetCoin(attackCircleStat.GetCoin());
+        agent.AddReward(RewardConstant.GetCoinScore);
     }
 
     public void GainGem()
     {
-        if (photonView.IsMine)
-        {
-            GameManager.Instance.soundManager.Play(SoundEffectType.GainItem);
-            attackCircleStat.SetGem(attackCircleStat.GetGem() + 1);
-            GameManager.Instance.UpdateRank(GameManager.Instance.userName, attackCircleStat.GetGem());
-            photonView.RPC("UpdateGemCnt", RpcTarget.AllBuffered, attackCircleStat.GetGem());
+        if (!photonView.IsMine) return;
 
-            agent.AddReward(RewardConstant.GetItemScore);
-        }
+        GameManager.Instance.soundManager.Play(SoundEffectType.GainItem);
+        attackCircleStat.SetGem(attackCircleStat.GetGem() + 1);
+        GameManager.Instance.UpdateRank(GameManager.Instance.userName, attackCircleStat.GetGem());
+        photonView.RPC("UpdateGemCnt", RpcTarget.AllBuffered, attackCircleStat.GetGem());
+        agent.AddReward(RewardConstant.GetItemScore);
     }
 
     public void GainBomb()
@@ -232,10 +198,7 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         agent.AddReward(RewardConstant.GetItemScore);
     }
 
-    public int GetCoin()
-    {
-        return attackCircleStat.GetCoin();
-    }
+    public int GetCoin() => attackCircleStat.GetCoin();
 
     public void SetCoin(int newCoin)
     {
@@ -249,16 +212,13 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         GameManager.Instance.uiManager.ShowUI(UIType.SelectCharacter, true);
     }
 
-    public void OnDetectedItem(NoticeType type, Item tree)
+    public void OnDetectedItem(NoticeType noticeType, Item tree)
     {
-        var gregs = owners.FindAll(o => o.GetCharacterType().Equals(CharacterType.Greg));
-        if(gregs.Count == 0)
+        var gregs = owners.FindAll(o => o.GetCharacterType() == CharacterType.Greg);
+        if (gregs.Count == 0)
         {
-            if(photonView.IsMine)
-            {
-                ShowNotice(type, tree);
-            }
-            
+            if (photonView.IsMine)
+                ShowNotice(noticeType, tree);
             return;
         }
 
@@ -267,27 +227,16 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
 
     public void OnUnDetectedItem(Item tree)
     {
-        var gregs = owners.FindAll(o => o.GetCharacterType().Equals(CharacterType.Greg));
-        if (gregs.Count == 0)
-        {
-            return;
-        }
+        var gregs = owners.FindAll(o => o.GetCharacterType() == CharacterType.Greg);
+        if (gregs.Count == 0) return;
 
         gregs.ForEach(g => g.GetComponent<Greg>().OnUnDetectedMoneyTree(tree));
-
     }
 
     public virtual void Stun(float duration, string animName)
     {
-        if (!photonView.IsMine)
-        {
-            return;
-        }
-
-        if (isStunned)
-        {
-            return;
-        }
+        if (!photonView.IsMine) return;
+        if (isStunned) return;
 
         StartCoroutine(CoStun(duration, animName));
     }
@@ -306,52 +255,45 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         GameManager.Instance.uiManager.fastMoveUI.SetInteractable(true);
     }
 
-    public void ShowNotice(NoticeType type, Item item)
+    public void ShowNotice(NoticeType noticeType, Item item)
     {
-        NoticeElem noticeElem = GameManager.Instance.uiManager.noticeUI.ShowAcitveNotice(type, true, item.gameObject);
-        item.onUndetectedPlayerAttack -= delegate { noticeElem.SetActive(false); };
-        item.onUndetectedPlayerAttack += delegate { noticeElem.SetActive(false); };
+        NoticeElem noticeElem = GameManager.Instance.uiManager.noticeUI.ShowActiveNotice(noticeType, true, item.gameObject);
+        item.onUndetectedPlayerAttack += () => noticeElem.SetActive(false);
     }
 
     #region IAttackCircleUIInterface
     public void SelectCharacter(CharacterType newType, CharacterLevel newLevel)
     {
-        Vector3 pos = Vector3.zero;
-        float x = Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
-        float z = Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
-        pos.x = x + transform.position.x;
-        pos.z = Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
-        CharacterBase player = SpawnCharacter(pos, newType, newLevel, true);
+        Vector3 spawnPos = Vector3.zero;
+        float x = UnityEngine.Random.Range(-attackCircleStat.attackRadius + 2, attackCircleStat.attackRadius - 2);
+        float z = UnityEngine.Random.Range(0, Mathf.Pow(attackCircleStat.attackRadius, 2) - Mathf.Pow(x, 2));
+        spawnPos.x = x + transform.position.x;
+        spawnPos.z = UnityEngine.Random.Range(-Mathf.Sqrt(z) + 2, Mathf.Sqrt(z) - 2) + transform.position.z;
+        SpawnCharacter(spawnPos, newType, newLevel, true);
 
         if (photonView.IsMine)
-        {
             redCircleEffect.gameObject.SetActive(true);
-        }
     }
 
     public void DoItemSkill(ItemType itemType)
     {
-        Projectile projectile = null;
-        Vector3 pos = transform.position;
+        Projectile projectile;
+        Vector3 skillPos = transform.position;
+
         switch (itemType)
         {
             case ItemType.Bomb:
-                pos.y = 2.1f;
-                projectile = GameManager.Instance.projectileManager.GetProjectile(pos, ProjectileType.Bomb);
-                Bomb bomb = projectile.gameObject.GetComponent<Bomb>();
-                bomb.Explode(2f);
+                skillPos.y = 2.1f;
+                projectile = GameManager.Instance.projectileManager.GetProjectile(skillPos, ProjectileType.Bomb);
+                projectile.gameObject.GetComponent<Bomb>().Explode(2f);
                 break;
             case ItemType.Cannon:
-                pos.y = 2.1f;
+                skillPos.y = 2.1f;
                 projectile = GameManager.Instance.projectileManager.GetProjectile(transform.position, ProjectileType.Cannon);
                 Cannon cannon = projectile.gameObject.GetComponent<Cannon>();
                 StartCoroutine(CoDisableCannon(cannon.lifeTime, cannon));
                 if (owners.Count > 0)
-                {
                     owners.ForEach(o => cannon.SetHost(o.gameObject));
-                }
-                break;
-            default:
                 break;
         }
     }
@@ -369,6 +311,4 @@ public class PlayerAttackCircle : AttackCircle, IAttackCircleUIInterface, IAttac
         GameManager.Instance.effectManager.Play((EffectType)effectType, pos, rot);
     }
     #endregion
-
-    
 }

@@ -9,15 +9,8 @@ public class CharacterNonPlayer : CharacterBase
     {
         base.Update();
 
-        if (!photonView.IsMine)
-        {
-            return;
-        }
-
-        if (characterState == CharacterState.InVincible)
-        {
-            return;
-        }
+        if (!photonView.IsMine && !GameManager.IsTrainingMode) return;
+        if (characterState == CharacterState.InVincible) return;
 
         if (characterState == CharacterState.Stun)
         {
@@ -42,18 +35,19 @@ public class CharacterNonPlayer : CharacterBase
 
     protected override IEnumerator CoAttack(GameObject target)
     {
-        TweenCallback callBack = null;
-        callBack = () =>
+        TweenCallback callBack = () =>
         {
             animator.SetBool(AnimLocalize.contactEnemy, true);
             AnimationClip clip = animatorController.animationClips.ToList().Find(anim => anim.name.Equals(AnimLocalize.attack));
             attackTerm = new WaitForSecondsRealtime(clip.length);
         };
         ForwardToEnemy(target, callBack);
+
         while (true)
         {
             ForwardToEnemy(target);
             yield return attackTerm;
+
             if (target.TryGetComponent<CharacterBase>(out CharacterBase targetObj))
             {
                 targetObj.TakeDamage(characterStat.GetAttackDamage());
@@ -66,7 +60,6 @@ public class CharacterNonPlayer : CharacterBase
             }
         }
     }
-
 
     public override void OnUnDetectEnemy(CharacterBase target)
     {

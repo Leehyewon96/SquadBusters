@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using Photon.Pun;
 using UnityEngine;
@@ -7,8 +8,7 @@ public class Item : MonoBehaviour
     protected PhotonView photonView = null;
     protected ItemType type = ItemType.Coin;
 
-    public delegate void OnUndetectedPlayerAttackCircle();
-    public OnUndetectedPlayerAttackCircle onUndetectedPlayerAttack = null;
+    public Action onUndetectedPlayerAttack = null;
 
     protected bool isPicked = false;
 
@@ -19,6 +19,11 @@ public class Item : MonoBehaviour
 
     public virtual void SetActive(bool isActive)
     {
+        if (GameManager.IsTrainingMode)
+        {
+            RPCSetActive(isActive);
+            return;
+        }
         photonView.RPC("RPCSetActive", RpcTarget.AllBuffered, isActive);
     }
 
@@ -32,6 +37,11 @@ public class Item : MonoBehaviour
 
     public virtual void SetPosition(Vector3 newPos)
     {
+        if (GameManager.IsTrainingMode)
+        {
+            RPCSetPosition(newPos);
+            return;
+        }
         photonView.RPC("RPCSetPosition", RpcTarget.AllBuffered, newPos);
     }
 
@@ -41,42 +51,28 @@ public class Item : MonoBehaviour
         gameObject.transform.position = newPos;
     }
 
-    public ItemType GetItemType()
-    {
-        return type;
-    }
+    public ItemType GetItemType() => type;
 
-    public void UpdateItemType(ItemType newType)
-    {
-        type = newType;
-    }
+    public void UpdateItemType(ItemType newType) => type = newType;
 
     [PunRPC]
-    public void SetIsPicked(bool picked)
-    {
-        isPicked = picked;
-    }
+    public void SetIsPicked(bool picked) => isPicked = picked;
 
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if(!photonView.IsMine)
-        {
-            return;
-        }
-
-        if (isPicked)
-        {
-            return;
-        }
+        if (!photonView.IsMine && !GameManager.IsTrainingMode) return;
+        if (isPicked) return;
 
         if (other.gameObject.TryGetComponent<ICharacterPlayerItemInterface>(out ICharacterPlayerItemInterface attackCircleItemInterface))
         {
-            photonView.RPC("SetIsPicked", RpcTarget.AllBuffered, true);
+            if (GameManager.IsTrainingMode)
+                isPicked = true;
+            else
+                photonView.RPC("SetIsPicked", RpcTarget.AllBuffered, true);
+
             transform.DOMove(other.gameObject.transform.position + Vector3.up * 1.2f, 0.25f).OnComplete(() =>
             {
-                Debug.Log($"[{gameObject.name}] {type.ToString()} {other.gameObject.name}");
                 attackCircleItemInterface.TakeItem(type);
-
                 SetActive(false);
             });
         }

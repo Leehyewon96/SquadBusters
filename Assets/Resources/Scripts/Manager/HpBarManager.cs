@@ -14,10 +14,10 @@ public class HpBarManager : MonoBehaviour
 
     public void Init()
     {
-        foreach(HpBar hpbar in hpBars)
+        foreach (HpBar hpbar in hpBars)
         {
             hpbar.SetActive(false);
-            hpbar.UPdateIsUsed(false);
+            hpbar.UpdateIsUsed(false);
         }
     }
 
@@ -40,7 +40,7 @@ public class HpBarManager : MonoBehaviour
         }
 
         hpbar.SetActive(true);
-        hpbar.UPdateIsUsed(true);
+        hpbar.UpdateIsUsed(true);
         return hpbar;
     }
 }

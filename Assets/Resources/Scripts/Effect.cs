@@ -7,16 +7,10 @@ public class Effect : MonoBehaviour
 
     private void Awake()
     {
-        particle = GetComponent<ParticleSystem>(); 
+        particle = GetComponent<ParticleSystem>();
     }
 
-    public bool GetIsPlaying()
-    {
-        return particle.isPlaying;
-    }
+    public bool GetIsPlaying() => particle.isPlaying;
 
-    public void Play()
-    {
-        particle.Play();
-    }
+    public void Play() => particle.Play();
 }

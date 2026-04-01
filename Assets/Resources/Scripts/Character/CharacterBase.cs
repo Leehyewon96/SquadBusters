@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Photon.Pun;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -43,7 +44,6 @@ public enum CharacterState
 
 public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 {
-    //protected AttackCircle attackCircle = null;
     protected HpBar hpBar = null;
 
     protected Animator animator = null;
@@ -57,7 +57,7 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     protected CharacterState characterState = CharacterState.Idle;
     protected CharacterLevel characterLevel = CharacterLevel.Classic;
-    protected bool isAttacking = false; // CharacterStat안에 있어야 되나?
+    protected bool isAttacking = false;
     public bool isDead { get; protected set; } = false;
 
     protected List<GameObject> DetectedEnemies = new List<GameObject>();
@@ -69,8 +69,7 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
     protected PhotonView photonView = null;
     protected Vector3 destinationPos;
 
-    public delegate void DeadAction(CharacterBase characterBase);
-    public DeadAction deadAction = null;
+    public Action<CharacterBase> deadAction = null;
 
     protected Coroutine coroutineAttack;
 
@@ -90,7 +89,7 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     protected virtual void OnDisable()
     {
-        if(coroutineAttack != null)
+        if (coroutineAttack != null)
         {
             StopCoroutine(coroutineAttack);
             coroutineAttack = null;
@@ -99,54 +98,56 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     protected virtual void Update()
     {
-        if(GameManager.Instance.endGame)
-        {
-            return;
-        }
-        //attackCircle.MoveAttackCircle(transform.position);
+        if (GameManager.Instance.endGame) return;
         hpBar.UpdatePos(transform.position + new Vector3(0, characterController.height + 0.4f, 0));
-
-        //업데이트용 이벤트 하나 생성 후 상속받는 클래스에서 Start에서 다 등록.
-        //여기서 업데이트용 이벤트 계속 Invoke하기(상속받는 클래스에는 Update 작성 X)
     }
 
     public virtual void Init()
     {
+        isDead = false;
         InitCharacterStat();
         hpBar.SetMaxHp(characterStat.GetMaxHp());
         hpBar.UpdateCurrentHp(characterStat.GetCurrentHp());
-        if(!photonView.IsMine)
-        {
+
+        if (!photonView.IsMine && !GameManager.IsTrainingMode)
             hpBar.InitColor(Color.red);
-        }
 
         characterStat.onCurrentHpChanged -= hpBar.UpdateCurrentHp;
         characterStat.onCurrentHpChanged += hpBar.UpdateCurrentHp;
-        characterStat.onCurrentHpZero -= delegate { trainingManager?.OnUnitDead(); };
-        characterStat.onCurrentHpZero += delegate { trainingManager?.OnUnitDead(); };
-        characterStat.onCurrentHpZero -= SetDead;
-        characterStat.onCurrentHpZero += SetDead;
+        characterStat.onCurrentHpZero -= OnHpZero;
+        characterStat.onCurrentHpZero += OnHpZero;
 
-        if (!photonView.IsMine)
-        {
-            return;
-        }
+        if (!photonView.IsMine && !GameManager.IsTrainingMode) return;
+    }
+
+    private void OnHpZero()
+    {
+        trainingManager?.OnUnitDead();
+        SetDead();
     }
 
     protected virtual void InitCharacterStat()
     {
         Dictionary<string, object> stat = CSVReader.Read("CharacterStat").Find(s => s["name"].ToString().Equals(characterType.ToString()));
-        if(stat == null)
-        {
-            Debug.Log($"{characterType.ToString()} 없음");
-        }
+        if (stat == null)
+            Debug.Log($"{characterType.ToString()} ????");
         else
-            characterStat.Init(float.Parse(stat.GetValueOrDefault("maxHp").ToString()), float.Parse(stat.GetValueOrDefault("attackDamage").ToString()), int.Parse(stat.GetValueOrDefault("coin").ToString()), int.Parse(stat.GetValueOrDefault("gem").ToString()));
-        //Debug.Log($"[{gameObject.name}] : maxHp : {characterStat.GetMaxHp()}");
+            characterStat.Init(
+                float.Parse(stat.GetValueOrDefault("maxHp").ToString()),
+                float.Parse(stat.GetValueOrDefault("attackDamage").ToString()),
+                int.Parse(stat.GetValueOrDefault("coin").ToString()),
+                int.Parse(stat.GetValueOrDefault("gem").ToString())
+            );
     }
 
     public virtual void SetCharacterState(CharacterState newState)
     {
+        // ?? ???? ???: RPC ???? ???? ???
+        if (GameManager.IsTrainingMode)
+        {
+            RPCSetCharacterState(newState);
+            return;
+        }
         photonView.RPC("RPCSetCharacterState", RpcTarget.AllBuffered, newState);
     }
 
@@ -161,50 +162,53 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         characterState = newState;
     }
 
-    public virtual CharacterType GetCharacterType()
-    {
-        return characterType;
-    }
+    public virtual CharacterType GetCharacterType() => characterType;
 
     public virtual void TakeDamage(float inDamage)
     {
+        // ?? ???? ???: RPC ???? ???? ???
+        if (GameManager.IsTrainingMode)
+        {
+            RPCTakeDamage(inDamage);
+            return;
+        }
         photonView.RPC("RPCTakeDamage", RpcTarget.AllBuffered, inDamage);
     }
 
     [PunRPC]
     public virtual void RPCTakeDamage(float inDamage)
     {
-        if (isDead)
-        {
-            return;
-        }
+        if (isDead) return;
+
         characterStat.ApplyDamage(inDamage);
 
-        if(characterStat.CheckDead())
+        if (characterStat.CheckDead())
         {
-            if(photonView.IsMine)
-            {
-                if (deadAction != null)
-                {
-                    deadAction.Invoke(this);
-                }
-            }
+            bool canInvoke = photonView.IsMine || GameManager.IsTrainingMode;
+            if (canInvoke && deadAction != null)
+                deadAction.Invoke(this);
         }
+
         GameManager.Instance.effectManager.Play(EffectType.StonesHit, gameObject.transform.position, transform.forward);
     }
 
     public virtual void Merged()
     {
         isDead = true;
-        hpBar.UPdateIsUsed(false);
+        hpBar.UpdateIsUsed(false);
         hpBar.SetActive(false);
         GameManager.Instance.effectManager.Play(EffectType.Explosion, transform.position, transform.forward);
-
         gameObject.SetActive(false);
     }
-    
+
     public virtual void SetDead()
     {
+        // ?? ???? ???: RPC ???? ???? ???
+        if (GameManager.IsTrainingMode)
+        {
+            RPCSetDead();
+            return;
+        }
         photonView.RPC("RPCSetDead", RpcTarget.AllBuffered);
     }
 
@@ -212,19 +216,16 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
     public virtual void RPCSetDead()
     {
         isDead = true;
-        hpBar.UPdateIsUsed(false);
+        hpBar.UpdateIsUsed(false);
         hpBar.SetActive(false);
         GameManager.Instance.effectManager.Play(EffectType.Explosion, transform.position, transform.forward);
-
         gameObject.SetActive(false);
     }
 
     public virtual void OnDetectEnemy(CharacterBase target)
     {
         if (!DetectedEnemies.Contains(target.gameObject))
-        {
             DetectedEnemies.Add(target.gameObject);
-        }
     }
 
     public virtual void SetDestinationPos(Vector3 destination)
@@ -234,12 +235,8 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     public virtual void SetDestination(Vector3 destination)
     {
-        if(navMeshAgent == null || !navMeshAgent.enabled || !navMeshAgent.isActiveAndEnabled)
-        {
-            return;
-        }
-
-        navMeshAgent?.SetDestination(destination);
+        if (navMeshAgent == null || !navMeshAgent.enabled || !navMeshAgent.isActiveAndEnabled) return;
+        navMeshAgent.SetDestination(destination);
         navMeshAgent.isStopped = false;
         navMeshAgent.updatePosition = true;
         navMeshAgent.updateRotation = true;
@@ -247,10 +244,7 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     public virtual void ResetPath()
     {
-        if (navMeshAgent == null || !navMeshAgent.enabled || !gameObject.activeSelf)
-        {
-            return;
-        }
+        if (navMeshAgent == null || !navMeshAgent.enabled || !gameObject.activeSelf) return;
         navMeshAgent.ResetPath();
         navMeshAgent.isStopped = true;
         navMeshAgent.velocity = Vector3.zero;
@@ -260,10 +254,7 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     public virtual void SetSpeed(float inSpeed)
     {
-        if (!navMeshAgent.enabled)
-        {
-            return;
-        }
+        if (!navMeshAgent.enabled) return;
         navMeshAgent.speed = inSpeed;
     }
 
@@ -272,12 +263,8 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         if (DetectedEnemies.Count > 0)
         {
             GameObject target = DetectedEnemies.Find(e => e != null && !e.GetComponent<CharacterBase>().isDead);
-            if (target != null)
-            {
-                return target;
-            }
+            if (target != null) return target;
         }
-
         return gameObject;
     }
 
@@ -296,58 +283,33 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
             case CharacterType.Colt:
                 if (target.TryGetComponent<CharacterBase>(out _) && !isAttacking)
                     MoveToEnemy(target);
-                    //Attack(target);
                 break;
             case CharacterType.Greg:
-                if(target.TryGetComponent<MoneyTree>(out _) && !isAttacking)
+                if (target.TryGetComponent<MoneyTree>(out _) && !isAttacking)
                     MoveToEnemy(target);
-                    //Attack(target);
-                break;
-            default:
                 break;
         }
     }
 
-
     public virtual void AIAction(int moveAction)
     {
-        float x = 0;
-        float z = 0;
-
-        switch(moveAction)
+        float x = 0, z = 0;
+        switch (moveAction)
         {
-            case 0: // forward 이동
-                x = 0;
-                z = 1;
-                break;
-            case 1: // back 이동
-                x = 0;
-                z = -1;
-                break;
-            case 2: // right 이동
-                x = 1;
-                z = 0;
-                break;
-            case 3: // left 이동
-                x = -1;
-                z = 0;
-                break;
-            case 4: // attack
+            case 0: x = 0; z = 1; break;
+            case 1: x = 0; z = -1; break;
+            case 2: x = 1; z = 0; break;
+            case 3: x = -1; z = 0; break;
+            case 4:
                 if (trainingManager == null) return;
                 Attack(trainingManager.GetNearestEnemy());
                 return;
-
-            default:
-                break;
         }
         navMeshAgent.enabled = false;
         Move(x, z);
     }
 
-    protected virtual void Move(float x, float z)
-    {
-        movement3D.Move(x, z);
-    }
+    protected virtual void Move(float x, float z) => movement3D.Move(x, z);
 
     public virtual void MoveToTarget(GameObject target)
     {
@@ -362,13 +324,9 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
             return;
         }
 
-        if (isAttacking)
-        {
-            return;
-        }
+        if (isAttacking) return;
 
         SetDestination(target.transform.position);
-
         if (Vector3.Distance(transform.position, target.transform.position) <= navMeshAgent.stoppingDistance)
         {
             ResetPath();
@@ -389,13 +347,9 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
             return;
         }
 
-        if(isAttacking)
-        {
-            return;
-        }
+        if (isAttacking) return;
 
         SetDestination(target.transform.position);
-
         if (Vector3.Distance(transform.position, target.transform.position) <= navMeshAgent.stoppingDistance)
         {
             ResetPath();
@@ -407,14 +361,12 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
     protected virtual void Attack(GameObject target)
     {
         if (isAttacking) return;
-
         navMeshAgent.enabled = false;
-
         if (coroutineAttack != null) return;
         coroutineAttack = StartCoroutine(CoAttack(target));
     }
 
-    protected virtual IEnumerator CoAttack(GameObject target) 
+    protected virtual IEnumerator CoAttack(GameObject target)
     {
         yield return null;
     }
@@ -425,10 +377,10 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
         trainingManager.OnEnemyKill();
 
         var enemies = GameManager.Instance.attackCircle.GetComponent<AttackCircle>().GetDetectedEnemies;
-        if(enemies.Contains(target))
-            GameManager.Instance.attackCircle.GetComponent<AttackCircle>().GetDetectedEnemies.Remove(target);
+        if (enemies.Contains(target))
+            enemies.Remove(target);
 
-        if(coroutineAttack != null)
+        if (coroutineAttack != null)
         {
             StopCoroutine(coroutineAttack);
             coroutineAttack = null;
@@ -446,99 +398,74 @@ public class CharacterBase : MonoBehaviour, ICharacterProjectileInterface
 
     public virtual void OnUnDetectEnemy(CharacterBase target)
     {
-        if(DetectedEnemies.Contains(target.gameObject))
-        {
+        if (DetectedEnemies.Contains(target.gameObject))
             DetectedEnemies.Remove(target.gameObject);
-        }
     }
 
     public virtual void KnockBack(float inDamage, float inKnockBackTime, float inKnockBackDis)
     {
+        // ?? ???? ???: RPC ???? ???? ???
+        if (GameManager.IsTrainingMode)
+        {
+            RPCKnockBack(inDamage, inKnockBackTime, inKnockBackDis);
+            return;
+        }
         photonView.RPC("RPCKnockBack", RpcTarget.AllBuffered, inDamage, inKnockBackTime, inKnockBackDis);
     }
 
     [PunRPC]
     public virtual void RPCKnockBack(float inDamage, float inKnockBackTime, float inKnockBackDis)
     {
-        if (photonView.IsMine)
+        bool canProcess = photonView.IsMine || GameManager.IsTrainingMode;
+        if (!canProcess) return;
+
+        navMeshAgent.enabled = false;
+        characterController.enabled = false;
+        animator.SetTrigger(AnimLocalize.knockBack);
+
+        Vector3 destination = transform.position - transform.forward.normalized * inKnockBackDis;
+        Vector3[] path = { transform.position, destination };
+        TakeDamage(inDamage);
+        transform.DOPath(path, inKnockBackTime, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
         {
-            navMeshAgent.enabled = false;
-            characterController.enabled = false;
-            animator.SetTrigger(AnimLocalize.knockBack);
-
-            Vector3 destination = transform.position - transform.forward.normalized * inKnockBackDis;
-            Vector3[] path = { transform.position, destination };
-            TakeDamage(inDamage);
-            transform.DOPath(path, inKnockBackTime, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
-            {
-                navMeshAgent.enabled = true;
-                characterController.enabled = true;
-                characterState = CharacterState.Idle;
-            });
-        }
+            navMeshAgent.enabled = true;
+            characterController.enabled = true;
+            characterState = CharacterState.Idle;
+        });
     }
 
-    public virtual int GetCoin()
-    {
-        return characterStat.GetCoin();
-    }
-
-    public virtual int GetGem()
-    {
-        return characterStat.GetGem();
-    }
+    public virtual int GetCoin() => characterStat.GetCoin();
+    public virtual int GetGem() => characterStat.GetGem();
 
     public virtual void GetAOE(float inDamage, Vector3 fromPos, float distance)
     {
-        //SetCharacterState(CharacterState.Stun);
-        ////characterState = CharacterState.Stun;
-        //fromPos.y = transform.position.y;
-        ////Debug.Log($"[{gameObject.name}] transform.position.y : {transform.position.y}");
-        //Vector3 dir = transform.position - fromPos;
-        //Vector3 startPos = transform.position;
-        //Vector3 endPoint = startPos + dir.normalized * distance;
-        //Vector3 midPoint = startPos + (endPoint - transform.position) * 0.5f;
-        //midPoint.y += 2f;
-        //endPoint.y = fromPos.y;
-        ////Debug.Log($"[{gameObject.name}] endPoint.y : {endPoint.y}");
-        //Vector3[] paths = { startPos, midPoint, endPoint };
-        //transform.DOPath(paths, 0.5f, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
-        //{
-        //    TakeDamage(inDamage);
-        //    //characterState = CharacterState.Idle;
-        //    SetCharacterState(CharacterState.Idle);
-        //    //Debug.Log($"[{gameObject.name}] y : {transform.position.y}");
-        //});
+        // ?? ???? ???: RPC ???? ???? ???
+        if (GameManager.IsTrainingMode)
+        {
+            RPCGetAOE(inDamage, fromPos, distance);
+            return;
+        }
         photonView.RPC("RPCGetAOE", RpcTarget.AllBuffered, inDamage, fromPos, distance);
     }
 
     [PunRPC]
     public virtual void RPCGetAOE(float inDamage, Vector3 fromPos, float distance)
     {
-        //SetCharacterState(CharacterState.Stun);
         characterState = CharacterState.Stun;
         fromPos.y = transform.position.y;
-        //Debug.Log($"[{gameObject.name}] transform.position.y : {transform.position.y}");
         Vector3 dir = transform.position - fromPos;
         Vector3 startPos = transform.position;
         Vector3 endPoint = startPos + dir.normalized * distance;
         Vector3 midPoint = startPos + (endPoint - transform.position) * 0.5f;
         midPoint.y += 2f;
         endPoint.y = fromPos.y;
-        //Debug.Log($"[{gameObject.name}] endPoint.y : {endPoint.y}");
         Vector3[] paths = { startPos, midPoint, endPoint };
         transform.DOPath(paths, 0.5f, PathType.CatmullRom, PathMode.Full3D).OnComplete(() =>
         {
             TakeDamage(inDamage);
             characterState = CharacterState.Idle;
-            //SetCharacterState(CharacterState.Idle);
-            //Debug.Log($"[{gameObject.name}] y : {transform.position.y}");
         });
     }
 
-    public virtual CharacterLevel GetCharacterLevel()
-    {
-        return characterLevel;
-    }
-
+    public virtual CharacterLevel GetCharacterLevel() => characterLevel;
 }
